@@ -1,0 +1,19 @@
+/*
+ * Tailwind FAQAT joylashuv uchun: flex, grid, gap, chetlar, kengliklar.
+ * Ranglar, shriftlar va komponentlar antd dan keladi.
+ *
+ * `preflight.css` ATAYLAB import qilinmagan. U brauzerning bazaviy
+ * uslublarini tozalaydi va shu bilan birga antd komponentlarining
+ * ko'rinishini buzadi. Faqat `theme` (o'zgaruvchilar) va `utilities`
+ * (sinflar) olinadi.
+ */
+@layer theme, base, components, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities);
+
+html,
+body,
+#root {
+  height: 100%;
+  margin: 0;
+}

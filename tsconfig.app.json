@@ -1,0 +1,35 @@
+{
+  "compilerOptions": {
+    "tsBuildInfoFile": "./node_modules/.tmp/tsconfig.app.tsbuildinfo",
+    "target": "es2023",
+    "lib": ["ES2023", "DOM"],
+    "module": "esnext",
+    "types": ["vite/client"],
+    "allowArbitraryExtensions": true,
+    "skipLibCheck": true,
+
+    /* Bundler mode */
+    "moduleResolution": "bundler",
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "moduleDetection": "force",
+    "noEmit": true,
+    "jsx": "react-jsx",
+
+    // `baseUrl` TS 6 da eskirgan. `paths` usiz ham ishlaydi —
+    // yo'llar tsconfig fayliga nisbatan hisoblanadi.
+    "paths": { "@/*": ["./src/*"] },
+
+    /* Linting */
+    // `strict` shablonda yo'q edi. `noUncheckedIndexedAccess` ataylab:
+    // `items[0]` `T | undefined` bo'ladi va bo'sh ro'yxatdagi xato
+    // ishga tushirishdan oldin topiladi.
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "noUnusedLocals": true,
+    "noUnusedParameters": true,
+    "erasableSyntaxOnly": true,
+    "noFallthroughCasesInSwitch": true
+  },
+  "include": ["src"]
+}
