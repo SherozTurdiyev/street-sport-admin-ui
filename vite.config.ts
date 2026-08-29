@@ -17,6 +17,31 @@ export default defineConfig({
     port: 5173,
     strictPort: true,
   },
+  build: {
+    // Bitta ulkan bo'lak o'rniga uchta: antd, React va ilova kodi.
+    // Ilova kodi tez-tez o'zgaradi, kutubxonalar esa deyarli hech
+    // qachon — ularni ajratish takroriy tashriflarda brauzer keshini
+    // ishlatishga imkon beradi. Aks holda bitta satr o'zgarsa ham
+    // foydalanuvchi 240 kB ni qaytadan yuklardi.
+    rolldownOptions: {
+      output: {
+        advancedChunks: {
+          groups: [
+            { name: 'antd', test: /node_modules[\\/](antd|@ant-design|@rc-component|rc-)/ },
+            // Qolgan barcha kutubxonalar: react-query, axios, router,
+            // dayjs. Ular ham kamdan-kam o'zgaradi, shuning uchun ilova
+            // kodidan ajratilishi kerak — aks holda bitta satr
+            // tuzatilganda foydalanuvchi ularni ham qaytadan yuklardi.
+            //
+            // Guruh ATAYLAB oxirida: rolldown modulni birinchi mos
+            // kelgan guruhga qo'yadi, shuning uchun keng qamrovli
+            // qoida aniqlaridan keyin turishi shart.
+            { name: 'vendor', test: /node_modules/ },
+          ],
+        },
+      },
+    },
+  },
   test: {
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
