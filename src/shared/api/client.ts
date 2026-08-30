@@ -1,6 +1,10 @@
-import axios, { type InternalAxiosRequestConfig } from 'axios';
-import { getAccessToken, setAccessToken } from './token';
-import { toApiError } from './errors';
+import axios, { type InternalAxiosRequestConfig } from "axios";
+import { getAccessToken, setAccessToken } from "./token";
+import { toApiError } from "./errors";
+import {
+  clearSubscriptionExpired,
+  markSubscriptionExpired,
+} from "./subscription";
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
@@ -58,12 +62,23 @@ export function setAuthLostHandler(fn: () => void): void {
  * "parol xato" degani, refresh yordam bermaydi. `/auth/refresh` da 401
  * esa cheksiz halqa hosil qilardi.
  */
-const NO_RETRY = ['/auth/login', '/auth/refresh'];
+const NO_RETRY = ["/auth/login", "/auth/refresh"];
 
 type RetriableConfig = InternalAxiosRequestConfig & { _retried?: boolean };
 
 api.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    // `GET` obuna tugaganda ham ishlaydi (faqat o'qish rejimi), shuning
+    // uchun u bannerni olib tashlamaydi. Muvaffaqiyatli YOZISH esa
+    // obuna yana faolligini isbotlaydi.
+    if (
+      response.config.method !== undefined &&
+      response.config.method !== "get"
+    ) {
+      clearSubscriptionExpired();
+    }
+    return response;
+  },
   async (error: unknown) => {
     const err = error as {
       config?: RetriableConfig;
@@ -90,6 +105,9 @@ api.interceptors.response.use(
       }
     }
 
-    return Promise.reject(toApiError(error));
+    const apiError = toApiError(error);
+    if (apiError.status === 402) markSubscriptionExpired(apiError.message);
+
+    return Promise.reject(apiError);
   },
 );
