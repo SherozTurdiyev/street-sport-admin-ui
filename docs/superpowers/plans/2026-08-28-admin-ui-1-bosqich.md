@@ -32,7 +32,7 @@ Har bir taskning talablariga quyidagilar **qo'shimcha ravishda** kiradi:
 
 **Fayllar:** butun loyiha ildizi
 
-- [ ] **1.1** Vite skeletini yaratish
+- [x] **1.1** Vite skeletini yaratish
 
 Papkada `docs/` va `.git/` bor, shuning uchun Vite to'g'ridan-to'g'ri
 skelet yasay olmaydi. Vaqtinchalik papkaga yasab, ko'chiriladi:
@@ -44,7 +44,7 @@ cp -R /tmp/ssui/. .
 rm -rf /tmp/ssui
 ```
 
-- [ ] **1.2** Paketlarni o'rnatish
+- [x] **1.2** Paketlarni o'rnatish
 
 ```bash
 npm i antd@6 @tanstack/react-query@5 axios@1 react-router@7 dayjs
@@ -53,7 +53,7 @@ npm i -D vitest @testing-library/react @testing-library/user-event \
   prettier eslint-config-prettier
 ```
 
-- [ ] **1.3** `tsconfig.app.json` da qat'iy rejimni yoqish
+- [x] **1.3** `tsconfig.app.json` da qat'iy rejimni yoqish
 
 ```json
 "strict": true,
@@ -69,7 +69,7 @@ va bo'sh ro'yxatdagi xato ishga tushirishdan oldin topiladi.
 
 `vite.config.ts` ga mos `resolve.alias` qo'shiladi.
 
-- [ ] **1.4** Vitest sozlamasi — `vite.config.ts` ga
+- [x] **1.4** Vitest sozlamasi — `vite.config.ts` ga
 
 ```ts
 test: {
@@ -79,18 +79,18 @@ test: {
 },
 ```
 
-- [ ] **1.5** `src/test/setup.ts`
+- [x] **1.5** `src/test/setup.ts`
 
 ```ts
 import '@testing-library/jest-dom/vitest';
 ```
 
-- [ ] **1.6** `package.json` skriptlari: `test`, `test:watch`, `format`
+- [x] **1.6** `package.json` skriptlari: `test`, `test:watch`, `format`
 
-- [ ] **1.7** Tekshirish: `npm run build` va `npm run test` (test yo'q,
+- [x] **1.7** Tekshirish: `npm run build` va `npm run test` (test yo'q,
       lekin ishga tushishi kerak)
 
-- [ ] **1.8** Commit: `chore: loyiha skeleti`
+- [x] **1.8** Commit: `chore: loyiha skeleti`
 
 ---
 
@@ -98,7 +98,7 @@ import '@testing-library/jest-dom/vitest';
 
 **Fayllar:** `src/index.css`, `src/app/providers.tsx`, `vite.config.ts`
 
-- [ ] **2.1** Tailwind 4 o'rnatish
+- [x] **2.1** Tailwind 4 o'rnatish
 
 ```bash
 npm i -D tailwindcss @tailwindcss/vite
@@ -106,7 +106,7 @@ npm i -D tailwindcss @tailwindcss/vite
 
 `vite.config.ts` ga `tailwindcss()` plagini qo'shiladi.
 
-- [ ] **2.2** `src/index.css` — **`preflight` siz**
+- [x] **2.2** `src/index.css` — **`preflight` siz**
 
 ```css
 @layer theme, base, components, utilities;
@@ -118,7 +118,7 @@ npm i -D tailwindcss @tailwindcss/vite
 uslublarini buzadi. Faqat `theme` (o'zgaruvchilar) va `utilities`
 (sinflar) olinadi.
 
-- [ ] **2.3** `src/app/providers.tsx`
+- [x] **2.3** `src/app/providers.tsx`
 
 ```tsx
 import { ConfigProvider } from 'antd';
@@ -151,10 +151,10 @@ export function Providers({ children }: PropsWithChildren) {
 }
 ```
 
-- [ ] **2.4** Tekshirish: `App.tsx` ga antd `Button` va Tailwind `flex`
+- [x] **2.4** Tekshirish: `App.tsx` ga antd `Button` va Tailwind `flex`
       qo'yib, ikkalasi ham buzilmasdan ko'rinishini ko'rish
 
-- [ ] **2.5** Commit: `chore: antd va Tailwind, preflight o'chirilgan`
+- [x] **2.5** Commit: `chore: antd va Tailwind, preflight o'chirilgan`
 
 ---
 
@@ -182,7 +182,7 @@ export function isApiError(e: unknown): e is ApiError;
 export const api: AxiosInstance;
 ```
 
-- [ ] **3.1** Test yozish: `src/shared/api/errors.test.ts`
+- [x] **3.1** Test yozish: `src/shared/api/errors.test.ts`
 
 ```ts
 import { toApiError } from './errors';
@@ -204,9 +204,9 @@ it('tarmoq uzilganda umumiy xabar beradi', () => {
 });
 ```
 
-- [ ] **3.2** Testni ishlatish — yiqilishi kerak
+- [x] **3.2** Testni ishlatish — yiqilishi kerak
 
-- [ ] **3.3** `token.ts` — xotiradagi o'zgaruvchi
+- [x] **3.3** `token.ts` — xotiradagi o'zgaruvchi
 
 ```ts
 // localStorage ATAYLAB ishlatilmaydi: unga XSS orqali yetish mumkin.
@@ -223,7 +223,7 @@ export function setAccessToken(token: string | null): void {
 }
 ```
 
-- [ ] **3.4** `errors.ts`
+- [x] **3.4** `errors.ts`
 
 ```ts
 export type ApiError = {
@@ -265,7 +265,7 @@ export function isApiError(e: unknown): e is ApiError {
 }
 ```
 
-- [ ] **3.5** `client.ts` — interceptorsiz asos
+- [x] **3.5** `client.ts` — interceptorsiz asos
 
 ```ts
 import axios from 'axios';
@@ -284,12 +284,12 @@ api.interceptors.request.use((config) => {
 });
 ```
 
-- [ ] **3.6** `.env` va `.env.example`:
+- [x] **3.6** `.env` va `.env.example`:
       `VITE_API_URL=http://localhost:3001/api/v1`
 
-- [ ] **3.7** Testlar o'tadi
+- [x] **3.7** Testlar o'tadi
 
-- [ ] **3.8** Commit: `feat: API mijozi va xato turi`
+- [x] **3.8** Commit: `feat: API mijozi va xato turi`
 
 ---
 
@@ -302,7 +302,7 @@ chaqiruvda almashtiradi**. Ikkita parallel refresh ketsa, ikkinchisi
 birinchisi yaratgan tokenni yaroqsiz qiladi va foydalanuvchi tizimdan
 tushib ketadi. Bu xato faqat real sharoitda, tasodifiy chiqadi.
 
-- [ ] **4.1** Test: MSW bilan
+- [x] **4.1** Test: MSW bilan
 
 ```ts
 it('401 dan keyin refresh qilib so`rovni qaytadan yuboradi', async () => {
@@ -341,9 +341,9 @@ it('parallel 401 larda refresh BIR MARTA ketadi', async () => {
 });
 ```
 
-- [ ] **4.2** Testlarni ishlatish — yiqilishi kerak
+- [x] **4.2** Testlarni ishlatish — yiqilishi kerak
 
-- [ ] **4.3** Interceptorni yozish
+- [x] **4.3** Interceptorni yozish
 
 ```ts
 let refreshing: Promise<string> | null = null;
@@ -404,9 +404,9 @@ api.interceptors.response.use(
 );
 ```
 
-- [ ] **4.4** Testlar o'tadi
+- [x] **4.4** Testlar o'tadi
 
-- [ ] **4.5** Commit: `feat: 401 da yagona refresh`
+- [x] **4.5** Commit: `feat: 401 da yagona refresh`
 
 ---
 
@@ -435,7 +435,7 @@ export function useAuth(): {
 export function useCan(): (permission: string) => boolean;
 ```
 
-- [ ] **5.1** `api.ts` — so'rovlar va tiplar
+- [x] **5.1** `api.ts` — so'rovlar va tiplar
 
 ```ts
 export type LoginResponse = {
@@ -456,16 +456,16 @@ export const authApi = {
 };
 ```
 
-- [ ] **5.2** `AuthProvider.tsx`
+- [x] **5.2** `AuthProvider.tsx`
 
 Ilova ishga tushganda `refreshOnce()` chaqiriladi, keyin `me()`.
 Uchinchi holat kerak: `loading` — hali bilinmaydi. Aks holda login
 sahifasi bir lahza chaqnab, keyin ichki sahifaga o'tardi.
 
-- [ ] **5.3** Test: refresh muvaffaqiyatli bo'lsa `authed`, xato bo'lsa
+- [x] **5.3** Test: refresh muvaffaqiyatli bo'lsa `authed`, xato bo'lsa
       `anon`; `loading` paytida hech qanday sahifa render qilinmaydi
 
-- [ ] **5.4** Commit: `feat: auth konteksti`
+- [x] **5.4** Commit: `feat: auth konteksti`
 
 ---
 
@@ -473,7 +473,7 @@ sahifasi bir lahza chaqnab, keyin ichki sahifaga o'tardi.
 
 **Fayllar:** `src/features/auth/LoginPage.tsx`
 
-- [ ] **6.1** Test
+- [x] **6.1** Test
 
 ```ts
 it('xato parolda backend xabarini ko`rsatadi', async () => {
@@ -490,12 +490,12 @@ it('xato parolda backend xabarini ko`rsatadi', async () => {
 });
 ```
 
-- [ ] **6.2** antd `Form` bilan sahifani yozish. Klientda faqat
+- [x] **6.2** antd `Form` bilan sahifani yozish. Klientda faqat
       majburiylik tekshiriladi; qolgani serverda.
 
-- [ ] **6.3** Testlar o'tadi
+- [x] **6.3** Testlar o'tadi
 
-- [ ] **6.4** Commit: `feat: login sahifasi`
+- [x] **6.4** Commit: `feat: login sahifasi`
 
 ---
 
@@ -503,15 +503,15 @@ it('xato parolda backend xabarini ko`rsatadi', async () => {
 
 **Fayllar:** `src/features/auth/ChangePasswordPage.tsx`
 
-- [ ] **7.1** Test: `mustChangePassword: true` bo'lgan foydalanuvchi
+- [x] **7.1** Test: `mustChangePassword: true` bo'lgan foydalanuvchi
       `/members` ga o'tolmaydi va `/change-password` ga qaytariladi
 
-- [ ] **7.2** Sahifa va yo'naltirish mantiqini yozish
+- [x] **7.2** Sahifa va yo'naltirish mantiqini yozish
 
-- [ ] **7.3** Parol almashgach backend barcha sessiyalarni yopadi —
+- [x] **7.3** Parol almashgach backend barcha sessiyalarni yopadi —
       foydalanuvchi qayta login qilishi kerak. Buni xabarda aytish.
 
-- [ ] **7.4** Commit: `feat: parol almashtirish`
+- [x] **7.4** Commit: `feat: parol almashtirish`
 
 ---
 
@@ -519,7 +519,7 @@ it('xato parolda backend xabarini ko`rsatadi', async () => {
 
 **Fayllar:** `src/app/layout/`, `src/app/guards/`, `eslint.config.js`
 
-- [ ] **8.1** ESLint qoidasi — rol bo'yicha solishtirishni taqiqlash
+- [x] **8.1** ESLint qoidasi — rol bo'yicha solishtirishni taqiqlash
 
 ```js
 {
@@ -528,11 +528,11 @@ it('xato parolda backend xabarini ko`rsatadi', async () => {
 }
 ```
 
-- [ ] **8.2** Test: administratorda "Xodimlar" menyusi ko'rinmaydi
+- [x] **8.2** Test: administratorda "Xodimlar" menyusi ko'rinmaydi
 
-- [ ] **8.3** Test: `/members` ga qo'lda kirsa "ruxsat yo'q" sahifasi
+- [x] **8.3** Test: `/members` ga qo'lda kirsa "ruxsat yo'q" sahifasi
 
-- [ ] **8.4** `RequireAuth`, `RequirePermission`, `AppLayout`, `Sidebar`
+- [x] **8.4** `RequireAuth`, `RequirePermission`, `AppLayout`, `Sidebar`
 
 Menyu jadvali — marshrut, ruxsat va nom bir joyda:
 
@@ -543,9 +543,9 @@ export const NAV = [
 ] as const;
 ```
 
-- [ ] **8.5** Testlar o'tadi
+- [x] **8.5** Testlar o'tadi
 
-- [ ] **8.6** Commit: `feat: layout va ruxsatli menyu`
+- [x] **8.6** Commit: `feat: layout va ruxsatli menyu`
 
 ---
 
@@ -553,11 +553,11 @@ export const NAV = [
 
 **Fayllar:** `src/shared/api/error-handler.ts`, `src/app/SubscriptionBanner.tsx`
 
-- [ ] **9.1** Test: `402` kelganda banner chiqadi
+- [x] **9.1** Test: `402` kelganda banner chiqadi
 
-- [ ] **9.2** Test: `VALIDATION_FAILED` xatosi forma maydoniga tushadi
+- [x] **9.2** Test: `VALIDATION_FAILED` xatosi forma maydoniga tushadi
 
-- [ ] **9.3** Ishlovchini yozish
+- [x] **9.3** Ishlovchini yozish
 
 ```ts
 // Backend `details.message` da maydon nomlarini emas, matnlarni
@@ -566,9 +566,9 @@ export const NAV = [
 export function applyServerErrors(form: FormInstance, error: ApiError): boolean;
 ```
 
-- [ ] **9.4** Testlar o'tadi
+- [x] **9.4** Testlar o'tadi
 
-- [ ] **9.5** Commit: `feat: xatolarni ko'rsatish`
+- [x] **9.5** Commit: `feat: xatolarni ko'rsatish`
 
 ---
 
@@ -594,25 +594,25 @@ export type Paginated<T> = {
 };
 ```
 
-- [ ] **10.1** Test: ro'yxat ko'rinadi, ikkinchi sahifaga o'tilganda
+- [x] **10.1** Test: ro'yxat ko'rinadi, ikkinchi sahifaga o'tilganda
       `?page=2` so'rovi ketadi
 
-- [ ] **10.2** Test: filtr o'zgarsa sahifa 1 ga qaytadi
+- [x] **10.2** Test: filtr o'zgarsa sahifa 1 ga qaytadi
 
 Filtr o'zgarganda 5-sahifada qolish — klassik xato: natija 2 ta bo'lsa,
 foydalanuvchi bo'sh jadval ko'radi va sababini tushunmaydi.
 
-- [ ] **10.3** `api.ts`, `hooks.ts`, jadval
+- [x] **10.3** `api.ts`, `hooks.ts`, jadval
 
 antd `Table` paginatsiyasi to'g'ridan-to'g'ri `page`/`pageSize` ga
 ulanadi — nomlar backend bilan bir xil.
 
-- [ ] **10.4** `userId` va `id` farqini izohda yozish: keyingi
+- [x] **10.4** `userId` va `id` farqini izohda yozish: keyingi
       so'rovlarda **`userId`** ishlatiladi.
 
-- [ ] **10.5** Testlar o'tadi
+- [x] **10.5** Testlar o'tadi
 
-- [ ] **10.6** Commit: `feat: xodimlar ro'yxati`
+- [x] **10.6** Commit: `feat: xodimlar ro'yxati`
 
 ---
 
