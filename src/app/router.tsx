@@ -1,7 +1,11 @@
 import { lazy, Suspense } from 'react';
 import { Navigate, Route, Routes } from 'react-router';
 import { Spin } from 'antd';
+import { useCan } from '@/features/auth/hooks';
 import { RequireAuth } from './guards/RequireAuth';
+import { RequirePermission } from './guards/RequirePermission';
+import { AppLayout } from './layout/AppLayout';
+import { allowedNav } from './layout/nav';
 
 /**
  * Sahifalar talab bo'yicha yuklanadi. Login qilayotgan odamga xodimlar
@@ -16,6 +20,11 @@ const ChangePasswordPage = lazy(() =>
     default: m.ChangePasswordPage,
   })),
 );
+const OrganizationPage = lazy(() =>
+  import('@/features/organization/OrganizationPage').then((m) => ({
+    default: m.OrganizationPage,
+  })),
+);
 
 function Loading() {
   return (
@@ -25,18 +34,38 @@ function Loading() {
   );
 }
 
+/**
+ * Bosh sahifa qat'iy emas: foydalanuvchi o'ziga ochiq BIRINCHI bo'limga
+ * tushadi. Aks holda administrator har kirganda "ruxsat yo'q" sahifasini
+ * ko'rardi.
+ */
+function HomeRedirect() {
+  const can = useCan();
+  const first = allowedNav(can)[0];
+  return <Navigate to={first?.path ?? '/organization'} replace />;
+}
+
 export function AppRouter() {
   return (
     <Suspense fallback={<Loading />}>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route element={<RequireAuth />}>
+          {/* Parol almashtirish LAYOUTDAN TASHQARIDA: bu sahifaga
+              majburan yuborilgan foydalanuvchi uchun menyu ochilmaydi. */}
           <Route path="/change-password" element={<ChangePasswordPage />} />
-          <Route path="/" element={<Navigate to="/members" replace />} />
-          <Route
-            path="/members"
-            element={<div className="p-6">Xodimlar — Task 10</div>}
-          />
+          <Route element={<AppLayout />}>
+            <Route path="/" element={<HomeRedirect />} />
+            <Route path="/organization" element={<OrganizationPage />} />
+            <Route
+              element={<RequirePermission permission="member.admin.manage" />}
+            >
+              <Route
+                path="/members"
+                element={<div className="p-6">Xodimlar — Task 10</div>}
+              />
+            </Route>
+          </Route>
         </Route>
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
