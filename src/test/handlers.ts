@@ -44,7 +44,10 @@ export function anonHandlers() {
   return [
     http.post(`${API}/auth/refresh`, () =>
       HttpResponse.json(
-        { code: 'AUTH_TOKEN_INVALID', message: 'Sessiya yaroqsiz. Qaytadan kiring.' },
+        {
+          code: 'AUTH_TOKEN_INVALID',
+          message: 'Sessiya yaroqsiz. Qaytadan kiring.',
+        },
         { status: 401 },
       ),
     ),

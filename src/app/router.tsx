@@ -1,11 +1,12 @@
-import { lazy, Suspense } from "react";
-import { Navigate, Route, Routes } from "react-router";
-import { Spin } from "antd";
-import { useCan } from "@/features/auth/hooks";
-import { RequireAuth } from "./guards/RequireAuth";
-import { RequirePermission } from "./guards/RequirePermission";
-import { AppLayout } from "./layout/AppLayout";
-import { allowedNav } from "./layout/nav";
+import { lazy, Suspense } from 'react';
+import { Navigate, Route, Routes } from 'react-router';
+import { useCan } from '@/features/auth/hooks';
+import { FullPageSpin } from '@/shared/ui/FullPageSpin';
+import { RedirectIfAuthed } from './guards/RedirectIfAuthed';
+import { RequireAuth } from './guards/RequireAuth';
+import { RequirePermission } from './guards/RequirePermission';
+import { AppLayout } from './layout/AppLayout';
+import { allowedNav } from './layout/nav';
 
 /**
  * Sahifalar talab bo'yicha yuklanadi. Login qilayotgan odamga xodimlar
@@ -13,31 +14,23 @@ import { allowedNav } from "./layout/nav";
  * sahifalarni umuman ko'rmaydi.
  */
 const LoginPage = lazy(() =>
-  import("@/features/auth/LoginPage").then((m) => ({ default: m.LoginPage })),
+  import('@/features/auth/LoginPage').then((m) => ({ default: m.LoginPage })),
 );
 const ChangePasswordPage = lazy(() =>
-  import("@/features/auth/ChangePasswordPage").then((m) => ({
+  import('@/features/auth/ChangePasswordPage').then((m) => ({
     default: m.ChangePasswordPage,
   })),
 );
 const MembersPage = lazy(() =>
-  import("@/features/members/MembersPage").then((m) => ({
+  import('@/features/members/MembersPage').then((m) => ({
     default: m.MembersPage,
   })),
 );
 const OrganizationPage = lazy(() =>
-  import("@/features/organization/OrganizationPage").then((m) => ({
+  import('@/features/organization/OrganizationPage').then((m) => ({
     default: m.OrganizationPage,
   })),
 );
-
-function Loading() {
-  return (
-    <div className="flex min-h-full items-center justify-center">
-      <Spin size="large" />
-    </div>
-  );
-}
 
 /**
  * Bosh sahifa qat'iy emas: foydalanuvchi o'ziga ochiq BIRINCHI bo'limga
@@ -47,14 +40,16 @@ function Loading() {
 function HomeRedirect() {
   const can = useCan();
   const first = allowedNav(can)[0];
-  return <Navigate to={first?.path ?? "/organization"} replace />;
+  return <Navigate to={first?.path ?? '/organization'} replace />;
 }
 
 export function AppRouter() {
   return (
-    <Suspense fallback={<Loading />}>
+    <Suspense fallback={<FullPageSpin />}>
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
+        <Route element={<RedirectIfAuthed />}>
+          <Route path="/login" element={<LoginPage />} />
+        </Route>
         <Route element={<RequireAuth />}>
           {/* Parol almashtirish LAYOUTDAN TASHQARIDA: bu sahifaga
               majburan yuborilgan foydalanuvchi uchun menyu ochilmaydi. */}

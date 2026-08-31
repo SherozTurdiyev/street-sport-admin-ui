@@ -1,6 +1,6 @@
-import { Spin } from 'antd';
 import { Navigate, Outlet, useLocation } from 'react-router';
 import { useAuth } from '@/features/auth/hooks';
+import { FullPageSpin } from '@/shared/ui/FullPageSpin';
 
 const CHANGE_PASSWORD = '/change-password';
 
@@ -11,13 +11,7 @@ export function RequireAuth() {
   // Uchinchi holat shu yerda kerak bo'ladi: `loading` paytida login
   // sahifasiga yubormaslik kerak, aks holda sahifa har yangilanganda
   // login bir lahza chaqnab o'tardi.
-  if (status === 'loading') {
-    return (
-      <div className="flex min-h-full items-center justify-center">
-        <Spin size="large" />
-      </div>
-    );
-  }
+  if (status === 'loading') return <FullPageSpin />;
 
   if (status === 'anon') {
     // Qayerga bormoqchi bo'lgani eslab qolinadi — kirgach o'sha yerga

@@ -8,7 +8,8 @@ const NONE = '—';
 export function OrganizationPage() {
   const { data, isPending, error } = useOrganization();
 
-  if (error) return <Alert type="error" showIcon message={errorMessage(error)} />;
+  if (error)
+    return <Alert type="error" showIcon message={errorMessage(error)} />;
   if (isPending) return <Skeleton active />;
 
   return (

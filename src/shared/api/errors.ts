@@ -6,7 +6,8 @@ export type ApiError = {
   status: number;
 };
 
-const UNKNOWN = "Kutilmagan xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring.";
+const UNKNOWN =
+  "Kutilmagan xatolik yuz berdi. Iltimos, qaytadan urinib ko'ring.";
 
 /**
  * Frontend xato MATNINI o'ylab topmaydi: backend `message` ni o'zbek

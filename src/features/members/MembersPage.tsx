@@ -1,40 +1,40 @@
-import { useState } from "react";
-import { Alert, Card, Input, Select, Space, Table, Tag } from "antd";
-import type { ColumnsType } from "antd/es/table";
-import { errorMessage } from "@/shared/api/error-handler";
-import { DEFAULT_PAGE_SIZE, ROLE_LABELS } from "@/shared/api/types";
-import { formatDateTime } from "@/shared/format/time";
-import type { Member, MemberRole, MembersQuery } from "./api";
-import { useMembers } from "./hooks";
+import { useState } from 'react';
+import { Alert, Card, Input, Select, Space, Table, Tag } from 'antd';
+import type { ColumnsType } from 'antd/es/table';
+import { errorMessage } from '@/shared/api/error-handler';
+import { DEFAULT_PAGE_SIZE, ROLE_LABELS } from '@/shared/api/types';
+import { formatDateTime } from '@/shared/format/time';
+import type { Member, MemberRole, MembersQuery } from './api';
+import { useMembers } from './hooks';
 
 const ROLE_OPTIONS: { value: MemberRole; label: string }[] = [
-  { value: "DIRECTOR", label: ROLE_LABELS.DIRECTOR },
-  { value: "MANAGER", label: ROLE_LABELS.MANAGER },
-  { value: "VENUE_ADMIN", label: ROLE_LABELS.VENUE_ADMIN },
+  { value: 'DIRECTOR', label: ROLE_LABELS.DIRECTOR },
+  { value: 'MANAGER', label: ROLE_LABELS.MANAGER },
+  { value: 'VENUE_ADMIN', label: ROLE_LABELS.VENUE_ADMIN },
 ];
 
 const STATUS_OPTIONS = [
-  { value: true, label: "Faol" },
-  { value: false, label: "Faolsiz" },
+  { value: true, label: 'Faol' },
+  { value: false, label: 'Faolsiz' },
 ];
 
 const columns: ColumnsType<Member> = [
-  { title: "Ism", dataIndex: "fullName" },
-  { title: "Telefon", dataIndex: "phone" },
+  { title: 'Ism', dataIndex: 'fullName' },
+  { title: 'Telefon', dataIndex: 'phone' },
   {
-    title: "Lavozim",
-    dataIndex: "role",
+    title: 'Lavozim',
+    dataIndex: 'role',
     render: (value: MemberRole) => ROLE_LABELS[value],
   },
   {
-    title: "Holat",
-    dataIndex: "isActive",
+    title: 'Holat',
+    dataIndex: 'isActive',
     render: (value: boolean) =>
       value ? <Tag color="green">Faol</Tag> : <Tag>Faolsiz</Tag>,
   },
   {
-    title: "Oxirgi kirish",
-    dataIndex: "lastLoginAt",
+    title: 'Oxirgi kirish',
+    dataIndex: 'lastLoginAt',
     render: (value: string | null) => formatDateTime(value),
   },
 ];

@@ -5,7 +5,12 @@ import userEvent from '@testing-library/user-event';
 import { Route, Routes } from 'react-router';
 import { server } from '@/test/msw';
 import { renderApp } from '@/test/render';
-import { API, DIRECTOR_ME, anonHandlers, authedHandlers } from '@/test/handlers';
+import {
+  API,
+  DIRECTOR_ME,
+  anonHandlers,
+  authedHandlers,
+} from '@/test/handlers';
 import { setAccessToken } from '@/shared/api/token';
 import { RequireAuth } from '@/app/guards/RequireAuth';
 import { LoginPage } from './LoginPage';
@@ -46,7 +51,8 @@ describe('Login sahifasi', () => {
         HttpResponse.json(
           {
             code: 'AUTH_ACCOUNT_LOCKED',
-            message: "Hisob vaqtincha bloklangan. Bir oz kutib, qaytadan urinib ko'ring.",
+            message:
+              "Hisob vaqtincha bloklangan. Bir oz kutib, qaytadan urinib ko'ring.",
           },
           { status: 423 },
         ),
@@ -75,7 +81,9 @@ describe('Login sahifasi', () => {
 
     await userEvent.click(screen.getByRole('button', { name: 'Kirish' }));
 
-    expect(await screen.findByText('Telefon raqamini kiriting')).toBeInTheDocument();
+    expect(
+      await screen.findByText('Telefon raqamini kiriting'),
+    ).toBeInTheDocument();
     expect(calls).toBe(0);
   });
 });
@@ -93,9 +101,7 @@ describe('Parol almashtirish majburiyati', () => {
 
   it('vaqtinchalik parolli foydalanuvchi boshqa sahifaga o`ta olmaydi', async () => {
     setAccessToken(null);
-    server.use(
-      ...authedHandlers({ ...DIRECTOR_ME, mustChangePassword: true }),
-    );
+    server.use(...authedHandlers({ ...DIRECTOR_ME, mustChangePassword: true }));
     renderApp(routes, { route: '/members' });
 
     expect(await screen.findByText('Parolni almashtiring')).toBeInTheDocument();
@@ -122,14 +128,24 @@ describe('Parol almashtirish majburiyati', () => {
     setAccessToken(null);
     server.use(
       ...authedHandlers({ ...DIRECTOR_ME, mustChangePassword: true }),
-      http.post(`${API}/auth/change-password`, () => HttpResponse.json({ success: true })),
-      http.post(`${API}/auth/logout`, () => HttpResponse.json({ success: true })),
+      http.post(`${API}/auth/change-password`, () =>
+        HttpResponse.json({ success: true }),
+      ),
+      http.post(`${API}/auth/logout`, () =>
+        HttpResponse.json({ success: true }),
+      ),
     );
     renderApp(routes, { route: '/change-password' });
 
-    await userEvent.type(await screen.findByLabelText('Joriy parol'), 'Vaqtinchalik1');
+    await userEvent.type(
+      await screen.findByLabelText('Joriy parol'),
+      'Vaqtinchalik1',
+    );
     await userEvent.type(screen.getByLabelText('Yangi parol'), 'YangiParol123');
-    await userEvent.type(screen.getByLabelText('Yangi parolni takrorlang'), 'YangiParol123');
+    await userEvent.type(
+      screen.getByLabelText('Yangi parolni takrorlang'),
+      'YangiParol123',
+    );
     await userEvent.click(screen.getByRole('button', { name: 'Saqlash' }));
 
     expect(await screen.findByText('Parol almashtirildi')).toBeInTheDocument();
@@ -148,9 +164,15 @@ describe('Parol almashtirish majburiyati', () => {
     );
     renderApp(routes, { route: '/change-password' });
 
-    await userEvent.type(await screen.findByLabelText('Joriy parol'), 'Parol123!');
+    await userEvent.type(
+      await screen.findByLabelText('Joriy parol'),
+      'Parol123!',
+    );
     await userEvent.type(screen.getByLabelText('Yangi parol'), 'YangiParol123');
-    await userEvent.type(screen.getByLabelText('Yangi parolni takrorlang'), 'Boshqacha123');
+    await userEvent.type(
+      screen.getByLabelText('Yangi parolni takrorlang'),
+      'Boshqacha123',
+    );
     await userEvent.click(screen.getByRole('button', { name: 'Saqlash' }));
 
     expect(await screen.findByText('Parollar mos kelmadi')).toBeInTheDocument();

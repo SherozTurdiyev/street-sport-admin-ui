@@ -15,9 +15,17 @@ describe('401 va yagona refresh', () => {
       http.get(`${API}/members`, () => {
         calls += 1;
         if (calls === 1) {
-          return HttpResponse.json({ code: 'AUTH_TOKEN_EXPIRED' }, { status: 401 });
+          return HttpResponse.json(
+            { code: 'AUTH_TOKEN_EXPIRED' },
+            { status: 401 },
+          );
         }
-        return HttpResponse.json({ items: [], total: 0, page: 1, pageSize: 20 });
+        return HttpResponse.json({
+          items: [],
+          total: 0,
+          page: 1,
+          pageSize: 20,
+        });
       }),
       http.post(`${API}/auth/refresh`, () =>
         HttpResponse.json({ accessToken: 'yangi' }),
@@ -88,7 +96,10 @@ describe('401 va yagona refresh', () => {
     server.use(
       http.get(`${API}/venues`, () =>
         HttpResponse.json(
-          { code: 'VENUE_ACCESS_DENIED', message: 'Bu stadion sizga biriktirilmagan.' },
+          {
+            code: 'VENUE_ACCESS_DENIED',
+            message: 'Bu stadion sizga biriktirilmagan.',
+          },
           { status: 403 },
         ),
       ),

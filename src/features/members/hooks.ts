@@ -1,9 +1,9 @@
-import { keepPreviousData, useQuery } from "@tanstack/react-query";
-import { membersApi, type MembersQuery } from "./api";
+import { keepPreviousData, useQuery } from '@tanstack/react-query';
+import { membersApi, type MembersQuery } from './api';
 
 export const memberKeys = {
-  all: ["members"] as const,
-  list: (query: MembersQuery) => ["members", "list", query] as const,
+  all: ['members'] as const,
+  list: (query: MembersQuery) => ['members', 'list', query] as const,
 };
 
 export function useMembers(query: MembersQuery) {

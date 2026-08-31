@@ -18,5 +18,8 @@ export function useCan(): (permission: string) => boolean {
     () => new Set(me?.permissions ?? []),
     [me?.permissions],
   );
-  return useMemo(() => (permission: string) => granted.has(permission), [granted]);
+  return useMemo(
+    () => (permission: string) => granted.has(permission),
+    [granted],
+  );
 }

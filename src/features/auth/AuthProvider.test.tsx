@@ -4,7 +4,13 @@ import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { server } from '@/test/msw';
 import { renderApp } from '@/test/render';
-import { API, ADMIN_ME, DIRECTOR_ME, anonHandlers, authedHandlers } from '@/test/handlers';
+import {
+  API,
+  ADMIN_ME,
+  DIRECTOR_ME,
+  anonHandlers,
+  authedHandlers,
+} from '@/test/handlers';
 import { setAccessToken } from '@/shared/api/token';
 import { useAuth, useCan } from './hooks';
 
@@ -16,7 +22,9 @@ function Probe() {
       <span data-testid="status">{status}</span>
       <span data-testid="name">{me?.fullName ?? '-'}</span>
       <span data-testid="can">{String(can('member.admin.manage'))}</span>
-      <button onClick={() => void login('+998901110001', 'Parol123!')}>Kirish</button>
+      <button onClick={() => void login('+998901110001', 'Parol123!')}>
+        Kirish
+      </button>
       <button onClick={() => void logout()}>Chiqish</button>
     </div>
   );
@@ -60,7 +68,14 @@ describe('Auth konteksti', () => {
       http.post(`${API}/auth/login`, () =>
         HttpResponse.json({
           accessToken: 'yangi',
-          user: { id: 'u-1', fullName: 'Anvar Direktorov', phone: '+998901110001', orgId: 'o-1', role: 'DIRECTOR', mustChangePassword: false },
+          user: {
+            id: 'u-1',
+            fullName: 'Anvar Direktorov',
+            phone: '+998901110001',
+            orgId: 'o-1',
+            role: 'DIRECTOR',
+            mustChangePassword: false,
+          },
         }),
       ),
       http.get(`${API}/auth/me`, () => HttpResponse.json(DIRECTOR_ME)),

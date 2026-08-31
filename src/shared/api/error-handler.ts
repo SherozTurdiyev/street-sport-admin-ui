@@ -33,9 +33,7 @@ export function applyServerErrors(
   }
   if (byField.size === 0) return false;
 
-  form.setFields(
-    [...byField].map(([name, errors]) => ({ name, errors })),
-  );
+  form.setFields([...byField].map(([name, errors]) => ({ name, errors })));
   return true;
 }
 

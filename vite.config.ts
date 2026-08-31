@@ -27,7 +27,10 @@ export default defineConfig({
       output: {
         advancedChunks: {
           groups: [
-            { name: 'antd', test: /node_modules[\\/](antd|@ant-design|@rc-component|rc-)/ },
+            {
+              name: 'antd',
+              test: /node_modules[\\/](antd|@ant-design|@rc-component|rc-)/,
+            },
             // Qolgan barcha kutubxonalar: react-query, axios, router,
             // dayjs. Ular ham kamdan-kam o'zgaradi, shuning uchun ilova
             // kodidan ajratilishi kerak — aks holda bitta satr

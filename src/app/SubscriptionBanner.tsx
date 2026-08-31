@@ -1,9 +1,9 @@
-import { useSyncExternalStore } from "react";
-import { Alert } from "antd";
+import { useSyncExternalStore } from 'react';
+import { Alert } from 'antd';
 import {
   subscribeSubscription,
   subscriptionMessage,
-} from "@/shared/api/subscription";
+} from '@/shared/api/subscription';
 
 export function SubscriptionBanner() {
   const text = useSyncExternalStore(subscribeSubscription, subscriptionMessage);

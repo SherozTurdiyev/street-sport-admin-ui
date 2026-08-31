@@ -1,8 +1,8 @@
-import { api } from "@/shared/api/client";
-import type { PageQuery, Paginated, Role } from "@/shared/api/types";
+import { api } from '@/shared/api/client';
+import type { PageQuery, Paginated, Role } from '@/shared/api/types';
 
 /** `SUPER_ADMIN` tashkilot xodimi emas — u ro'yxatda uchramaydi. */
-export type MemberRole = Exclude<Role, "SUPER_ADMIN">;
+export type MemberRole = Exclude<Role, 'SUPER_ADMIN'>;
 
 export type Member = {
   /**
@@ -33,6 +33,6 @@ export const membersApi = {
     // axios `undefined` parametrlarni umuman yubormaydi, shuning uchun
     // bo'sh filtrlar uchun alohida tozalash kerak emas.
     api
-      .get<Paginated<Member>>("/members", { params: query })
+      .get<Paginated<Member>>('/members', { params: query })
       .then((r) => r.data),
 };

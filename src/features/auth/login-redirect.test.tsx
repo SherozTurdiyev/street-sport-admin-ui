@@ -1,0 +1,92 @@
+import { http, HttpResponse } from 'msw';
+import { beforeEach, describe, expect, it } from 'vitest';
+import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
+import { server } from '@/test/msw';
+import { renderApp } from '@/test/render';
+import {
+  API,
+  DIRECTOR_ME,
+  anonHandlers,
+  authedHandlers,
+} from '@/test/handlers';
+import { setAccessToken } from '@/shared/api/token';
+import { AppRouter } from '@/app/router';
+
+const LOGIN_OK = {
+  accessToken: 'token',
+  user: {
+    id: 'u-1',
+    fullName: 'Anvar Direktorov',
+    phone: '+998901110001',
+    orgId: 'o-1',
+    role: 'DIRECTOR',
+    mustChangePassword: false,
+  },
+};
+
+function membersHandler() {
+  return http.get(`${API}/members`, () =>
+    HttpResponse.json({ items: [], total: 0, page: 1, pageSize: 20 }),
+  );
+}
+
+async function kirish() {
+  await userEvent.type(screen.getByLabelText('Telefon'), '+998901110001');
+  await userEvent.type(screen.getByLabelText('Parol'), 'Parol123!');
+  await userEvent.click(screen.getByRole('button', { name: 'Kirish' }));
+}
+
+beforeEach(() => {
+  setAccessToken(null);
+});
+
+describe('Logindan keyingi yo`nalish', () => {
+  it('foydalanuvchi bormoqchi bo`lgan sahifaga qaytaradi', async () => {
+    server.use(
+      ...anonHandlers(),
+      http.post(`${API}/auth/login`, () => HttpResponse.json(LOGIN_OK)),
+      http.get(`${API}/auth/me`, () => HttpResponse.json(DIRECTOR_ME)),
+      membersHandler(),
+    );
+    // `/members` ga kirmoqchi bo'ldi, lekin login sahifasiga tushdi.
+    renderApp(<AppRouter />, { route: '/members' });
+
+    await screen.findByRole('button', { name: 'Kirish' });
+    await kirish();
+
+    expect(await screen.findByRole('table')).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Kirish' }),
+    ).not.toBeInTheDocument();
+  });
+
+  it('to`g`ridan-to`g`ri kirganda bosh sahifaga o`tadi', async () => {
+    server.use(
+      ...anonHandlers(),
+      http.post(`${API}/auth/login`, () => HttpResponse.json(LOGIN_OK)),
+      http.get(`${API}/auth/me`, () => HttpResponse.json(DIRECTOR_ME)),
+      membersHandler(),
+    );
+    renderApp(<AppRouter />, { route: '/login' });
+
+    await screen.findByRole('button', { name: 'Kirish' });
+    await kirish();
+
+    expect(
+      await screen.findByRole('menuitem', { name: 'Xodimlar' }),
+    ).toBeInTheDocument();
+  });
+
+  it('kirgan foydalanuvchiga login formasi ko`rsatilmaydi', async () => {
+    server.use(...authedHandlers(DIRECTOR_ME), membersHandler());
+    renderApp(<AppRouter />, { route: '/login' });
+
+    expect(
+      await screen.findByRole('menuitem', { name: 'Xodimlar' }),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole('button', { name: 'Kirish' }),
+    ).not.toBeInTheDocument();
+  });
+});

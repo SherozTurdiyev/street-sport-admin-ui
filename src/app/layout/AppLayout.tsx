@@ -1,9 +1,9 @@
-import { Button, Layout, Menu, Space, Typography } from "antd";
-import { Link, Outlet, useLocation } from "react-router";
-import { useAuth, useCan } from "@/features/auth/hooks";
-import { ROLE_LABELS } from "@/shared/api/types";
-import { SubscriptionBanner } from "@/app/SubscriptionBanner";
-import { allowedNav } from "./nav";
+import { Button, Layout, Menu, Space, Typography } from 'antd';
+import { Link, Outlet, useLocation } from 'react-router';
+import { useAuth, useCan } from '@/features/auth/hooks';
+import { ROLE_LABELS } from '@/shared/api/types';
+import { SubscriptionBanner } from '@/app/SubscriptionBanner';
+import { allowedNav } from './nav';
 
 const { Header, Sider, Content } = Layout;
 
@@ -35,9 +35,9 @@ export function AppLayout() {
         <Header className="flex items-center justify-end gap-4 bg-white px-6">
           <Space size="middle">
             <span>
-              <Typography.Text strong>{me?.fullName}</Typography.Text>{" "}
+              <Typography.Text strong>{me?.fullName}</Typography.Text>{' '}
               <Typography.Text type="secondary">
-                {me ? ROLE_LABELS[me.role] : ""}
+                {me ? ROLE_LABELS[me.role] : ''}
               </Typography.Text>
             </span>
             {/* Parol almashtirish sahifasiga boshqa kirish yo'li yo'q. */}
