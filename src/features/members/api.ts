@@ -28,6 +28,25 @@ export type MembersQuery = PageQuery & {
   search?: string;
 };
 
+/** `DIRECTOR` bu yerda yaratilmaydi — backend uni rad etadi. */
+export type CreatableRole = Exclude<MemberRole, 'DIRECTOR'>;
+
+export type CreateMemberInput = {
+  fullName: string;
+  phone: string;
+  role: CreatableRole;
+  venueIds: string[];
+};
+
+/**
+ * `temporaryPassword` BIR MARTA qaytadi va boshqa hech qayerdan
+ * olinmaydi: backend faqat uning hash'ini saqlaydi.
+ */
+export type CreatedMember = {
+  member: Member;
+  temporaryPassword: string;
+};
+
 export const membersApi = {
   list: (query: MembersQuery) =>
     // axios `undefined` parametrlarni umuman yubormaydi, shuning uchun
@@ -35,4 +54,7 @@ export const membersApi = {
     api
       .get<Paginated<Member>>('/members', { params: query })
       .then((r) => r.data),
+
+  create: (input: CreateMemberInput) =>
+    api.post<CreatedMember>('/members', input).then((r) => r.data),
 };

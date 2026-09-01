@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Alert, Card, Input, Select, Space, Table, Tag } from 'antd';
+import { Alert, Button, Card, Input, Select, Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { errorMessage } from '@/shared/api/error-handler';
 import { DEFAULT_PAGE_SIZE, ROLE_LABELS } from '@/shared/api/types';
 import { formatDateTime } from '@/shared/format/time';
 import type { Member, MemberRole, MembersQuery } from './api';
+import { MemberFormModal } from './MemberFormModal';
 import { useMembers } from './hooks';
 
 const ROLE_OPTIONS: { value: MemberRole; label: string }[] = [
@@ -44,6 +45,7 @@ export function MembersPage() {
     page: 1,
     pageSize: DEFAULT_PAGE_SIZE,
   });
+  const [formOpen, setFormOpen] = useState(false);
   const { data, isFetching, error } = useMembers(query);
 
   /**
@@ -56,7 +58,14 @@ export function MembersPage() {
   }
 
   return (
-    <Card title="Xodimlar">
+    <Card
+      title="Xodimlar"
+      extra={
+        <Button type="primary" onClick={() => setFormOpen(true)}>
+          Yangi xodim
+        </Button>
+      }
+    >
       <Space className="mb-4" wrap>
         <Input.Search
           aria-label="Qidiruv"
@@ -65,7 +74,7 @@ export function MembersPage() {
           onSearch={(value) => setFilter({ search: value || undefined })}
         />
         <Select
-          aria-label="Lavozim"
+          aria-label="Lavozim bo'yicha filtr"
           className="w-44"
           placeholder="Lavozim"
           allowClear
@@ -74,7 +83,7 @@ export function MembersPage() {
           onChange={(value?: MemberRole) => setFilter({ role: value })}
         />
         <Select
-          aria-label="Holat"
+          aria-label="Holat bo'yicha filtr"
           className="w-36"
           placeholder="Holat"
           allowClear
@@ -114,6 +123,8 @@ export function MembersPage() {
           }))
         }
       />
+
+      <MemberFormModal open={formOpen} onClose={() => setFormOpen(false)} />
     </Card>
   );
 }

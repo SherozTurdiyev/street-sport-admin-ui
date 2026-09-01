@@ -19,6 +19,21 @@ window.matchMedia ??= ((query: string) => ({
   dispatchEvent: () => false,
 })) as unknown as typeof window.matchMedia;
 
+/**
+ * jsdom `ResizeObserver` ni ham amalga oshirmaydi. antd ning `Select`
+ * va `Modal` komponentlari o'lchamni kuzatadi, shuning uchun usiz ular
+ * umuman chizilmaydi. Kuzatuv testda hech narsaga ta'sir qilmaydi:
+ * o'lcham o'zgarmaydi.
+ */
+class ResizeObserverStub {
+  observe() {}
+  unobserve() {}
+  disconnect() {}
+}
+
+globalThis.ResizeObserver ??=
+  ResizeObserverStub as unknown as typeof ResizeObserver;
+
 // Kutilmagan so'rov testni yiqitadi: mock qilinmagan endpoint jimgina
 // osilib qolgandan ko'ra, darhol ko'rinishi kerak.
 beforeAll(() => server.listen({ onUnhandledRequest: 'error' }));

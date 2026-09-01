@@ -17,7 +17,15 @@ import { describe, expect, it } from 'vitest';
 const SRC = join(process.cwd(), 'src');
 
 const RULES: readonly { re: RegExp; xato: string }[] = [
-  { re: /\brole\s*(?:===|!==|==|!=)/, xato: 'rolni solishtirish' },
+  // `undefined` va `null` ATAYLAB chiqarib tashlangan: ular qaysi rol
+  // ekanini so'ramaydi, faqat qiymat bor-yo'qligini tekshiradi. Qoidaning
+  // maqsadi — rol TURI bo'yicha shoxlanishni to'sish.
+  {
+    // `(?!=)` shart: usiz `!=` shoxi `!==` ning boshini yeb qo'yadi va
+    // undefined tekshiruvi ushlanib qolardi.
+    re: /\brole\s*(?:===|!==|==|!=)(?!=)(?!\s*(?:undefined|null)\b)/,
+    xato: 'rolni solishtirish',
+  },
   {
     re: /(?:===|!==|==|!=)\s*['"](?:SUPER_ADMIN|DIRECTOR|MANAGER|VENUE_ADMIN)['"]/,
     xato: 'rol qiymati bilan solishtirish',

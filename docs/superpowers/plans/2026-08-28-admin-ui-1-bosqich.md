@@ -620,24 +620,24 @@ ulanadi — nomlar backend bilan bir xil.
 
 **Fayllar:** `src/features/members/MemberFormModal.tsx`
 
-- [ ] **11.1** Test: yaratilgach vaqtinchalik parol ko'rinadi
+- [x] **11.1** Test: yaratilgach vaqtinchalik parol ko'rinadi
 
 ```ts
 expect(await screen.findByText('USNViPUQm5')).toBeInTheDocument();
 ```
 
-- [ ] **11.2** Test: `VENUE_ADMIN` tanlansa stadion maydoni majburiy
+- [x] **11.2** Test: `VENUE_ADMIN` tanlansa stadion maydoni majburiy
       bo'ladi; serverdan `MEMBER_VENUE_REQUIRED` kelsa xabar ko'rinadi
 
-- [ ] **11.3** Forma va parol oynasini yozish
+- [x] **11.3** Forma va parol oynasini yozish
 
 Vaqtinchalik parol **bir marta** qaytadi. Oyna uni nusxalash tugmasi
 bilan ko'rsatadi va yopilgach qayta ochib bo'lmaydi — buni foydalanuvchiga
 aniq aytish kerak.
 
-- [ ] **11.4** Testlar o'tadi
+- [x] **11.4** Testlar o'tadi
 
-- [ ] **11.5** Commit: `feat: xodim yaratish`
+- [x] **11.5** Commit: `feat: xodim yaratish`
 
 ---
 
