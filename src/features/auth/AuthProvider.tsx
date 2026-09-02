@@ -74,9 +74,17 @@ export function AuthProvider({ children }: PropsWithChildren) {
     setMe(await authApi.me());
   }, []);
 
+  /**
+   * `PATCH /auth/me` javobi `GET /auth/me` bilan bir xil, shuning uchun
+   * qo'shimcha so'rov kerak emas — holat to'g'ridan-to'g'ri almashadi.
+   */
+  const applyMe = useCallback((next: Me) => {
+    setMe(next);
+  }, []);
+
   const value = useMemo<AuthValue>(
-    () => ({ status, me, login, logout, reloadMe }),
-    [status, me, login, logout, reloadMe],
+    () => ({ status, me, login, logout, reloadMe, applyMe }),
+    [status, me, login, logout, reloadMe, applyMe],
   );
 
   return <AuthContext value={value}>{children}</AuthContext>;

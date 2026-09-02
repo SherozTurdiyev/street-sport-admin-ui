@@ -31,6 +31,10 @@ export const authApi = {
 
   me: () => api.get<Me>('/auth/me').then((r) => r.data),
 
+  /** Javob `GET /auth/me` bilan aynan bir xil — qayta so'rash kerak emas. */
+  updateProfile: (input: { fullName?: string; phone?: string }) =>
+    api.patch<Me>('/auth/me', input).then((r) => r.data),
+
   logout: () => api.post('/auth/logout').then(() => undefined),
 
   /** Barcha qurilmalardagi sessiyalarni yopadi. */

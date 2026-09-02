@@ -146,7 +146,9 @@ describe('Parol almashtirish majburiyati', () => {
       screen.getByLabelText('Yangi parolni takrorlang'),
       'YangiParol123',
     );
-    await userEvent.click(screen.getByRole('button', { name: 'Parolni yangilash' }));
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Parolni yangilash' }),
+    );
 
     expect(await screen.findByText('Parol almashtirildi')).toBeInTheDocument();
     expect(screen.getByText(/sessiyalar yopildi/)).toBeInTheDocument();
@@ -173,7 +175,9 @@ describe('Parol almashtirish majburiyati', () => {
       screen.getByLabelText('Yangi parolni takrorlang'),
       'Boshqacha123',
     );
-    await userEvent.click(screen.getByRole('button', { name: 'Parolni yangilash' }));
+    await userEvent.click(
+      screen.getByRole('button', { name: 'Parolni yangilash' }),
+    );
 
     expect(await screen.findByText('Parollar mos kelmadi')).toBeInTheDocument();
     expect(calls).toBe(0);

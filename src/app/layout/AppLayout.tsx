@@ -48,7 +48,7 @@ export function AppLayout() {
   const current = nav.find((item) => item.path === selected[0]);
 
   return (
-    <Layout className="min-h-full">
+    <Layout className="min-h-screen">
       <Sider
         width={figma.siderWidth}
         breakpoint="lg"

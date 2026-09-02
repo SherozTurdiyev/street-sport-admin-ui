@@ -15,6 +15,8 @@ export type AuthValue = {
   login: (phone: string, password: string) => Promise<void>;
   logout: () => Promise<void>;
   reloadMe: () => Promise<void>;
+  /** Serverdan kelgan yangi profilni holatga qo'yadi. */
+  applyMe: (next: Me) => void;
 };
 
 export const AuthContext = createContext<AuthValue | null>(null);

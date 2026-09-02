@@ -47,14 +47,47 @@ describe('Profil', () => {
       await screen.findByRole('link', { name: /Anvar Direktorov/ }),
     );
 
-    // Telefon yon panelda ham turibdi, shuning uchun aynan kartochka
-    // ichida qidiriladi.
-    const kartochka = within(
-      (await screen.findByText("Shaxsiy ma'lumotlar")).closest(
-        '.ant-card',
-      ) as HTMLElement,
+    // Endi bu maydonlar tahrirlanadi — matn emas, forma qiymati.
+    expect(await screen.findByLabelText('Ism va familiya')).toHaveValue(
+      'Anvar Direktorov',
     );
-    expect(kartochka.getByText('+998901110001')).toBeInTheDocument();
+    expect(screen.getByLabelText('Telefon')).toHaveValue('+998901110001');
+  });
+
+  it('ism va telefonni saqlaydi', async () => {
+    let yuborilgan: unknown = null;
+    server.use(
+      ...baseHandlers(),
+      http.patch(`${API}/auth/me`, async ({ request }) => {
+        yuborilgan = await request.json();
+        return HttpResponse.json({
+          ...DIRECTOR_ME,
+          fullName: 'Anvar Yangi',
+          phone: '+998901119999',
+        });
+      }),
+    );
+    renderApp(<AppRouter />, { route: '/profile' });
+
+    const ism = await screen.findByLabelText('Ism va familiya');
+    await userEvent.clear(ism);
+    await userEvent.type(ism, 'Anvar Yangi');
+    const tel = screen.getByLabelText('Telefon');
+    await userEvent.clear(tel);
+    await userEvent.type(tel, '+998901119999');
+    await userEvent.click(screen.getByRole('button', { name: 'Saqlash' }));
+
+    expect(await screen.findByText(/saqlandi/i)).toBeInTheDocument();
+    expect(yuborilgan).toEqual({
+      fullName: 'Anvar Yangi',
+      phone: '+998901119999',
+    });
+
+    // Javob `me` bilan bir xil, shuning uchun yon paneldagi ism ham
+    // qo'shimcha so'rovsiz yangilanadi.
+    expect(
+      await screen.findByRole('link', { name: /Anvar Yangi/ }),
+    ).toBeInTheDocument();
   });
 
   it('profildan parol almashtiriladi', async () => {

@@ -5,7 +5,6 @@ import {
   Avatar,
   Button,
   Card,
-  Descriptions,
   Popconfirm,
   Space,
   Tag,
@@ -15,6 +14,7 @@ import { errorMessage } from '@/shared/api/error-handler';
 import { ROLE_LABELS } from '@/shared/api/types';
 import { figma } from '@/shared/theme/tokens';
 import { authApi } from './api';
+import { ProfileForm } from './ProfileForm';
 import { ChangePasswordForm } from './ChangePasswordForm';
 import { useAuth } from './hooks';
 
@@ -66,29 +66,7 @@ export function ProfilePage() {
 
       <div className="grid gap-6 lg:grid-cols-2">
         <Card title="Shaxsiy ma'lumotlar">
-          <Descriptions column={1} size="small">
-            <Descriptions.Item label="Ism va familiya">
-              {me.fullName}
-            </Descriptions.Item>
-            <Descriptions.Item label="Telefon">{me.phone}</Descriptions.Item>
-            <Descriptions.Item label="Lavozim">
-              {ROLE_LABELS[me.role]}
-            </Descriptions.Item>
-          </Descriptions>
-
-          {/*
-            Tahrirlash tugmasi ATAYLAB yo'q: backendda foydalanuvchi o'z
-            ismini yoki telefonini o'zgartiradigan endpoint mavjud emas.
-            Ishlamaydigan tugma qo'yish uni bor deb o'ylashga majbur
-            qilardi.
-          */}
-          <Alert
-            className="!mt-4"
-            type="info"
-            showIcon
-            message="Ma'lumotlarni tashkilot administratori o'zgartiradi"
-            description="Ism yoki telefonni o'zgartirish kerak bo'lsa, direktor yoki menejerga murojaat qiling."
-          />
+          <ProfileForm />
         </Card>
 
         <Card title="Xavfsizlik">
