@@ -52,6 +52,16 @@ export const CANCEL_REASON_LABELS = {
 
 export type CancelReason = keyof typeof CANCEL_REASON_LABELS;
 
+/**
+ * Ro'yxat elementi bron obyektidan ikkita bog'lanishga boy: stadion va
+ * mijoz nomlari. Jadvalda ular bo'lmasa mijoz `customerId` bo'lib
+ * ko'rinardi.
+ */
+export type BookingListItem = Booking & {
+  venue: { id: string; name: string };
+  customer: { id: string; fullName: string; phone: string } | null;
+};
+
 export type BookingsQuery = PageQuery & {
   search?: string;
   status?: BookingStatus;
@@ -160,7 +170,7 @@ export type BookingResult = 'COMPLETED' | 'NO_SHOW';
 export const bookingsApi = {
   search: (query: BookingsQuery) =>
     api
-      .get<Paginated<Booking>>('/bookings', { params: query })
+      .get<Paginated<BookingListItem>>('/bookings', { params: query })
       .then((r) => r.data),
 
   todayPanel: () =>

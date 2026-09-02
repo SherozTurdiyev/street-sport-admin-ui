@@ -400,3 +400,52 @@ describe('Bron kartochkasi', () => {
     });
   });
 });
+
+describe('Bronlar ro`yxati', () => {
+  const QATOR = {
+    ...BRON,
+    venue: { id: 'v-1', name: 'Chilonzor Arena' },
+    customer: {
+      id: 'c-1',
+      fullName: 'Alisher Rahimov',
+      phone: '+998901112233',
+    },
+  };
+
+  function royxatHandlers() {
+    return [
+      http.get(`${API}/bookings`, ({ request }) => {
+        soralgan.push(new URL(request.url));
+        return HttpResponse.json({
+          items: [QATOR],
+          total: 1,
+          page: 1,
+          pageSize: 20,
+        });
+      }),
+      ...baseHandlers(),
+    ];
+  }
+
+  it('mijoz va stadion nomlari bilan chiziladi', async () => {
+    server.use(...royxatHandlers());
+    renderApp(<AppRouter />, { route: '/bookings?tab=list' });
+
+    const jadval = within(await screen.findByRole('table'));
+    expect(await jadval.findByText('Alisher Rahimov')).toBeInTheDocument();
+    expect(jadval.getByText('Chilonzor Arena')).toBeInTheDocument();
+    // Telefon maskada, pul esa ajratilgan holda.
+    expect(jadval.getByText('+998 (90) 111-22-33')).toBeInTheDocument();
+    expect(jadval.getByText("300 000 so'm")).toBeInTheDocument();
+  });
+
+  it('qidiruv so`rovga tushadi', async () => {
+    server.use(...royxatHandlers());
+    renderApp(<AppRouter />, { route: '/bookings?tab=list' });
+    await screen.findByRole('table');
+
+    await userEvent.type(screen.getByLabelText('Qidiruv'), 'Alisher{Enter}');
+
+    expect(soralgan.at(-1)?.searchParams.get('search')).toBe('Alisher');
+  });
+});

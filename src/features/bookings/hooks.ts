@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
 import {
   bookingsApi,
   type BookingResult,
@@ -18,6 +23,14 @@ export const bookingKeys = {
     ['bookings', 'calendar', date, venueIds] as const,
   card: (id: string) => ['bookings', 'card', id] as const,
 };
+
+export function useBookings(query: BookingsQuery) {
+  return useQuery({
+    queryKey: bookingKeys.search(query),
+    queryFn: () => bookingsApi.search(query),
+    placeholderData: keepPreviousData,
+  });
+}
 
 /** Bitta stadionning bitta kuni — panjara va kunlik ko'rsatkichlar uchun. */
 export function useDayCalendar(date: string, venueId: string) {
