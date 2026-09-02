@@ -31,6 +31,24 @@ function membersHandler() {
   );
 }
 
+function organizationHandler() {
+  return http.get(`${API}/organizations/current`, () =>
+    HttpResponse.json({
+      id: 'o-1',
+      name: 'Neon Sports Group',
+      logoUrl: null,
+      phone: null,
+      address: null,
+      timezone: 'Asia/Tashkent',
+      currency: 'UZS',
+      subscriptionStatus: 'ACTIVE',
+      subscriptionEndsAt: null,
+      createdAt: '2026-01-01T00:00:00.000Z',
+      updatedAt: '2026-01-01T00:00:00.000Z',
+    }),
+  );
+}
+
 async function kirish() {
   await userEvent.type(screen.getByLabelText('Telefon'), '+998901110001');
   await userEvent.type(screen.getByLabelText('Parol'), 'Parol123!');
@@ -67,6 +85,7 @@ describe('Logindan keyingi yo`nalish', () => {
       http.post(`${API}/auth/login`, () => HttpResponse.json(LOGIN_OK)),
       http.get(`${API}/auth/me`, () => HttpResponse.json(DIRECTOR_ME)),
       membersHandler(),
+      organizationHandler(),
     );
     renderApp(<AppRouter />, { route: '/login' });
 
@@ -78,8 +97,33 @@ describe('Logindan keyingi yo`nalish', () => {
     ).toBeInTheDocument();
   });
 
+  it('parol almashtirish sahifasiga QAYTARMAYDI', async () => {
+    server.use(
+      ...anonHandlers(),
+      http.post(`${API}/auth/login`, () => HttpResponse.json(LOGIN_OK)),
+      http.get(`${API}/auth/me`, () => HttpResponse.json(DIRECTOR_ME)),
+      membersHandler(),
+      organizationHandler(),
+    );
+    // Parol almashgach backend barcha sessiyalarni yopadi va foydalanuvchi
+    // aynan shu sahifada turib login sahifasiga tushadi. U bu yerga o'zi
+    // bormagan — qaytarilishi kerak bo'lgan manzil emas.
+    renderApp(<AppRouter />, { route: '/change-password' });
+
+    await screen.findByRole('button', { name: 'Kirish' });
+    await kirish();
+
+    // Bosh sahifaga tushadi — ya'ni birinchi ochiq bo'limga.
+    expect(await screen.findByText('Neon Sports Group')).toBeInTheDocument();
+    expect(screen.queryByLabelText('Joriy parol')).not.toBeInTheDocument();
+  });
+
   it('kirgan foydalanuvchiga login formasi ko`rsatilmaydi', async () => {
-    server.use(...authedHandlers(DIRECTOR_ME), membersHandler());
+    server.use(
+      ...authedHandlers(DIRECTOR_ME),
+      membersHandler(),
+      organizationHandler(),
+    );
     renderApp(<AppRouter />, { route: '/login' });
 
     expect(

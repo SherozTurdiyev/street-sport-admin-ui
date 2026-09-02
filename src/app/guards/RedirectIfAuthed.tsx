@@ -1,6 +1,7 @@
 import { Navigate, Outlet, useLocation } from 'react-router';
 import { useAuth } from '@/features/auth/hooks';
 import { FullPageSpin } from '@/shared/ui/FullPageSpin';
+import { returnPath } from './return-path';
 
 /**
  * Login sahifasi kirgan foydalanuvchiga ko'rsatilmaydi.
@@ -21,8 +22,7 @@ export function RedirectIfAuthed() {
   if (status === 'authed') {
     // `RequireAuth` qayerga bormoqchi bo'lganini shu yerda qoldiradi.
     const from = (location.state as { from?: string } | null)?.from;
-    // `/login` ning o'zi kelib qolsa cheksiz halqa bo'lardi.
-    return <Navigate to={from && from !== '/login' ? from : '/'} replace />;
+    return <Navigate to={returnPath(from)} replace />;
   }
 
   return <Outlet />;
