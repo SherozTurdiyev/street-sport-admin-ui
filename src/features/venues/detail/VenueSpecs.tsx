@@ -1,4 +1,5 @@
 import { Descriptions } from 'antd';
+import { displayPhone } from '@/shared/format/phone';
 import { formatDateTime } from '@/shared/format/time';
 import { formatMoney } from '@/shared/format/money';
 import type { VenueDetail } from '../api';
@@ -33,7 +34,7 @@ export function VenueSpecs({
         {venue.slotMinutes} daqiqa
       </Descriptions.Item>
       <Descriptions.Item label="Aloqa">
-        {venue.contactPhone ?? '—'}
+        {displayPhone(venue.contactPhone)}
       </Descriptions.Item>
       <Descriptions.Item label="Qulayliklar">
         {venue.amenities.length === 0
