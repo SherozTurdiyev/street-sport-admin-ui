@@ -29,6 +29,20 @@ export const ADMIN_ME = {
   permissions: ['booking.create', 'customer.manage'],
 };
 
+/**
+ * Platforma xodimi: `orgId` YO'Q va ruxsatlar ro'yxati bo'sh. Bu backend
+ * qarori (TZ 4.2) — uning amallari alohida platforma endpoint'larida.
+ */
+export const SUPER_ADMIN_ME = {
+  userId: 'u-0',
+  orgId: null,
+  role: 'SUPER_ADMIN',
+  fullName: 'Platforma Egasi',
+  phone: '+998901110000',
+  mustChangePassword: false,
+  permissions: [],
+};
+
 /** Kirgan foydalanuvchi: refresh ham, `/auth/me` ham muvaffaqiyatli. */
 export function authedHandlers(me: object = DIRECTOR_ME) {
   return [

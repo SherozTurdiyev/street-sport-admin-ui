@@ -23,6 +23,12 @@ export type NavItem = {
    * bo'lib qoladi va faqat ma'lumot jadvali bo'lib xizmat qiladi.
    */
   icon: NavIcon;
+  /**
+   * Ruxsat yetarli emas: platforma xodimida `orgId` YO'Q va tashkilot
+   * ma'lumotini so'rasa backend haqli ravishda `NOT_FOUND` qaytaradi.
+   * Platforma bo'limlari qo'shilganda ular `false` bilan keladi.
+   */
+  requiresOrg: boolean;
 };
 
 export const NAV: readonly NavItem[] = [
@@ -31,17 +37,24 @@ export const NAV: readonly NavItem[] = [
     permission: null,
     label: 'Tashkilot',
     icon: ShopOutlined,
+    requiresOrg: true,
   },
   {
     path: '/members',
     permission: 'member.admin.manage',
     label: 'Xodimlar',
     icon: TeamOutlined,
+    requiresOrg: true,
   },
 ];
 
 export function allowedNav(
   can: (permission: string) => boolean,
+  hasOrg: boolean,
 ): readonly NavItem[] {
-  return NAV.filter((item) => item.permission === null || can(item.permission));
+  return NAV.filter(
+    (item) =>
+      (!item.requiresOrg || hasOrg) &&
+      (item.permission === null || can(item.permission)),
+  );
 }

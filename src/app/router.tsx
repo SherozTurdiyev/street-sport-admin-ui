@@ -1,7 +1,8 @@
 import { lazy, Suspense } from 'react';
-import { Navigate, Route, Routes } from 'react-router';
-import { useCan } from '@/features/auth/hooks';
+import { Navigate, Outlet, Route, Routes } from 'react-router';
+import { useCan, useHasOrg } from '@/features/auth/hooks';
 import { FullPageSpin } from '@/shared/ui/FullPageSpin';
+import { NoSectionsPage } from '@/shared/ui/NoSectionsPage';
 import { RedirectIfAuthed } from './guards/RedirectIfAuthed';
 import { RequireAuth } from './guards/RequireAuth';
 import { RequirePermission } from './guards/RequirePermission';
@@ -36,11 +37,21 @@ const OrganizationPage = lazy(() =>
  * Bosh sahifa qat'iy emas: foydalanuvchi o'ziga ochiq BIRINCHI bo'limga
  * tushadi. Aks holda administrator har kirganda "ruxsat yo'q" sahifasini
  * ko'rardi.
+ *
+ * Birorta bo'lim ochiq bo'lmasa qat'iy manzilga yuborilmaydi: platforma
+ * xodimini `/organization` ga tashlash uni ishlamaydigan sahifaga olib
+ * borardi.
  */
 function HomeRedirect() {
   const can = useCan();
-  const first = allowedNav(can)[0];
-  return <Navigate to={first?.path ?? '/organization'} replace />;
+  const hasOrg = useHasOrg();
+  const first = allowedNav(can, hasOrg)[0];
+  return first ? <Navigate to={first.path} replace /> : <NoSectionsPage />;
+}
+
+/** Tashkilot bo'limlari a'zolik talab qiladi — manzil qo'lda yozilsa ham. */
+function RequireOrg() {
+  return useHasOrg() ? <Outlet /> : <NoSectionsPage />;
 }
 
 export function AppRouter() {
@@ -56,11 +67,13 @@ export function AppRouter() {
           <Route path="/change-password" element={<ChangePasswordPage />} />
           <Route element={<AppLayout />}>
             <Route path="/" element={<HomeRedirect />} />
-            <Route path="/organization" element={<OrganizationPage />} />
-            <Route
-              element={<RequirePermission permission="member.admin.manage" />}
-            >
-              <Route path="/members" element={<MembersPage />} />
+            <Route element={<RequireOrg />}>
+              <Route path="/organization" element={<OrganizationPage />} />
+              <Route
+                element={<RequirePermission permission="member.admin.manage" />}
+              >
+                <Route path="/members" element={<MembersPage />} />
+              </Route>
             </Route>
           </Route>
         </Route>

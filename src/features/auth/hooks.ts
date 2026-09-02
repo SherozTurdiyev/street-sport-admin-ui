@@ -23,3 +23,12 @@ export function useCan(): (permission: string) => boolean {
     [granted],
   );
 }
+
+/**
+ * Foydalanuvchi tashkilotga tegishlimi. Platforma xodimida `orgId`
+ * `null` bo'ladi va tashkilot bo'limlari unga ochilmaydi.
+ */
+export function useHasOrg(): boolean {
+  const { me } = useAuth();
+  return me?.orgId != null;
+}

@@ -2,7 +2,7 @@ import { createElement } from 'react';
 import { KeyOutlined, LogoutOutlined } from '@ant-design/icons';
 import { Avatar, Button, Layout, Menu, Tooltip, Typography } from 'antd';
 import { Link, Outlet, useLocation } from 'react-router';
-import { useAuth, useCan } from '@/features/auth/hooks';
+import { useAuth, useCan, useHasOrg } from '@/features/auth/hooks';
 import { ROLE_LABELS } from '@/shared/api/types';
 import { figma } from '@/shared/theme/tokens';
 import { SubscriptionBanner } from '@/app/SubscriptionBanner';
@@ -23,9 +23,10 @@ function initials(fullName: string): string {
 export function AppLayout() {
   const { me, logout } = useAuth();
   const can = useCan();
+  const hasOrg = useHasOrg();
   const location = useLocation();
 
-  const nav = allowedNav(can);
+  const nav = allowedNav(can, hasOrg);
   const items = nav.map((item) => ({
     key: item.path,
     icon: createElement(item.icon, { 'aria-hidden': true }),

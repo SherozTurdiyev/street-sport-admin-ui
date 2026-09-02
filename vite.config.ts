@@ -49,5 +49,14 @@ export default defineConfig({
     environment: 'jsdom',
     setupFiles: ['./src/test/setup.ts'],
     globals: true,
+    /*
+     * Standart 5 soniya bu testlar uchun kam. Ular butun ilovani
+     * (marshrutlar, layout, MSW) ko'tarib, foydalanuvchi harakatlarini
+     * belgima-belgi bajaradi — bitta testda oyna ochish, ikki maydon
+     * to'ldirish va ikki ro'yxatdan tanlash bor. To'liq yugurishda,
+     * fayllar CPU uchun raqobatlashganda, chegaraga tegib ketardi.
+     * Bu kutish muddati, tekshiruv emas: tasdiqlar o'zgarmadi.
+     */
+    testTimeout: 15_000,
   },
 });
