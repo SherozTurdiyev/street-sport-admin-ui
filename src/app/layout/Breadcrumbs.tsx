@@ -1,6 +1,7 @@
 import { Breadcrumb } from 'antd';
 import { Link, useLocation, useMatch } from 'react-router';
 import { useCan, useHasOrg } from '@/features/auth/hooks';
+import { useOrganization } from '@/features/platform/hooks';
 import { useVenue } from '@/features/venues/hooks';
 import { allowedNav } from './nav';
 
@@ -27,13 +28,19 @@ export function Breadcrumbs() {
    */
   const venueMatch = useMatch('/venues/:id');
   const venue = useVenue(venueMatch?.params.id ?? null);
+  const orgMatch = useMatch('/platform/organizations/:id');
+  const org = useOrganization(orgMatch?.params.id ?? null);
 
   const section = allowedNav(can, hasOrg).find((item) =>
     location.pathname.startsWith(item.path),
   );
   if (!section) return null;
 
-  const leaf = venueMatch ? (venue.data?.name ?? '…') : null;
+  const leaf = venueMatch
+    ? (venue.data?.name ?? '…')
+    : orgMatch
+      ? (org.data?.name ?? '…')
+      : null;
 
   return (
     <Breadcrumb

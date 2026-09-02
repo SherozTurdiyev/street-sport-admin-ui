@@ -52,6 +52,11 @@ const VenueDetailPage = lazy(() =>
     default: m.VenueDetailPage,
   })),
 );
+const OrganizationDetailPage = lazy(() =>
+  import('@/features/platform/detail/OrganizationDetailPage').then((m) => ({
+    default: m.OrganizationDetailPage,
+  })),
+);
 const OrganizationsPage = lazy(() =>
   import('@/features/platform/OrganizationsPage').then((m) => ({
     default: m.OrganizationsPage,
@@ -101,6 +106,10 @@ export function AppRouter() {
               <Route
                 path="/platform/organizations"
                 element={<OrganizationsPage />}
+              />
+              <Route
+                path="/platform/organizations/:id"
+                element={<OrganizationDetailPage />}
               />
             </Route>
             <Route element={<RequireOrg />}>

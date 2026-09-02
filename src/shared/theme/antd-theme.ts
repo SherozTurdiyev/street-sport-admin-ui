@@ -81,7 +81,10 @@ export const antdTheme: ThemeConfig = {
     Select: { colorBgContainer: figma.bgInput },
     Table: {
       headerBg: 'transparent',
-      headerColor: figma.textMuted,
+      // Sarlavha ham OQ: quyuq fonda kulrang matn o'qilmasdi.
+      // Ierarxiya rang bilan emas, o'lcham va qalinlik bilan beriladi.
+      headerColor: figma.text,
+      colorText: figma.text,
       rowHoverBg: figma.primarySoft,
       borderColor: figma.border,
     },

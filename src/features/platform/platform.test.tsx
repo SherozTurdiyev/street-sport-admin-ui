@@ -66,11 +66,13 @@ function baseHandlers() {
   ];
 }
 
-async function kartochkaniOch(): Promise<HTMLElement> {
+/** Ro'yxatdan tashkilot sahifasiga o'tadi. */
+async function tashkilotSahifasi(): Promise<HTMLElement> {
   await userEvent.click(
-    await screen.findByRole('button', { name: 'Neon Sports Group' }),
+    await screen.findByRole('button', { name: 'Neon Sports Group — ochish' }),
   );
-  return await screen.findByRole('dialog');
+  await screen.findByRole('heading', { name: 'Neon Sports Group' });
+  return document.body;
 }
 
 beforeEach(() => {
@@ -113,9 +115,9 @@ describe('Platforma paneli', () => {
     );
     renderApp(<AppRouter />, { route: '/platform/organizations' });
 
-    const karta = within(await kartochkaniOch());
+    await tashkilotSahifasi();
     await userEvent.click(
-      karta.getByRole('button', { name: 'Tashkilotni bloklash' }),
+      await screen.findByRole('button', { name: 'Tashkilotni bloklash' }),
     );
 
     // Oyna kartochka ustiga ochiladi — ro'yxatdagi oxirgi `dialog`.
@@ -152,10 +154,68 @@ describe('Platforma paneli', () => {
     );
     renderApp(<AppRouter />, { route: '/platform/organizations' });
 
-    const karta = within(await kartochkaniOch());
+    await tashkilotSahifasi();
     // Muddat allaqachon o'tgan: blokdan chiqarish holatni ACTIVE
     // qilmaydi va foydalanuvchi buni OLDINDAN bilishi kerak.
-    expect(await karta.findByText(/muddati.*o.?tgan/i)).toBeInTheDocument();
+    expect(await screen.findByText(/muddati.*o.?tgan/i)).toBeInTheDocument();
+  });
+
+  it('manzildagi bo`lim to`g`ridan-to`g`ri ochiladi', async () => {
+    server.use(
+      // Almashtiruvchi handler OLDINDA turishi shart.
+      http.get(`${ROOT}/org-1/members`, () =>
+        HttpResponse.json({
+          items: [
+            {
+              id: 'm-1',
+              userId: 'u-1',
+              fullName: 'Anvar Direktorov',
+              phone: '+998901110001',
+              role: 'DIRECTOR',
+              isActive: true,
+              lastLoginAt: null,
+            },
+          ],
+          total: 1,
+          page: 1,
+          pageSize: 20,
+        }),
+      ),
+      ...baseHandlers(),
+    );
+    renderApp(<AppRouter />, {
+      route: '/platform/organizations/org-1?tab=members',
+    });
+
+    expect(await screen.findByText('Anvar Direktorov')).toBeInTheDocument();
+  });
+
+  it('tor ekranda jadval o`rniga kartochka chizadi', async () => {
+    const asl = window.matchMedia;
+    // jsdom ekran o'lchamini bilmaydi; so'rovga qarab javob beramiz.
+    window.matchMedia = ((query: string) => ({
+      matches: query.includes('max-width: 767px'),
+      media: query,
+      onchange: null,
+      addListener: () => {},
+      removeListener: () => {},
+      addEventListener: () => {},
+      removeEventListener: () => {},
+      dispatchEvent: () => false,
+    })) as unknown as typeof window.matchMedia;
+
+    try {
+      server.use(...baseHandlers());
+      renderApp(<AppRouter />, { route: '/platform/organizations' });
+
+      expect(
+        await screen.findByRole('heading', { name: 'Neon Sports Group' }),
+      ).toBeInTheDocument();
+      // Olti ustunli jadval telefon ekraniga sig'maydi.
+      expect(screen.queryByRole('table')).not.toBeInTheDocument();
+    } finally {
+      window.matchMedia = asl;
+    }
   });
 
   it('yangi tashkilot ochganda vaqtinchalik parolni ko`rsatadi', async () => {
