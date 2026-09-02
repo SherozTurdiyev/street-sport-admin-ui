@@ -1,6 +1,7 @@
 import {
   BankOutlined,
   CalendarOutlined,
+  ContactsOutlined,
   DashboardOutlined,
   EnvironmentOutlined,
   ShopOutlined,
@@ -56,6 +57,15 @@ export const NAV: readonly NavItem[] = [
     permission: null,
     label: 'Bronlar',
     icon: CalendarOutlined,
+    requiresOrg: true,
+  },
+  {
+    // Mijoz bazasi bron bilan yonma-yon: kalendardan ochilgan kartochka
+    // shu bo'limdagi sahifaga olib boradi.
+    path: '/customers',
+    permission: null,
+    label: 'Mijozlar',
+    icon: ContactsOutlined,
     requiresOrg: true,
   },
   {

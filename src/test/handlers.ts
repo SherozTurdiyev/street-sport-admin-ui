@@ -9,11 +9,21 @@ export const DIRECTOR_ME = {
   fullName: 'Anvar Direktorov',
   phone: '+998901110001',
   mustChangePassword: false,
+  // Backenddagi DIRECTOR qatoridan: bron va mijoz ruxsatlari ham bor —
+  // ular bo'lmasa interfeys tugmalarni yashirib qo'yardi.
   permissions: [
     'org.settings.update',
     'member.admin.manage',
     'member.manager.manage',
     'member.venue.assign',
+    'booking.create',
+    'booking.move',
+    'booking.cancel',
+    'booking.result.set',
+    'booking.series.create',
+    'booking.series.cancel',
+    'customer.manage',
+    'customer.blacklist',
   ],
 };
 

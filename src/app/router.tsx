@@ -37,6 +37,16 @@ const BookingsPage = lazy(() =>
     default: m.BookingsPage,
   })),
 );
+const CustomersPage = lazy(() =>
+  import('@/features/customers/CustomersPage').then((m) => ({
+    default: m.CustomersPage,
+  })),
+);
+const CustomerDetailPage = lazy(() =>
+  import('@/features/customers/CustomerDetailPage').then((m) => ({
+    default: m.CustomerDetailPage,
+  })),
+);
 const MembersPage = lazy(() =>
   import('@/features/members/MembersPage').then((m) => ({
     default: m.MembersPage,
@@ -135,6 +145,8 @@ export function AppRouter() {
             <Route element={<RequireOrg />}>
               <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/bookings" element={<BookingsPage />} />
+              <Route path="/customers" element={<CustomersPage />} />
+              <Route path="/customers/:id" element={<CustomerDetailPage />} />
               <Route path="/organization" element={<OrganizationPage />} />
               <Route path="/venues" element={<VenuesPage />} />
               <Route path="/venues/:id" element={<VenueDetailPage />} />

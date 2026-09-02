@@ -1,5 +1,6 @@
 import { api } from '@/shared/api/client';
 import type { PageQuery, Paginated } from '@/shared/api/types';
+import type { Booking } from '@/features/bookings/api';
 
 export type Customer = {
   id: string;
@@ -11,6 +12,28 @@ export type Customer = {
   /** Bron yaratishni TAQIQLAMAYDI — faqat ogohlantiradi. */
   isBlacklisted: boolean;
   createdAt: string;
+};
+
+/**
+ * `totalPaid` va `currentDebt` hozircha HAR DOIM `"0"`: to'lovlar
+ * moduli (M8) hali yozilmagan va `pendingModule` shuni ochiq aytadi.
+ * Interfeys ularni ko'rsatmaydi — nol raqam yolg'on bo'lardi.
+ */
+export type CustomerStats = {
+  totalBookings: number;
+  completedCount: number;
+  cancelledCount: number;
+  noShowCount: number;
+  lastVisitAt: string | null;
+  totalPaid: string;
+  currentDebt: string;
+  pendingModule: 'M8';
+};
+
+export type CustomerCard = Customer & {
+  stats: CustomerStats;
+  /** Oxirgi bronlar, yangisidan eskisiga. */
+  bookings: Booking[];
 };
 
 /**
@@ -28,6 +51,15 @@ export type CustomersQuery = PageQuery & {
   blacklistedOnly?: boolean;
 };
 
+/** Telefon bu yerda YO'Q: u mijozning identifikatori va o'zgarmaydi. */
+export type CustomerInput = {
+  fullName?: string;
+  note?: string | null;
+  tags?: string[];
+};
+
+export type CreateCustomerInput = { phone: string; fullName: string };
+
 export const customersApi = {
   lookup: (input: { phone: string; fullName?: string }) =>
     api.post<LookupResult>('/customers/lookup', input).then((r) => r.data),
@@ -35,5 +67,19 @@ export const customersApi = {
   list: (query: CustomersQuery) =>
     api
       .get<Paginated<Customer>>('/customers', { params: query })
+      .then((r) => r.data),
+
+  card: (id: string) =>
+    api.get<CustomerCard>(`/customers/${id}`).then((r) => r.data),
+
+  create: (input: CreateCustomerInput) =>
+    api.post<Customer>('/customers', input).then((r) => r.data),
+
+  update: (id: string, input: CustomerInput) =>
+    api.patch<Customer>(`/customers/${id}`, input).then((r) => r.data),
+
+  blacklist: (id: string, isBlacklisted: boolean) =>
+    api
+      .patch<Customer>(`/customers/${id}/blacklist`, { isBlacklisted })
       .then((r) => r.data),
 };
