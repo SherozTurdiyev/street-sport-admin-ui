@@ -17,6 +17,11 @@ import { allowedNav } from './layout/nav';
 const LoginPage = lazy(() =>
   import('@/features/auth/LoginPage').then((m) => ({ default: m.LoginPage })),
 );
+const ProfilePage = lazy(() =>
+  import('@/features/auth/ProfilePage').then((m) => ({
+    default: m.ProfilePage,
+  })),
+);
 const ChangePasswordPage = lazy(() =>
   import('@/features/auth/ChangePasswordPage').then((m) => ({
     default: m.ChangePasswordPage,
@@ -77,6 +82,9 @@ export function AppRouter() {
           <Route path="/change-password" element={<ChangePasswordPage />} />
           <Route element={<AppLayout />}>
             <Route path="/" element={<HomeRedirect />} />
+            {/* Profil `RequireOrg` DAN TASHQARIDA: platforma xodimining
+                ham profili bor, tashkiloti esa yo'q. */}
+            <Route path="/profile" element={<ProfilePage />} />
             <Route
               element={<RequirePermission permission="platform.org.manage" />}
             >

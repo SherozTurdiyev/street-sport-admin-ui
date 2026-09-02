@@ -33,6 +33,9 @@ export const authApi = {
 
   logout: () => api.post('/auth/logout').then(() => undefined),
 
+  /** Barcha qurilmalardagi sessiyalarni yopadi. */
+  logoutAll: () => api.post('/auth/logout-all').then(() => undefined),
+
   changePassword: (currentPassword: string, newPassword: string) =>
     api
       .post('/auth/change-password', { currentPassword, newPassword })

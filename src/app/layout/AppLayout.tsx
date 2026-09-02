@@ -1,5 +1,5 @@
-import { createElement } from 'react';
-import { KeyOutlined, LogoutOutlined } from '@ant-design/icons';
+import { createElement, useState } from 'react';
+import { LogoutOutlined } from '@ant-design/icons';
 import { Avatar, Button, Layout, Menu, Tooltip, Typography } from 'antd';
 import { Link, Outlet, useLocation } from 'react-router';
 import { useAuth, useCan, useHasOrg } from '@/features/auth/hooks';
@@ -22,6 +22,12 @@ function initials(fullName: string): string {
 
 export function AppLayout() {
   const { me, logout } = useAuth();
+  /**
+   * Yon panel `fixed` — u oqim (`flow`) dan chiqadi va o'ng tomondagi
+   * ustunga o'z kengligini bermaydi. Shuning uchun chetni O'ZIMIZ
+   * qo'shamiz; `collapsed` da esa panel yo'qoladi va chet nolga tushadi.
+   */
+  const [collapsed, setCollapsed] = useState(false);
   const can = useCan();
   const hasOrg = useHasOrg();
   const location = useLocation();
@@ -47,7 +53,17 @@ export function AppLayout() {
         width={figma.siderWidth}
         breakpoint="lg"
         collapsedWidth={0}
-        style={{ borderRight: `1px solid ${figma.border}` }}
+        onCollapse={setCollapsed}
+        style={{
+          borderRight: `1px solid ${figma.border}`,
+          // To'liq balandlik va sahifa bilan birga sirg'almaydi: uzun
+          // jadvalni aylantirganda menyu joyida turadi.
+          position: 'fixed',
+          insetBlock: 0,
+          insetInlineStart: 0,
+          height: '100vh',
+          zIndex: 20,
+        }}
       >
         <div className="flex h-full flex-col">
           <div
@@ -94,7 +110,8 @@ export function AppLayout() {
             className="flex shrink-0 items-center justify-between gap-3 px-6 py-6"
             style={{ borderTop: `1px solid ${figma.border}` }}
           >
-            <div className="flex min-w-0 items-center gap-3">
+            {/* Profilga yagona kirish yo'li — sarlavhadagi tugma o'rniga. */}
+            <Link to="/profile" className="flex min-w-0 items-center gap-3">
               <Avatar
                 size={40}
                 style={{ border: `1px solid ${figma.primary}` }}
@@ -117,7 +134,7 @@ export function AppLayout() {
                   {me?.phone}
                 </div>
               </div>
-            </div>
+            </Link>
             <Tooltip title="Chiqish">
               <Button
                 type="text"
@@ -130,7 +147,12 @@ export function AppLayout() {
         </div>
       </Sider>
 
-      <Layout>
+      <Layout
+        style={{
+          marginInlineStart: collapsed ? 0 : figma.siderWidth,
+          transition: 'margin-inline-start 0.2s',
+        }}
+      >
         <Header
           className="flex items-center justify-between"
           style={{ borderBottom: `1px solid ${figma.border}` }}
@@ -138,12 +160,6 @@ export function AppLayout() {
           <Typography.Text style={{ color: figma.textMuted }}>
             {current?.label ?? ''}
           </Typography.Text>
-          {/* Parol almashtirish sahifasiga boshqa kirish yo'li yo'q. */}
-          <Link to="/change-password">
-            <Button type="text" icon={<KeyOutlined />}>
-              Parolni almashtirish
-            </Button>
-          </Link>
         </Header>
         <SubscriptionBanner />
         <Content className="p-8">
