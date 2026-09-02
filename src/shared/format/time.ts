@@ -24,3 +24,17 @@ export function formatDateTime(iso: string | null | undefined): string {
 export function formatDate(iso: string | null | undefined): string {
   return iso ? dayjs(iso).tz(TASHKENT).format('DD.MM.YYYY') : NONE;
 }
+
+/**
+ * Foydalanuvchi tanlagan devor soatini ISO UTC ga o'giradi.
+ *
+ * `DatePicker` BRAUZER mintaqasida qiymat qaytaradi. Adminka esa har
+ * doim Toshkent vaqtida ishlaydi (stadion o'sha yerda). Boshqa
+ * mintaqadagi foydalanuvchi 18:00 ni tanlasa, `toISOString()` uni
+ * o'zining 18:00 i deb hisoblab, backendga boshqa soatni yuborardi.
+ *
+ * `wallClock` — `YYYY-MM-DD HH:mm` ko'rinishida.
+ */
+export function tashkentToIso(wallClock: string): string {
+  return dayjs.tz(wallClock, TASHKENT).toISOString();
+}

@@ -19,6 +19,7 @@ import {
   VENUE_STATUS_VIEW,
 } from './enums';
 import { WeeklyHoursForm } from './WeeklyHoursForm';
+import { PriceRulesTab } from './prices/PriceRulesTab';
 import { useArchiveVenue, useRestoreVenue, useVenue } from './hooks';
 
 function VenueProfileTab({ venueId }: { venueId: string }) {
@@ -140,6 +141,11 @@ function VenueCardBody({ venueId }: { venueId: string }) {
           key: 'hours',
           label: 'Ish vaqti',
           children: <WeeklyHoursForm venueId={venueId} />,
+        },
+        {
+          key: 'prices',
+          label: 'Narxlar',
+          children: <PriceRulesTab venueId={venueId} />,
         },
       ]}
     />

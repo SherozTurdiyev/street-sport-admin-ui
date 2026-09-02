@@ -76,7 +76,7 @@ Shuning uchun forma haftaning yettala kunini ko'rsatadi, har birida
 
 ## 2-qism: narx
 
-### Task 4: Narx qoidalari
+### ✅ Task 4: Narx qoidalari
 
 **Fayllar:** `prices/PriceRulesTab.tsx`, `PriceRuleModal.tsx`
 
@@ -86,7 +86,7 @@ Shuning uchun forma haftaning yettala kunini ko'rsatadi, har birida
 - Test: `pricePerHour` satrligicha yuboriladi
 - Commit: `feat: narx qoidalari`
 
-### Task 5: Haftalik narx panjarasi va kalkulyator
+### ✅ Task 5: Haftalik narx panjarasi va kalkulyator
 
 **Fayllar:** `prices/PriceTable.tsx`, `prices/PriceCalculator.tsx`
 
