@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react';
 import { ArrowRightOutlined, SettingOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Typography } from 'antd';
 import { Link } from 'react-router';
@@ -113,7 +114,52 @@ function PhotoArea({ venue }: { venue: VenueListRow }) {
  * boradi, o'q esa sahifaning boshiga. Bir xil ish qiladigan ikki
  * tugma foydalanuvchini chalg'itardi.
  */
-export function VenueCard({ venue }: { venue: VenueListRow }) {
+export function VenueCardLinks({ venue }: { venue: VenueListRow }) {
+  return (
+    <div className="flex shrink-0 gap-2">
+      <Tooltip title="Narxlar">
+        <Link to={`/venues/${venue.id}?tab=prices`}>
+          <Button
+            aria-label={`${venue.name} — narxlar`}
+            icon={<SettingOutlined aria-hidden />}
+            style={{
+              ...ROUND_BUTTON,
+              background: figma.bgSider,
+              borderColor: figma.border,
+            }}
+          />
+        </Link>
+      </Tooltip>
+      <Tooltip title="Ochish">
+        <Link to={`/venues/${venue.id}`}>
+          <Button
+            aria-label={`${venue.name} — ochish`}
+            icon={<ArrowRightOutlined aria-hidden />}
+            style={{
+              ...ROUND_BUTTON,
+              background: figma.primarySoft,
+              borderColor: figma.primarySoftBorder,
+            }}
+          />
+        </Link>
+      </Tooltip>
+    </div>
+  );
+}
+
+export function VenueCard({
+  venue,
+  /**
+   * Amallar ATAYLAB tashqaridan: platforma xodimi shu kartochkani
+   * tashkilot sahifasida ko'radi, lekin stadion sahifasiga kira
+   * olmaydi (uning tashkiloti yo'q). U yerda `null` uzatiladi —
+   * ochilmaydigan tugma ko'rsatishdan afzal.
+   */
+  actions = <VenueCardLinks venue={venue} />,
+}: {
+  venue: VenueListRow;
+  actions?: ReactNode;
+}) {
   return (
     <div
       className="flex h-full flex-col overflow-hidden"
@@ -184,34 +230,7 @@ export function VenueCard({ venue }: { venue: VenueListRow }) {
             )}
           </div>
 
-          <div className="flex shrink-0 gap-2">
-            <Tooltip title="Narxlar">
-              <Link to={`/venues/${venue.id}?tab=prices`}>
-                <Button
-                  aria-label={`${venue.name} — narxlar`}
-                  icon={<SettingOutlined aria-hidden />}
-                  style={{
-                    ...ROUND_BUTTON,
-                    background: figma.bgSider,
-                    borderColor: figma.border,
-                  }}
-                />
-              </Link>
-            </Tooltip>
-            <Tooltip title="Ochish">
-              <Link to={`/venues/${venue.id}`}>
-                <Button
-                  aria-label={`${venue.name} — ochish`}
-                  icon={<ArrowRightOutlined aria-hidden />}
-                  style={{
-                    ...ROUND_BUTTON,
-                    background: figma.primarySoft,
-                    borderColor: figma.primarySoftBorder,
-                  }}
-                />
-              </Link>
-            </Tooltip>
-          </div>
+          {actions}
         </div>
       </div>
     </div>

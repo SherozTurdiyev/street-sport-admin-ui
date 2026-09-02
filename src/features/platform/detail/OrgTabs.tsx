@@ -1,14 +1,9 @@
-import { Table, Tag, Typography } from 'antd';
+import { Empty, Skeleton, Table, Typography } from 'antd';
 import { DEFAULT_PAGE_SIZE, ROLE_LABELS } from '@/shared/api/types';
 import { displayPhone } from '@/shared/format/phone';
 import { formatDateTime } from '@/shared/format/time';
-import {
-  SPORT_TYPE_LABELS,
-  VENUE_STATUS_VIEW,
-  type SportType,
-  type VenueStatus,
-} from '@/features/venues/enums';
-import type { OrganizationMember, OrganizationVenue } from '../api';
+import { VenueCard } from '@/features/venues/VenueCard';
+import type { OrganizationMember } from '../api';
 import { useOrganizationMembers, useOrganizationVenues } from '../hooks';
 
 const PAGE = { page: 1, pageSize: DEFAULT_PAGE_SIZE };
@@ -46,7 +41,9 @@ export function OrgMembersTab({ id }: { id: string }) {
 }
 
 export function OrgVenuesTab({ id }: { id: string }) {
-  const { data, isFetching } = useOrganizationVenues(id, PAGE);
+  const { data, isPending, isFetching } = useOrganizationVenues(id, PAGE);
+  const items = data?.items ?? [];
+
   return (
     <>
       {/* Arxivlanganlar ham ko'rinadi — shunda ro'yxat kartochkadagi
@@ -54,35 +51,26 @@ export function OrgVenuesTab({ id }: { id: string }) {
       <Typography.Paragraph type="secondary">
         Arxivlangan stadionlar ham ko‘rsatiladi.
       </Typography.Paragraph>
-      <Table<OrganizationVenue>
-        rowKey="id"
-        size="small"
-        loading={isFetching}
-        dataSource={data?.items ?? []}
-        pagination={false}
-        scroll={{ x: 'max-content' }}
-        columns={[
-          { title: 'Nomi', dataIndex: 'name' },
-          {
-            title: 'Sport turi',
-            dataIndex: 'sportType',
-            // Enum qiymati EMAS, yorlig'i. Noma'lum qiymat kelsa
-            // (backend yangi tur qo'shsa) xom qiymat ko'rsatiladi —
-            // bo'sh katakdan ko'ra shu foydaliroq.
-            render: (value: string) =>
-              SPORT_TYPE_LABELS[value as SportType] ?? value,
-          },
-          { title: 'Shahar', dataIndex: 'city' },
-          {
-            title: 'Holat',
-            dataIndex: 'status',
-            render: (value: string) => {
-              const view = VENUE_STATUS_VIEW[value as VenueStatus];
-              return view ? <Tag color={view.color}>{view.label}</Tag> : value;
-            },
-          },
-        ]}
-      />
+
+      {isPending ? (
+        <Skeleton active />
+      ) : items.length === 0 ? (
+        <Empty description="Tashkilotda stadion yo‘q" />
+      ) : (
+        <div
+          // Figma (2009:4486): kartochka 256 keng, oralig'i 24. Ustunlar
+          // soni qotirilmaydi — tor oynada kartochka siqilib ketardi.
+          className="grid grid-cols-[repeat(auto-fill,minmax(256px,1fr))] gap-6"
+          style={{ opacity: isFetching ? 0.6 : 1 }}
+        >
+          {items.map((venue) => (
+            // Amallarsiz: platforma xodimining tashkiloti yo'q, ya'ni
+            // stadion sahifasi unga ochilmaydi (BR-08/BR-09). Ishlamaydigan
+            // tugma qo'yishdan ko'ra qo'ymagan ma'qul.
+            <VenueCard key={venue.id} venue={venue} actions={null} />
+          ))}
+        </div>
+      )}
     </>
   );
 }

@@ -13,7 +13,7 @@ import { StatCard } from '@/features/dashboard/StatCard';
 import { useOrganization } from '../hooks';
 import { OrganizationHero } from './OrganizationHero';
 import { OrgProfileForm } from './OrgProfileForm';
-import { OrgMembersTab, OrgVenuesTab } from './OrgTables';
+import { OrgMembersTab, OrgVenuesTab } from './OrgTabs';
 
 const TABS = ['profile', 'members', 'venues'] as const;
 type Tab = (typeof TABS)[number];

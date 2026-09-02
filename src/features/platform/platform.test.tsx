@@ -41,6 +41,29 @@ const MUDDATI_TUGAGAN = {
   stats: STATS,
 };
 
+const STADION = {
+  id: 'v-1',
+  orgId: 'org-1',
+  name: 'Chilonzor Arena',
+  sportType: 'FOOTBALL_5X5',
+  surface: 'ARTIFICIAL_GRASS',
+  sizeLabel: '40x20',
+  isIndoor: false,
+  city: 'Toshkent',
+  address: null,
+  latitude: null,
+  longitude: null,
+  contactPhone: null,
+  slotMinutes: 60,
+  amenities: [],
+  photos: [],
+  description: null,
+  status: 'ACTIVE',
+  createdAt: '2026-01-01T00:00:00.000Z',
+  updatedAt: '2026-01-01T00:00:00.000Z',
+  basePricePerHour: '150000',
+};
+
 let yuborilgan: { url: string; body: unknown }[] = [];
 
 function baseHandlers() {
@@ -188,6 +211,36 @@ describe('Platforma paneli', () => {
     });
 
     expect(await screen.findByText('Anvar Direktorov')).toBeInTheDocument();
+  });
+
+  it('stadionlar bo`limi kartochka bilan chiziladi', async () => {
+    server.use(
+      // Almashtiruvchi handler OLDINDA turishi shart.
+      http.get(`${ROOT}/org-1/venues`, () =>
+        HttpResponse.json({
+          items: [STADION],
+          total: 1,
+          page: 1,
+          pageSize: 20,
+        }),
+      ),
+      ...baseHandlers(),
+    );
+    renderApp(<AppRouter />, {
+      route: '/platform/organizations/org-1?tab=venues',
+    });
+
+    expect(
+      await screen.findByRole('heading', { name: 'Chilonzor Arena' }),
+    ).toBeInTheDocument();
+    // Kartochkadagi eng ko'rinarli qiymat — narx.
+    expect(screen.getByText("150 000 so'm/soat")).toBeInTheDocument();
+    // Jadval EMAS: bo'limda endi panjara bor.
+    expect(screen.queryByRole('table')).not.toBeInTheDocument();
+    // Platforma xodimi stadion sahifasiga kira olmaydi — havola yo'q.
+    expect(
+      screen.queryByRole('button', { name: /Chilonzor Arena —/ }),
+    ).not.toBeInTheDocument();
   });
 
   it('tor ekranda jadval o`rniga kartochka chizadi', async () => {

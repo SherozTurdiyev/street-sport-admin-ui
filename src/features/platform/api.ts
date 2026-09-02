@@ -1,5 +1,6 @@
 import { api } from '@/shared/api/client';
 import type { PageQuery, Paginated, Role } from '@/shared/api/types';
+import type { VenueListRow } from '@/features/venues/api';
 
 /**
  * AMALDAGI holat — hisoblangan. `subscriptionStatus` (bazadagi ustun)
@@ -62,13 +63,12 @@ export type OrganizationMember = {
   lastLoginAt: string | null;
 };
 
-export type OrganizationVenue = {
-  id: string;
-  name: string;
-  sportType: string;
-  city: string | null;
-  status: string;
-};
+/**
+ * Platforma endpointi `GET /venues` bilan BIR XIL obyektni qaytaradi —
+ * fotolari va bazaviy narxi bilan. Farqi ikkita: arxivlanganlar ham
+ * ko'rinadi va yozuv faqat o'qish uchun.
+ */
+export type OrganizationVenue = VenueListRow;
 
 export type OrganizationsQuery = PageQuery & {
   search?: string;
