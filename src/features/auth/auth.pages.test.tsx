@@ -33,7 +33,7 @@ describe('Login sahifasi', () => {
     );
     renderApp(<LoginPage />);
 
-    await userEvent.type(screen.getByLabelText('Telefon'), '+998901110001');
+    await userEvent.type(screen.getByLabelText('Telefon'), '901110001');
     await userEvent.type(screen.getByLabelText('Parol'), 'xato');
     await userEvent.click(screen.getByRole('button', { name: /kirish/i }));
 
@@ -60,7 +60,7 @@ describe('Login sahifasi', () => {
     );
     renderApp(<LoginPage />);
 
-    await userEvent.type(screen.getByLabelText('Telefon'), '+998901110001');
+    await userEvent.type(screen.getByLabelText('Telefon'), '901110001');
     await userEvent.type(screen.getByLabelText('Parol'), 'xato');
     await userEvent.click(screen.getByRole('button', { name: /kirish/i }));
 

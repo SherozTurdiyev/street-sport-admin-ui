@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Alert, Form, Input, Modal, Select, Typography } from 'antd';
 import { applyServerErrors, errorMessage } from '@/shared/api/error-handler';
+import { PhoneInput } from '@/shared/ui/PhoneInput';
 import { ROLE_LABELS } from '@/shared/api/types';
 import { useVenueOptions } from '@/features/venues/hooks';
 import type { CreatableRole, CreatedMember } from './api';
@@ -133,11 +134,11 @@ export function MemberFormModal({
             { required: true, message: 'Telefon raqamini kiriting' },
             {
               pattern: /^\+998\d{9}$/,
-              message: "Raqam +998XXXXXXXXX ko'rinishida bo'lishi kerak",
+              message: 'Raqamni to‘liq kiriting: +998 (90) 000-00-00',
             },
           ]}
         >
-          <Input placeholder="+998901234567" />
+          <PhoneInput />
         </Form.Item>
 
         <Form.Item

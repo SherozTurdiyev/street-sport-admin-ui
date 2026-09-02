@@ -16,6 +16,7 @@ import {
 } from 'antd';
 import { errorMessage } from '@/shared/api/error-handler';
 import { ROLE_LABELS } from '@/shared/api/types';
+import { displayPhone } from '@/shared/format/phone';
 import { formatDateTime } from '@/shared/format/time';
 import { formatMoney } from '@/shared/format/money';
 import { useVenueOptions } from '@/features/venues/hooks';
@@ -78,7 +79,9 @@ function MemberCardBody({ userId }: { userId: string }) {
       )}
 
       <Descriptions column={1} size="small">
-        <Descriptions.Item label="Telefon">{data.phone}</Descriptions.Item>
+        <Descriptions.Item label="Telefon">
+          {displayPhone(data.phone)}
+        </Descriptions.Item>
         <Descriptions.Item label="Holat">
           {data.isActive ? <Tag color="success">Faol</Tag> : <Tag>Faolsiz</Tag>}
         </Descriptions.Item>

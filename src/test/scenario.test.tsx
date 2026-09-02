@@ -101,7 +101,7 @@ describe('1-bosqich: to`liq ssenariy', () => {
     renderApp(<AppRouter />, { route: '/members' });
     await screen.findByRole('button', { name: /kirish/i });
 
-    await userEvent.type(screen.getByLabelText('Telefon'), '+998901110001');
+    await userEvent.type(screen.getByLabelText('Telefon'), '901110001');
     await userEvent.type(screen.getByLabelText('Parol'), 'Parol123!');
     await userEvent.click(screen.getByRole('button', { name: /kirish/i }));
 
@@ -121,7 +121,7 @@ describe('1-bosqich: to`liq ssenariy', () => {
       oyna.getByLabelText('Ism va familiya'),
       'Test Menejer',
     );
-    await userEvent.type(oyna.getByLabelText('Telefon'), '+998903517021');
+    await userEvent.type(oyna.getByLabelText('Telefon'), '903517021');
     await userEvent.click(oyna.getByLabelText('Lavozim'));
     await userEvent.click(await screen.findByTitle('Menejer'));
     await userEvent.click(oyna.getByRole('button', { name: 'Yaratish' }));

@@ -24,6 +24,7 @@ import type { ColumnsType } from 'antd/es/table';
 import { Link } from 'react-router';
 import { errorMessage } from '@/shared/api/error-handler';
 import { DEFAULT_PAGE_SIZE } from '@/shared/api/types';
+import { displayPhone } from '@/shared/format/phone';
 import { formatDate } from '@/shared/format/time';
 import { figma } from '@/shared/theme/tokens';
 import { useIsMobile } from '@/shared/ui/useIsMobile';
@@ -76,7 +77,7 @@ function buildColumns(): ColumnsType<PlatformOrganization> {
             '—'
           ) : (
             <>
-              <PhoneOutlined aria-hidden /> {value}
+              <PhoneOutlined aria-hidden /> {displayPhone(value)}
             </>
           )}
         </span>

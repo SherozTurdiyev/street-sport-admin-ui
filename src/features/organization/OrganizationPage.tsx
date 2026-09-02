@@ -1,5 +1,6 @@
 import { Alert, Card, Descriptions, Skeleton } from 'antd';
 import { errorMessage } from '@/shared/api/error-handler';
+import { displayPhone } from '@/shared/format/phone';
 import { formatDate } from '@/shared/format/time';
 import { useOrganization } from './hooks';
 
@@ -16,7 +17,7 @@ export function OrganizationPage() {
     <Card title={data.name}>
       <Descriptions column={1} bordered size="small">
         <Descriptions.Item label="Telefon">
-          {data.phone ?? NONE}
+          {displayPhone(data.phone)}
         </Descriptions.Item>
         <Descriptions.Item label="Manzil">
           {data.address ?? NONE}

@@ -15,6 +15,7 @@ import {
 import dayjs, { type Dayjs } from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { applyServerErrors, errorMessage } from '@/shared/api/error-handler';
+import { MoneyInput } from '@/shared/ui/MoneyInput';
 import { WEEKDAYS } from '../enums';
 import type { PriceRule, PriceRuleInput } from './api';
 import { useCreatePriceRule, useUpdatePriceRule } from './hooks';
@@ -127,7 +128,7 @@ function RuleForm({
         <Form.Item
           name="pricePerHour"
           label="Soatiga narx"
-          extra="So‘mda, butun son"
+          extra="Butun son. Masalan: 260 000"
           rules={[
             { required: true, message: 'Narxni kiriting' },
             {
@@ -136,7 +137,7 @@ function RuleForm({
             },
           ]}
         >
-          <Input inputMode="numeric" placeholder="260000" />
+          <MoneyInput placeholder="260 000" />
         </Form.Item>
 
         <Form.Item

@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Alert, App, Button, Form, Input } from 'antd';
 import { applyServerErrors, errorMessage } from '@/shared/api/error-handler';
 import { ROLE_LABELS } from '@/shared/api/types';
+import { PhoneInput } from '@/shared/ui/PhoneInput';
 import { authApi } from './api';
 import { useAuth } from './hooks';
 
@@ -72,11 +73,11 @@ export function ProfileForm() {
             { required: true, message: 'Telefon raqamini kiriting' },
             {
               pattern: /^\+998\d{9}$/,
-              message: "Raqam +998XXXXXXXXX ko'rinishida bo'lishi kerak",
+              message: 'Raqamni to‘liq kiriting: +998 (90) 000-00-00',
             },
           ]}
         >
-          <Input />
+          <PhoneInput />
         </Form.Item>
 
         <Form.Item label="Lavozim" extra="Lavozimni direktor o‘zgartiradi">

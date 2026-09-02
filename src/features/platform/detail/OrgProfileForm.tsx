@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Alert, App, Button, DatePicker, Form, Input } from 'antd';
 import dayjs, { type Dayjs } from 'dayjs';
 import { errorMessage } from '@/shared/api/error-handler';
+import { PhoneInput } from '@/shared/ui/PhoneInput';
 import type { PlatformOrganizationDetail } from '../api';
 import { useUpdateOrganization } from '../hooks';
 
@@ -64,8 +65,17 @@ export function OrgProfileForm({ org }: { org: PlatformOrganizationDetail }) {
         >
           <Input />
         </Form.Item>
-        <Form.Item name="phone" label="Telefon">
-          <Input placeholder="+998712000000" />
+        <Form.Item
+          name="phone"
+          label="Telefon"
+          rules={[
+            {
+              pattern: /^\+998\d{9}$/,
+              message: 'Raqamni to‘liq kiriting: +998 (90) 000-00-00',
+            },
+          ]}
+        >
+          <PhoneInput />
         </Form.Item>
         <Form.Item name="address" label="Manzil">
           <Input />

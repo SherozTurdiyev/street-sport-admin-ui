@@ -252,7 +252,9 @@ describe('Platforma paneli', () => {
     );
     await userEvent.type(
       oyna.getByLabelText('Direktor telefoni'),
-      '+998993517023',
+      // Maska mamlakat kodini o'zi qo'yadi — foydalanuvchi milliy
+      // raqamni teradi, serverga esa `+998993517023` ketadi.
+      '993517023',
     );
     await userEvent.click(oyna.getByRole('button', { name: 'Yaratish' }));
 

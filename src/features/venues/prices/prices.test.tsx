@@ -176,7 +176,8 @@ describe('Narx qoidalari', () => {
     const oyna = within(oynaEl);
     const maydon = oyna.getByLabelText('Soatiga narx');
     // Serverdagi qiymat formaga tushgan bo'lishi kerak.
-    expect(maydon).toHaveValue('260000');
+    // Maskali ko'rinish: serverdagi `260000` shunday chiziladi.
+    expect(maydon).toHaveValue('260 000');
     await userEvent.clear(maydon);
     await userEvent.type(maydon, '300000');
 

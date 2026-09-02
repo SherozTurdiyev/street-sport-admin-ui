@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Alert, Form, Input, Modal, Typography } from 'antd';
 import { applyServerErrors, errorMessage } from '@/shared/api/error-handler';
+import { PhoneInput } from '@/shared/ui/PhoneInput';
 import type { CreatedOrganization } from './api';
 import { useCreateOrganization } from './hooks';
 
@@ -121,11 +122,11 @@ export function OrganizationFormModal({
             { required: true, message: 'Telefon raqamini kiriting' },
             {
               pattern: /^\+998\d{9}$/,
-              message: "Raqam +998XXXXXXXXX ko'rinishida bo'lishi kerak",
+              message: 'Raqamni to‘liq kiriting: +998 (90) 000-00-00',
             },
           ]}
         >
-          <Input placeholder="+998901234567" />
+          <PhoneInput />
         </Form.Item>
       </Form>
     </Modal>

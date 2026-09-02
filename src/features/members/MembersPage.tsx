@@ -3,6 +3,7 @@ import { Alert, Button, Card, Input, Select, Space, Table, Tag } from 'antd';
 import type { ColumnsType } from 'antd/es/table';
 import { errorMessage } from '@/shared/api/error-handler';
 import { DEFAULT_PAGE_SIZE, ROLE_LABELS } from '@/shared/api/types';
+import { displayPhone } from '@/shared/format/phone';
 import { formatDateTime } from '@/shared/format/time';
 import type { Member, MemberRole, MembersQuery } from './api';
 import { MemberCardDrawer } from './MemberCardDrawer';
@@ -37,7 +38,11 @@ function buildColumns(onOpen: (userId: string) => void): ColumnsType<Member> {
         </Button>
       ),
     },
-    { title: 'Telefon', dataIndex: 'phone' },
+    {
+      title: 'Telefon',
+      dataIndex: 'phone',
+      render: (value: string) => displayPhone(value),
+    },
     {
       title: 'Lavozim',
       dataIndex: 'role',

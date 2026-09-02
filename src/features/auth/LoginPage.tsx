@@ -3,6 +3,7 @@ import { LockOutlined, PhoneOutlined } from '@ant-design/icons';
 import { Alert, Button, Checkbox, Form, Input, Modal, Typography } from 'antd';
 import { errorMessage } from '@/shared/api/error-handler';
 import { figma } from '@/shared/theme/tokens';
+import { PhoneInput } from '@/shared/ui/PhoneInput';
 import logoUrl from '@/assets/logo.svg';
 import { useAuth } from './hooks';
 
@@ -199,13 +200,12 @@ export function LoginPage() {
               className="!mb-4"
               rules={[{ required: true, message: 'Telefon raqamini kiriting' }]}
             >
-              <Input
+              <PhoneInput
                 aria-label="Telefon"
                 style={{ height: 56 }}
                 prefix={
                   <PhoneOutlined aria-hidden style={{ color: figma.primary }} />
                 }
-                placeholder="Telefon raqami"
                 autoComplete="username"
               />
             </Form.Item>

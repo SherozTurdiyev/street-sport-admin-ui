@@ -3,6 +3,7 @@ import { LogoutOutlined } from '@ant-design/icons';
 import { Avatar, Button, Layout, Menu, Tooltip, Typography } from 'antd';
 import { Link, Outlet, useLocation } from 'react-router';
 import { useAuth, useCan, useHasOrg } from '@/features/auth/hooks';
+import { displayPhone } from '@/shared/format/phone';
 import { ROLE_LABELS } from '@/shared/api/types';
 import { figma } from '@/shared/theme/tokens';
 import { SubscriptionBanner } from '@/app/SubscriptionBanner';
@@ -131,7 +132,7 @@ export function AppLayout() {
                   className="truncate"
                   style={{ color: figma.textMuted, fontSize: 12 }}
                 >
-                  {me?.phone}
+                  {displayPhone(me?.phone)}
                 </div>
               </div>
             </Link>

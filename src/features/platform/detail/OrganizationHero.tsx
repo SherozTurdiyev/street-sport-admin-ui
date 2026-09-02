@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Alert, App, Button, Popconfirm, Tag, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { errorMessage } from '@/shared/api/error-handler';
+import { displayPhone } from '@/shared/format/phone';
 import { figma } from '@/shared/theme/tokens';
 import type { PlatformOrganizationDetail } from '../api';
 import { BlockModal } from '../BlockModal';
@@ -70,7 +71,7 @@ export function OrganizationHero({ org }: { org: PlatformOrganizationDetail }) {
 
         <div className="mt-2 flex flex-wrap gap-x-4" style={{ fontSize: 13 }}>
           <span>ORG-{org.id.slice(0, 8)}</span>
-          {org.phone !== null && <span>{org.phone}</span>}
+          {org.phone !== null && <span>{displayPhone(org.phone)}</span>}
           {org.address !== null && <span>{org.address}</span>}
         </div>
 
@@ -116,7 +117,9 @@ export function OrganizationHero({ org }: { org: PlatformOrganizationDetail }) {
             org.directors.map((d) => (
               <div key={d.userId}>
                 <Typography.Text strong>{d.fullName}</Typography.Text>{' '}
-                <span style={{ color: figma.textMuted }}>{d.phone}</span>
+                <span style={{ color: figma.textMuted }}>
+                  {displayPhone(d.phone)}
+                </span>
               </div>
             ))
           )}

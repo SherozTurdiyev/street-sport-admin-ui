@@ -51,7 +51,8 @@ describe('Profil', () => {
     expect(await screen.findByLabelText('Ism va familiya')).toHaveValue(
       'Anvar Direktorov',
     );
-    expect(screen.getByLabelText('Telefon')).toHaveValue('+998901110001');
+    // Maydonda maska ko'rinadi, formaga esa E.164 tushadi.
+    expect(screen.getByLabelText('Telefon')).toHaveValue('+998 (90) 111-00-01');
   });
 
   it('ism va telefonni saqlaydi', async () => {
@@ -74,7 +75,7 @@ describe('Profil', () => {
     await userEvent.type(ism, 'Anvar Yangi');
     const tel = screen.getByLabelText('Telefon');
     await userEvent.clear(tel);
-    await userEvent.type(tel, '+998901119999');
+    await userEvent.type(tel, '901119999');
     await userEvent.click(screen.getByRole('button', { name: 'Saqlash' }));
 
     expect(await screen.findByText(/saqlandi/i)).toBeInTheDocument();

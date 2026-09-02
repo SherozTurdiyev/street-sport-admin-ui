@@ -1,5 +1,6 @@
 import { Table, Tag, Typography } from 'antd';
 import { DEFAULT_PAGE_SIZE, ROLE_LABELS } from '@/shared/api/types';
+import { displayPhone } from '@/shared/format/phone';
 import { formatDateTime } from '@/shared/format/time';
 import {
   SPORT_TYPE_LABELS,
@@ -24,7 +25,11 @@ export function OrgMembersTab({ id }: { id: string }) {
       scroll={{ x: 'max-content' }}
       columns={[
         { title: 'Ism', dataIndex: 'fullName' },
-        { title: 'Telefon', dataIndex: 'phone' },
+        {
+          title: 'Telefon',
+          dataIndex: 'phone',
+          render: (value: string) => displayPhone(value),
+        },
         {
           title: 'Lavozim',
           dataIndex: 'role',

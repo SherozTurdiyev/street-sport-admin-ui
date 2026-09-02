@@ -84,7 +84,7 @@ describe('Xodim yaratish', () => {
       oyna.getByLabelText('Ism va familiya'),
       'Test Menejer',
     );
-    await userEvent.type(oyna.getByLabelText('Telefon'), '+998903517021');
+    await userEvent.type(oyna.getByLabelText('Telefon'), '903517021');
     await tanla(oyna.getByLabelText('Lavozim'), 'Menejer');
     await userEvent.click(oyna.getByRole('button', { name: 'Yaratish' }));
 
@@ -105,7 +105,7 @@ describe('Xodim yaratish', () => {
 
     const oyna = within(await oynaniOch());
     await userEvent.type(oyna.getByLabelText('Ism va familiya'), 'Test Admin');
-    await userEvent.type(oyna.getByLabelText('Telefon'), '+998903517022');
+    await userEvent.type(oyna.getByLabelText('Telefon'), '903517022');
     await tanla(oyna.getByLabelText('Lavozim'), 'Administrator');
 
     // Stadion maydoni faqat administrator tanlanganda paydo bo'ladi.
@@ -135,7 +135,7 @@ describe('Xodim yaratish', () => {
 
     const oyna = within(await oynaniOch());
     await userEvent.type(oyna.getByLabelText('Ism va familiya'), 'Test Admin');
-    await userEvent.type(oyna.getByLabelText('Telefon'), '+998903517022');
+    await userEvent.type(oyna.getByLabelText('Telefon'), '903517022');
     await tanla(oyna.getByLabelText('Lavozim'), 'Administrator');
     // Stadion tanlangan, lekin u shu orada arxivlangan bo'lishi mumkin.
     // Klientdagi qoida serverdagisining o'rnini bosmaydi.
@@ -165,7 +165,7 @@ describe('Xodim yaratish', () => {
       oyna.getByLabelText('Ism va familiya'),
       'Test Menejer',
     );
-    await userEvent.type(oyna.getByLabelText('Telefon'), '+998901110001');
+    await userEvent.type(oyna.getByLabelText('Telefon'), '901110001');
     await tanla(oyna.getByLabelText('Lavozim'), 'Menejer');
     await userEvent.click(oyna.getByRole('button', { name: 'Yaratish' }));
 

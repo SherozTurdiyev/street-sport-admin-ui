@@ -1,6 +1,7 @@
 import { ArrowRightOutlined, PhoneOutlined } from '@ant-design/icons';
 import { Button, Tag, Typography } from 'antd';
 import { Link } from 'react-router';
+import { displayPhone } from '@/shared/format/phone';
 import { formatDate } from '@/shared/format/time';
 import { figma } from '@/shared/theme/tokens';
 import type { PlatformOrganization } from './api';
@@ -35,7 +36,7 @@ export function OrganizationCard({ org }: { org: PlatformOrganization }) {
               style={{ fontSize: 13 }}
             >
               <PhoneOutlined aria-hidden />
-              {org.phone}
+              {displayPhone(org.phone)}
             </div>
           )}
         </div>

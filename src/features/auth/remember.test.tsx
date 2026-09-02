@@ -36,7 +36,7 @@ function logoutHandler() {
 }
 
 async function kirish(eslabQol: boolean): Promise<void> {
-  await userEvent.type(screen.getByLabelText('Telefon'), '+998901110001');
+  await userEvent.type(screen.getByLabelText('Telefon'), '901110001');
   await userEvent.type(screen.getByLabelText('Parol'), 'Parol123!');
   // Belgi standart bo'yicha QO'YILGAN — maketdagidek.
   if (!eslabQol) {
