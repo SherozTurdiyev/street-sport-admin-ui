@@ -22,7 +22,7 @@ function Probe() {
       <span data-testid="status">{status}</span>
       <span data-testid="name">{me?.fullName ?? '-'}</span>
       <span data-testid="can">{String(can('member.admin.manage'))}</span>
-      <button onClick={() => void login('+998901110001', 'Parol123!')}>
+      <button onClick={() => void login('+998901110001', 'Parol123!', true)}>
         Kirish
       </button>
       <button onClick={() => void logout()}>Chiqish</button>
@@ -85,7 +85,7 @@ describe('Auth konteksti', () => {
       expect(screen.getByTestId('status')).toHaveTextContent('anon'),
     );
 
-    await userEvent.click(screen.getByRole('button', { name: 'Kirish' }));
+    await userEvent.click(screen.getByRole('button', { name: /kirish/i }));
 
     await waitFor(() =>
       expect(screen.getByTestId('status')).toHaveTextContent('authed'),

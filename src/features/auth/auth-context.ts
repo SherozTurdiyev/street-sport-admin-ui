@@ -12,7 +12,11 @@ export type AuthStatus = 'loading' | 'authed' | 'anon';
 export type AuthValue = {
   status: AuthStatus;
   me: Me | null;
-  login: (phone: string, password: string) => Promise<void>;
+  /**
+   * `remember` — brauzer yopilgandan keyin ham kirgan holda qolish.
+   * `false` bo'lsa, ilova keyingi ishga tushishida sessiyani yopadi.
+   */
+  login: (phone: string, password: string, remember: boolean) => Promise<void>;
   logout: () => Promise<void>;
   reloadMe: () => Promise<void>;
   /** Serverdan kelgan yangi profilni holatga qo'yadi. */

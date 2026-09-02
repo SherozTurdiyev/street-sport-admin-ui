@@ -35,7 +35,7 @@ describe('Login sahifasi', () => {
 
     await userEvent.type(screen.getByLabelText('Telefon'), '+998901110001');
     await userEvent.type(screen.getByLabelText('Parol'), 'xato');
-    await userEvent.click(screen.getByRole('button', { name: 'Kirish' }));
+    await userEvent.click(screen.getByRole('button', { name: /kirish/i }));
 
     // Matn frontendda yozilmagan — u backenddan kelgan.
     expect(
@@ -62,7 +62,7 @@ describe('Login sahifasi', () => {
 
     await userEvent.type(screen.getByLabelText('Telefon'), '+998901110001');
     await userEvent.type(screen.getByLabelText('Parol'), 'xato');
-    await userEvent.click(screen.getByRole('button', { name: 'Kirish' }));
+    await userEvent.click(screen.getByRole('button', { name: /kirish/i }));
 
     expect(await screen.findByText(/vaqtincha bloklangan/)).toBeInTheDocument();
   });
@@ -79,7 +79,7 @@ describe('Login sahifasi', () => {
     );
     renderApp(<LoginPage />);
 
-    await userEvent.click(screen.getByRole('button', { name: 'Kirish' }));
+    await userEvent.click(screen.getByRole('button', { name: /kirish/i }));
 
     expect(
       await screen.findByText('Telefon raqamini kiriting'),

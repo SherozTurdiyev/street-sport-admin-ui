@@ -99,11 +99,11 @@ describe('1-bosqich: to`liq ssenariy', () => {
 
     // 1. Xodimlar sahifasiga bormoqchi — login sahifasiga tushadi.
     renderApp(<AppRouter />, { route: '/members' });
-    await screen.findByRole('button', { name: 'Kirish' });
+    await screen.findByRole('button', { name: /kirish/i });
 
     await userEvent.type(screen.getByLabelText('Telefon'), '+998901110001');
     await userEvent.type(screen.getByLabelText('Parol'), 'Parol123!');
-    await userEvent.click(screen.getByRole('button', { name: 'Kirish' }));
+    await userEvent.click(screen.getByRole('button', { name: /kirish/i }));
 
     // 2. Kirgach o'sha sahifaga qaytariladi va menyuda ruxsati bor
     //    bo'limlar turadi.

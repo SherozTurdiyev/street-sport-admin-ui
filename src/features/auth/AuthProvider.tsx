@@ -3,6 +3,12 @@ import type { PropsWithChildren } from 'react';
 import { refreshOnce, setAuthLostHandler } from '@/shared/api/client';
 import { setAccessToken } from '@/shared/api/token';
 import { authApi, type Me } from './api';
+import {
+  clearRemember,
+  markAlive,
+  rememberChoice,
+  shouldForget,
+} from './remember';
 import { AuthContext, type AuthStatus, type AuthValue } from './auth-context';
 
 export function AuthProvider({ children }: PropsWithChildren) {
@@ -26,6 +32,24 @@ export function AuthProvider({ children }: PropsWithChildren) {
   useEffect(() => {
     let cancelled = false;
     void (async () => {
+      /*
+       * "Eslab qolish" belgilanmagan va brauzer yopilib qayta ochilgan:
+       * cookie hali tirik, lekin foydalanuvchi aynan buni istamagan.
+       * Uni JavaScript o'chira olmaydi (`httpOnly`) — serverga aytamiz.
+       */
+      if (shouldForget()) {
+        try {
+          await authApi.logout();
+        } catch {
+          // Server yetib bormasa ham foydalanuvchi kirgan holda
+          // ko'rsatilmaydi: quyida `anon` ga tushadi.
+        }
+        clearRemember();
+        if (!cancelled) forgetSession();
+        return;
+      }
+      markAlive();
+
       try {
         await refreshOnce();
         const data = await authApi.me();
@@ -42,15 +66,19 @@ export function AuthProvider({ children }: PropsWithChildren) {
     };
   }, [forgetSession]);
 
-  const login = useCallback(async (phone: string, password: string) => {
-    const res = await authApi.login(phone, password);
-    setAccessToken(res.accessToken);
-    // `/auth/me` alohida chaqiriladi: login javobida `permissions` yo'q,
-    // butun interfeys esa aynan shunga tayanadi.
-    const data = await authApi.me();
-    setMe(data);
-    setStatus('authed');
-  }, []);
+  const login = useCallback(
+    async (phone: string, password: string, remember: boolean) => {
+      rememberChoice(remember);
+      const res = await authApi.login(phone, password);
+      setAccessToken(res.accessToken);
+      // `/auth/me` alohida chaqiriladi: login javobida `permissions` yo'q,
+      // butun interfeys esa aynan shunga tayanadi.
+      const data = await authApi.me();
+      setMe(data);
+      setStatus('authed');
+    },
+    [],
+  );
 
   const logout = useCallback(async () => {
     try {
@@ -66,6 +94,7 @@ export function AuthProvider({ children }: PropsWithChildren) {
       // Bu tarmoq uzilgan yoki server yiqilgan holatda sodir bo'ladi;
       // o'sha paytda foydalanuvchi baribir hech nima qila olmaydi.
     } finally {
+      clearRemember();
       forgetSession();
     }
   }, [forgetSession]);

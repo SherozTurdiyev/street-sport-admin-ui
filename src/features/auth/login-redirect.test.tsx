@@ -53,7 +53,7 @@ function organizationHandler() {
 async function kirish() {
   await userEvent.type(screen.getByLabelText('Telefon'), '+998901110001');
   await userEvent.type(screen.getByLabelText('Parol'), 'Parol123!');
-  await userEvent.click(screen.getByRole('button', { name: 'Kirish' }));
+  await userEvent.click(screen.getByRole('button', { name: /kirish/i }));
 }
 
 beforeEach(() => {
@@ -71,12 +71,12 @@ describe('Logindan keyingi yo`nalish', () => {
     // `/members` ga kirmoqchi bo'ldi, lekin login sahifasiga tushdi.
     renderApp(<AppRouter />, { route: '/members' });
 
-    await screen.findByRole('button', { name: 'Kirish' });
+    await screen.findByRole('button', { name: /kirish/i });
     await kirish();
 
     expect(await screen.findByRole('table')).toBeInTheDocument();
     expect(
-      screen.queryByRole('button', { name: 'Kirish' }),
+      screen.queryByRole('button', { name: /kirish/i }),
     ).not.toBeInTheDocument();
   });
 
@@ -91,7 +91,7 @@ describe('Logindan keyingi yo`nalish', () => {
     );
     renderApp(<AppRouter />, { route: '/login' });
 
-    await screen.findByRole('button', { name: 'Kirish' });
+    await screen.findByRole('button', { name: /kirish/i });
     await kirish();
 
     expect(
@@ -113,7 +113,7 @@ describe('Logindan keyingi yo`nalish', () => {
     // bormagan — qaytarilishi kerak bo'lgan manzil emas.
     renderApp(<AppRouter />, { route: '/change-password' });
 
-    await screen.findByRole('button', { name: 'Kirish' });
+    await screen.findByRole('button', { name: /kirish/i });
     await kirish();
 
     // Bosh sahifaga tushadi — ya'ni birinchi ochiq bo'lim, ya'ni
@@ -137,7 +137,7 @@ describe('Logindan keyingi yo`nalish', () => {
       await screen.findByRole('menuitem', { name: 'Xodimlar' }),
     ).toBeInTheDocument();
     expect(
-      screen.queryByRole('button', { name: 'Kirish' }),
+      screen.queryByRole('button', { name: /kirish/i }),
     ).not.toBeInTheDocument();
   });
 });
