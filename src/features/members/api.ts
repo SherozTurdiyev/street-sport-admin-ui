@@ -47,6 +47,20 @@ export type CreatedMember = {
   temporaryPassword: string;
 };
 
+/**
+ * M8 (to'lovlar) va M9 (smena) qo'shilgunicha backend `cashReceived` ni
+ * `"0"`, `shiftDiscrepancies` ni bo'sh massiv qaytaradi.
+ */
+export type MemberStats = {
+  bookingsCreated: number;
+  bookingsCancelled: number;
+  /** Pul SATR — `number` ga o'girilmaydi (BR-13). */
+  cashReceived: string;
+  shiftDiscrepancies: readonly unknown[];
+};
+
+export type MemberDetail = Member & { stats: MemberStats };
+
 export const membersApi = {
   list: (query: MembersQuery) =>
     // axios `undefined` parametrlarni umuman yubormaydi, shuning uchun
@@ -57,4 +71,31 @@ export const membersApi = {
 
   create: (input: CreateMemberInput) =>
     api.post<CreatedMember>('/members', input).then((r) => r.data),
+
+  // Quyidagi barcha yo'llarda `:id` — bu `userId`, `member.id` EMAS.
+  detail: (userId: string) =>
+    api.get<MemberDetail>(`/members/${userId}`).then((r) => r.data),
+
+  setRole: (userId: string, role: MemberRole) =>
+    api.patch<Member>(`/members/${userId}/role`, { role }).then((r) => r.data),
+
+  setActive: (userId: string, isActive: boolean) =>
+    api
+      .post<{ userId: string; isActive: boolean }>(
+        `/members/${userId}/${isActive ? 'activate' : 'deactivate'}`,
+      )
+      .then((r) => r.data),
+
+  /**
+   * `PUT` — ro'yxat BUTUNLAY almashtiriladi, qo'shilmaydi. Interfeys ham
+   * shunga mos bo'lishi kerak: belgilash ro'yxati, "qo'shish" tugmasi
+   * emas.
+   */
+  setVenues: (userId: string, venueIds: string[]) =>
+    api
+      .put<{ userId: string; venueIds: string[] }>(
+        `/members/${userId}/venues`,
+        { venueIds },
+      )
+      .then((r) => r.data),
 };

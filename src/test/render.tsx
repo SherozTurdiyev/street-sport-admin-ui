@@ -1,7 +1,7 @@
 import type { ReactElement, ReactNode } from 'react';
 import { render, type RenderOptions } from '@testing-library/react';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
-import { ConfigProvider } from 'antd';
+import { App as AntApp, ConfigProvider } from 'antd';
 import uzUZ from 'antd/locale/uz_UZ';
 import { MemoryRouter } from 'react-router';
 import { AuthProvider } from '@/features/auth/AuthProvider';
@@ -31,9 +31,11 @@ export function renderApp(
     return (
       <QueryClientProvider client={createTestClient()}>
         <ConfigProvider locale={uzUZ} theme={antdTheme}>
-          <MemoryRouter initialEntries={[route]}>
-            <AuthProvider>{children}</AuthProvider>
-          </MemoryRouter>
+          <AntApp>
+            <MemoryRouter initialEntries={[route]}>
+              <AuthProvider>{children}</AuthProvider>
+            </MemoryRouter>
+          </AntApp>
         </ConfigProvider>
       </QueryClientProvider>
     );

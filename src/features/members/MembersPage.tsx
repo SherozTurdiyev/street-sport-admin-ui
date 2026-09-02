@@ -5,6 +5,7 @@ import { errorMessage } from '@/shared/api/error-handler';
 import { DEFAULT_PAGE_SIZE, ROLE_LABELS } from '@/shared/api/types';
 import { formatDateTime } from '@/shared/format/time';
 import type { Member, MemberRole, MembersQuery } from './api';
+import { MemberCardDrawer } from './MemberCardDrawer';
 import { MemberFormModal } from './MemberFormModal';
 import { useMembers } from './hooks';
 
@@ -19,26 +20,42 @@ const STATUS_OPTIONS = [
   { value: false, label: 'Faolsiz' },
 ];
 
-const columns: ColumnsType<Member> = [
-  { title: 'Ism', dataIndex: 'fullName' },
-  { title: 'Telefon', dataIndex: 'phone' },
-  {
-    title: 'Lavozim',
-    dataIndex: 'role',
-    render: (value: MemberRole) => ROLE_LABELS[value],
-  },
-  {
-    title: 'Holat',
-    dataIndex: 'isActive',
-    render: (value: boolean) =>
-      value ? <Tag color="green">Faol</Tag> : <Tag>Faolsiz</Tag>,
-  },
-  {
-    title: 'Oxirgi kirish',
-    dataIndex: 'lastLoginAt',
-    render: (value: string | null) => formatDateTime(value),
-  },
-];
+function buildColumns(onOpen: (userId: string) => void): ColumnsType<Member> {
+  return [
+    {
+      title: 'Ism',
+      dataIndex: 'fullName',
+      // Kartochka `userId` bilan ochiladi, `id` bilan emas: keyingi
+      // barcha so'rovlar shu bo'yicha ketadi.
+      render: (value: string, row: Member) => (
+        <Button
+          type="link"
+          className="!px-0"
+          onClick={() => onOpen(row.userId)}
+        >
+          {value}
+        </Button>
+      ),
+    },
+    { title: 'Telefon', dataIndex: 'phone' },
+    {
+      title: 'Lavozim',
+      dataIndex: 'role',
+      render: (value: MemberRole) => ROLE_LABELS[value],
+    },
+    {
+      title: 'Holat',
+      dataIndex: 'isActive',
+      render: (value: boolean) =>
+        value ? <Tag color="success">Faol</Tag> : <Tag>Faolsiz</Tag>,
+    },
+    {
+      title: 'Oxirgi kirish',
+      dataIndex: 'lastLoginAt',
+      render: (value: string | null) => formatDateTime(value),
+    },
+  ];
+}
 
 export function MembersPage() {
   const [query, setQuery] = useState<MembersQuery>({
@@ -46,6 +63,7 @@ export function MembersPage() {
     pageSize: DEFAULT_PAGE_SIZE,
   });
   const [formOpen, setFormOpen] = useState(false);
+  const [cardUserId, setCardUserId] = useState<string | null>(null);
   const { data, isFetching, error } = useMembers(query);
 
   /**
@@ -104,7 +122,7 @@ export function MembersPage() {
 
       <Table<Member>
         rowKey="id"
-        columns={columns}
+        columns={buildColumns(setCardUserId)}
         dataSource={data?.items ?? []}
         loading={isFetching}
         // Sahifalash SERVER tomonda: nomlar backend bilan bir xil
@@ -125,6 +143,10 @@ export function MembersPage() {
       />
 
       <MemberFormModal open={formOpen} onClose={() => setFormOpen(false)} />
+      <MemberCardDrawer
+        userId={cardUserId}
+        onClose={() => setCardUserId(null)}
+      />
     </Card>
   );
 }

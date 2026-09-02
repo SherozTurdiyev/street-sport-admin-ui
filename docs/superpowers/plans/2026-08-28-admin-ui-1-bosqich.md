@@ -645,21 +645,21 @@ aniq aytish kerak.
 
 **Fayllar:** `src/features/members/MemberCardDrawer.tsx`
 
-- [ ] **12.1** Test: rolni `VENUE_ADMIN` ga o'zgartirishda stadion
+- [x] **12.1** Test: rolni `VENUE_ADMIN` ga o'zgartirishda stadion
       biriktirilmagan bo'lsa `MEMBER_VENUE_REQUIRED` xabari ko'rinadi
 
-- [ ] **12.2** Test: faolsizlantirishdan oldin tasdiq so'raladi
+- [x] **12.2** Test: faolsizlantirishdan oldin tasdiq so'raladi
 
-- [ ] **12.3** Kartochka: statistika, rol o'zgartirish,
+- [x] **12.3** Kartochka: statistika, rol o'zgartirish,
       faollashtirish/faolsizlantirish, stadion biriktirish
 
 Stadion biriktirish `PUT` — ro'yxat **butunlay almashtiriladi**.
 Interfeysda bu aniq ko'rinishi kerak (checkbox ro'yxati, "qo'shish"
 tugmasi emas).
 
-- [ ] **12.4** Testlar o'tadi
+- [x] **12.4** Testlar o'tadi
 
-- [ ] **12.5** Commit: `feat: xodim kartochkasi va amallari`
+- [x] **12.5** Commit: `feat: xodim kartochkasi va amallari`
 
 ---
 

@@ -1,5 +1,5 @@
 import type { PropsWithChildren } from 'react';
-import { ConfigProvider } from 'antd';
+import { App as AntApp, ConfigProvider } from 'antd';
 import uzUZ from 'antd/locale/uz_UZ';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { isApiError } from '@/shared/api/errors';
@@ -31,8 +31,14 @@ const queryClient = createQueryClient();
 export function Providers({ children }: PropsWithChildren) {
   return (
     <QueryClientProvider client={queryClient}>
+      {/*
+        `App` — antd 6 da SHART: `App.useApp()` orqali olinadigan
+        `message` va `modal` shu konteksdan keladi. Usiz ular jimgina
+        yo'qoladi — komponent xato bermaydi, foydalanuvchi esa hech
+        qanday tasdiq ko'rmaydi.
+      */}
       <ConfigProvider locale={uzUZ} theme={antdTheme}>
-        {children}
+        <AntApp>{children}</AntApp>
       </ConfigProvider>
     </QueryClientProvider>
   );
