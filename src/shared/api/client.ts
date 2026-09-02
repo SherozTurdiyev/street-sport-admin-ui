@@ -8,6 +8,18 @@ import {
 
 const BASE_URL = import.meta.env.VITE_API_URL;
 
+/**
+ * Backend fayl havolalarini server ILDIZIGA nisbatan qaytaradi:
+ * `/api/v1/files/:id`. Uni `<img src>` ga to'g'ridan-to'g'ri qo'yish
+ * xato bo'lardi — brauzer uni adminka manzilidan (`:5173`) qidiradi va
+ * rasm ochilmaydi. Shuning uchun backend manzili oldiga qo'shiladi.
+ */
+const API_ORIGIN = new URL(BASE_URL).origin;
+
+export function assetUrl(path: string): string {
+  return `${API_ORIGIN}${path}`;
+}
+
 export const api = axios.create({
   baseURL: BASE_URL,
   // Cookie usiz `/auth/refresh` ishlamaydi: refresh token httpOnly

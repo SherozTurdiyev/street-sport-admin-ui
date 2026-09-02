@@ -83,6 +83,30 @@ export type VenueInput = {
   description?: string | null;
 };
 
+export const CANCEL_REASON_LABELS = {
+  CUSTOMER_REFUSED: 'Mijoz voz kechdi',
+  WEATHER: 'Ob-havo',
+  VENUE_ISSUE: 'Stadion muammosi',
+  DOUBLE_BOOKING: 'Ikki marta bron',
+  OTHER: 'Boshqa',
+} as const;
+
+export type CancelReason = keyof typeof CANCEL_REASON_LABELS;
+
+export type ClosureInput = {
+  /** ISO UTC. */
+  startsAt: string;
+  endsAt: string;
+  reason: string;
+  /**
+   * Davrda bron bo'lsa va bu berilmasa, backend
+   * `VENUE_CLOSURE_HAS_BOOKINGS` (409) qaytaradi — bron jimgina
+   * yo'qolib qolmasligi uchun ataylab qo'yilgan to'siq.
+   */
+  cancelBookings?: boolean;
+  cancelReason?: CancelReason;
+};
+
 export const venuesApi = {
   options: () =>
     api
@@ -111,6 +135,32 @@ export const venuesApi = {
 
   restore: (id: string) =>
     api.post<Venue>(`/venues/${id}/restore`).then((r) => r.data),
+
+  /**
+   * `multipart/form-data`, maydon nomi `file`. `Content-Type` ATAYLAB
+   * qo'lda berilmaydi: brauzer uni chegara (`boundary`) bilan birga
+   * o'zi qo'yadi, qo'lda yozilsa so'rov o'qib bo'lmas holga keladi.
+   */
+  addPhoto: (id: string, file: File) => {
+    const form = new FormData();
+    form.append('file', file);
+    return api
+      .post<{ photos: VenuePhoto[] }>(`/venues/${id}/photos`, form)
+      .then((r) => r.data.photos);
+  },
+
+  removePhoto: (id: string, photoId: string) =>
+    api
+      .delete<{ photos: VenuePhoto[] }>(`/venues/${id}/photos/${photoId}`)
+      .then((r) => r.data.photos),
+
+  addClosure: (id: string, input: ClosureInput) =>
+    api.post<VenueClosure>(`/venues/${id}/closures`, input).then((r) => r.data),
+
+  removeClosure: (id: string, closureId: string) =>
+    api
+      .delete<{ id: string }>(`/venues/${id}/closures/${closureId}`)
+      .then((r) => r.data),
 
   hours: (id: string) =>
     api

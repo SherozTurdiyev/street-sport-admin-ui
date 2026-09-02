@@ -100,7 +100,7 @@ Shuning uchun forma haftaning yettala kunini ko'rsatadi, har birida
 
 ## 3-qism: fotolar va yopilishlar
 
-### Task 6: Fotolar
+### ✅ Task 6: Fotolar
 
 **Fayllar:** `photos/PhotosTab.tsx`
 
@@ -111,7 +111,7 @@ orqali ko'rsatiladi (`/api/v1/files/:id`).
 - Test: `FILE_TOO_LARGE` va `FILE_TYPE_INVALID` xabarlari ko'rinadi
 - Commit: `feat: stadion fotolari`
 
-### Task 7: Vaqtinchalik yopilishlar
+### ✅ Task 7: Vaqtinchalik yopilishlar
 
 **Fayllar:** `closures/ClosuresTab.tsx`
 

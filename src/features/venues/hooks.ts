@@ -6,6 +6,7 @@ import {
 } from '@tanstack/react-query';
 import {
   venuesApi,
+  type ClosureInput,
   type VenueHours,
   type VenueInput,
   type VenuesQuery,
@@ -87,4 +88,26 @@ export function useRestoreVenue(id: string) {
 
 export function useSetVenueHours(id: string) {
   return useVenueAction((hours: VenueHours[]) => venuesApi.setHours(id, hours));
+}
+
+export function useAddPhoto(id: string) {
+  return useVenueAction((file: File) => venuesApi.addPhoto(id, file));
+}
+
+export function useRemovePhoto(id: string) {
+  return useVenueAction((photoId: string) =>
+    venuesApi.removePhoto(id, photoId),
+  );
+}
+
+export function useAddClosure(id: string) {
+  return useVenueAction((input: ClosureInput) =>
+    venuesApi.addClosure(id, input),
+  );
+}
+
+export function useRemoveClosure(id: string) {
+  return useVenueAction((closureId: string) =>
+    venuesApi.removeClosure(id, closureId),
+  );
 }

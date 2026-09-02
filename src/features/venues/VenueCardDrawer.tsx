@@ -19,6 +19,8 @@ import {
   VENUE_STATUS_VIEW,
 } from './enums';
 import { WeeklyHoursForm } from './WeeklyHoursForm';
+import { ClosuresTab } from './ClosuresTab';
+import { PhotosTab } from './PhotosTab';
 import { PriceRulesTab } from './prices/PriceRulesTab';
 import { useArchiveVenue, useRestoreVenue, useVenue } from './hooks';
 
@@ -146,6 +148,16 @@ function VenueCardBody({ venueId }: { venueId: string }) {
           key: 'prices',
           label: 'Narxlar',
           children: <PriceRulesTab venueId={venueId} />,
+        },
+        {
+          key: 'photos',
+          label: 'Fotolar',
+          children: <PhotosTab venueId={venueId} />,
+        },
+        {
+          key: 'closures',
+          label: 'Yopilishlar',
+          children: <ClosuresTab venueId={venueId} />,
         },
       ]}
     />

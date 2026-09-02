@@ -129,6 +129,29 @@ bloklash mumkin.
 to'lovlari va audit jurnalini ham olib ketardi. Ish to'xtatilishi kerak
 bo'lsa — bloklanadi.
 
+## Stadionlar
+
+Ro'yxat, profil, arxivlash va kartochkada beshta bo'lim: ish vaqti,
+narxlar, fotolar, yopilishlar.
+
+**Ro'yxatni to'liq almashtiruvchi `PUT` lar.** Ish vaqti shunday
+ishlaydi: ro'yxatga kirmagan kun yopiq hisoblanadi. Shuning uchun forma
+haftaning yettala kunini ko'rsatadi — "kun qo'shish" tugmasi bo'lganda
+bitta kunni tahrirlagan odam qolganlarini bilmasdan yopib qo'yardi.
+
+**Bazaviy narx qoidasi majburiy.** Usiz bron umuman yaratilmaydi, shuning
+uchun yo'qligi narxlar bo'limida darhol ogohlantirish bilan ko'rinadi.
+
+**Vaqt: devor soati Toshkentda o'qiladi.** `DatePicker` brauzer
+mintaqasida qiymat qaytaradi, adminka esa har doim Toshkent vaqtida
+ishlaydi. O'girish `tashkentToIso` orqali — `toISOString()` ni
+to'g'ridan-to'g'ri ishlatish boshqa mintaqadagi foydalanuvchida boshqa
+soatni yuborardi.
+
+**Fayl havolalari.** Backend `/api/v1/files/:id` qaytaradi — server
+ildizidan. `<img src>` ga qo'yishdan oldin `assetUrl()` bilan backend
+manzili qo'shiladi, aks holda brauzer uni adminka manzilidan qidiradi.
+
 ## Hozircha yo'q
 
-Stadionlar, narx qoidalari, mijozlar, kalendar, bron, to'lovlar.
+Mijozlar, kalendar, bron, to'lovlar.
