@@ -50,8 +50,8 @@ export function useMember(userId: string | null) {
  * ham ro'yxat, ham kartochka yangilanadi. `memberKeys.all` prefiksi
  * ikkalasini ham qamrab oladi.
  */
-function useMemberAction<TInput>(
-  mutationFn: (input: TInput) => Promise<unknown>,
+function useMemberAction<TInput, TOutput>(
+  mutationFn: (input: TInput) => Promise<TOutput>,
 ) {
   const queryClient = useQueryClient();
   return useMutation({

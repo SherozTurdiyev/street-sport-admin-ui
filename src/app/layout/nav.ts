@@ -1,4 +1,4 @@
-import { ShopOutlined, TeamOutlined } from '@ant-design/icons';
+import { BankOutlined, ShopOutlined, TeamOutlined } from '@ant-design/icons';
 import type { ComponentType } from 'react';
 
 /**
@@ -45,6 +45,15 @@ export const NAV: readonly NavItem[] = [
     label: 'Xodimlar',
     icon: TeamOutlined,
     requiresOrg: true,
+  },
+  {
+    // Platforma bo'limi: tashkilotga a'zolik TALAB QILINMAYDI —
+    // `SUPER_ADMIN` da `orgId` yo'q.
+    path: '/platform/organizations',
+    permission: 'platform.org.manage',
+    label: 'Tashkilotlar',
+    icon: BankOutlined,
+    requiresOrg: false,
   },
 ];
 

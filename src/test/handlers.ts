@@ -40,7 +40,9 @@ export const SUPER_ADMIN_ME = {
   fullName: 'Platforma Egasi',
   phone: '+998901110000',
   mustChangePassword: false,
-  permissions: [],
+  // Backend `/auth/me` da aynan shu ruxsatni qaytaradi — platforma
+  // ruxsatlari alohida fazoda va tashkilot rollariga berilmaydi.
+  permissions: ['platform.org.manage'],
 };
 
 /** Kirgan foydalanuvchi: refresh ham, `/auth/me` ham muvaffaqiyatli. */

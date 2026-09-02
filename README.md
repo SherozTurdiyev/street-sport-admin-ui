@@ -110,9 +110,25 @@ Ko'pchilik testlar butun ilovani (`AppRouter`) ko'taradi. Bu sekinroq,
 lekin marshrut, ruxsat va kesh bilan birga tekshiradi. To'liq zanjir —
 `src/test/scenario.test.tsx`.
 
+## Platforma paneli
+
+`SUPER_ADMIN` uchun alohida bo'lim: tashkilotlar ro'yxati, yangi
+tashkilot ochish, profil va obuna muddati, bloklash.
+
+Ikkita nozik joyni yodda tuting:
+
+**Holat ikkita.** `subscriptionStatus` — bazadagi ustun,
+`effectiveStatus` — amaldagi holat. Obuna sanasi hech kim tegmasdan
+o'tib ketadi, shuning uchun ustunda `ACTIVE` turgan tashkilot amalda
+`EXPIRED` bo'lishi mumkin. **Ko'rsatiladigan holat har doim
+`effectiveStatus`**, bloklash tugmalari esa **ustunga** qaraydi —
+backend ham shunday qaraydi va muddati tugagan tashkilotni qo'lda ham
+bloklash mumkin.
+
+**`DELETE` yo'q va bo'lmaydi.** Tashkilotni o'chirish uning bronlari,
+to'lovlari va audit jurnalini ham olib ketardi. Ish to'xtatilishi kerak
+bo'lsa — bloklanadi.
+
 ## Hozircha yo'q
 
-Stadionlar, narx qoidalari, mijozlar, kalendar, bron, to'lovlar,
-platforma paneli. Platforma xodimi (`SUPER_ADMIN`) kirsa buni
-tushuntiruvchi sahifa ko'radi: uning bo'limlari backendda tayyor
-(`/platform/*`), adminkada esa hali qurilmagan.
+Stadionlar, narx qoidalari, mijozlar, kalendar, bron, to'lovlar.

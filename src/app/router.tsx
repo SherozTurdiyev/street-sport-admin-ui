@@ -32,6 +32,11 @@ const OrganizationPage = lazy(() =>
     default: m.OrganizationPage,
   })),
 );
+const OrganizationsPage = lazy(() =>
+  import('@/features/platform/OrganizationsPage').then((m) => ({
+    default: m.OrganizationsPage,
+  })),
+);
 
 /**
  * Bosh sahifa qat'iy emas: foydalanuvchi o'ziga ochiq BIRINCHI bo'limga
@@ -67,6 +72,14 @@ export function AppRouter() {
           <Route path="/change-password" element={<ChangePasswordPage />} />
           <Route element={<AppLayout />}>
             <Route path="/" element={<HomeRedirect />} />
+            <Route
+              element={<RequirePermission permission="platform.org.manage" />}
+            >
+              <Route
+                path="/platform/organizations"
+                element={<OrganizationsPage />}
+              />
+            </Route>
             <Route element={<RequireOrg />}>
               <Route path="/organization" element={<OrganizationPage />} />
               <Route
