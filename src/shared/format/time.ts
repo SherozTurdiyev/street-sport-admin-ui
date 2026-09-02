@@ -67,3 +67,8 @@ export function nextDaysRange(days: number): { from: string; to: string } {
   const now = dayjs();
   return { from: now.toISOString(), to: now.add(days, 'day').toISOString() };
 }
+
+/** Toshkent bugungi kuni, `YYYY-MM-DD`. Brauzer mintaqasi emas (BR-12). */
+export function tashkentToday(): string {
+  return dayjs().tz(TASHKENT).format('YYYY-MM-DD');
+}

@@ -1,5 +1,6 @@
 import {
   BankOutlined,
+  CalendarOutlined,
   DashboardOutlined,
   EnvironmentOutlined,
   ShopOutlined,
@@ -46,6 +47,15 @@ export const NAV: readonly NavItem[] = [
     permission: null,
     label: 'Boshqaruv paneli',
     icon: DashboardOutlined,
+    requiresOrg: true,
+  },
+  {
+    // Kalendar boshqaruv panelidan keyin: administratorning kunlik ishi
+    // shu yerda boshlanadi.
+    path: '/bookings',
+    permission: null,
+    label: 'Bronlar',
+    icon: CalendarOutlined,
     requiresOrg: true,
   },
   {
