@@ -2,7 +2,7 @@
 
 > **Ijrochi uchun:** tasklar ketma-ket bajariladi, har biridan keyin
 > `npm test && npm run lint && npm run build` va commit. Qadamlar
-> checkbox (`- [ ]`) bilan belgilanadi.
+> checkbox (`- [x]`) bilan belgilanadi.
 
 **Maqsad:** administrator kalendardan bron ochadi, mijoz bazasini
 yuritadi va takrorlanuvchi o'yinlarni seriya qilib kiritadi.
@@ -40,7 +40,7 @@ Oldingi bosqichlardagilar kuchda qoladi:
 
 ## 1-qism: M6 — kalendar va bron
 
-### Task 1: Bron API si va hooklari
+### ✅ Task 1: Bron API si va hooklari
 
 **Fayllar:**
 
@@ -104,15 +104,15 @@ muvaffaqiyatda `bookingKeys.all` ni bekor qiladi.
 
 **Qadamlar:**
 
-- [ ] `slots.ts` va `slots.test.ts` ni ko'chir, importlarni yangila,
+- [x] `slots.ts` va `slots.test.ts` ni ko'chir, importlarni yangila,
       `npm test` yashil ekanini tekshir
-- [ ] `CANCEL_REASON_LABELS` ni ko'chir, `ClosuresTab` importini
+- [x] `CANCEL_REASON_LABELS` ni ko'chir, `ClosuresTab` importini
       yangila
-- [ ] `api.ts` ga yuqoridagi turlar va metodlarni qo'sh
-- [ ] `hooks.ts` ga hooklarni qo'sh
-- [ ] Commit: `refactor: bron mantiqi o'z bo'limiga ko'chdi`
+- [x] `api.ts` ga yuqoridagi turlar va metodlarni qo'sh
+- [x] `hooks.ts` ga hooklarni qo'sh
+- [x] Commit: `refactor: bron mantiqi o'z bo'limiga ko'chdi`
 
-### Task 2: Panjaraning sof funksiyalari
+### ✅ Task 2: Panjaraning sof funksiyalari
 
 **Fayllar:** yaratish `src/features/bookings/calendar/grid.ts`,
 `grid.test.ts`
@@ -139,16 +139,16 @@ erta ochilish va eng kech yopilish. Hech biri ochiq bo'lmasa `null`.
 
 **Testlar:**
 
-- [ ] Ikki stadion, biri 08:00–23:00, ikkinchisi 10:00–02:00 →
+- [x] Ikki stadion, biri 08:00–23:00, ikkinchisi 10:00–02:00 →
       `axisRange` `{ start: 480, end: 1560 }` (yarim tundan o'tgani
       +24 soat bilan)
-- [ ] Hech qaysi stadion shu kuni ochiq emas → `null`
-- [ ] `hourTicks({ start: 480, end: 600 })` → `[480, 540, 600]`
-- [ ] Ikki soatlik bron → **bitta** blok, `height: 120`
-- [ ] Bekor qilingan bron blok bermaydi
-- [ ] Commit: `feat: kalendar panjarasining hisob-kitobi`
+- [x] Hech qaysi stadion shu kuni ochiq emas → `null`
+- [x] `hourTicks({ start: 480, end: 600 })` → `[480, 540, 600]`
+- [x] Ikki soatlik bron → **bitta** blok, `height: 120`
+- [x] Bekor qilingan bron blok bermaydi
+- [x] Commit: `feat: kalendar panjarasining hisob-kitobi`
 
-### Task 3: Kalendar ekrani
+### ✅ Task 3: Kalendar ekrani
 
 **Fayllar:** yaratish `BookingsPage.tsx`, `calendar/DayCalendar.tsx`,
 `calendar/VenueColumn.tsx`, `calendar/CalendarToolbar.tsx`;
@@ -172,14 +172,14 @@ ham `<button>`: `` `${slot vaqti} ${mijoz yoki 'Anonim'} — ochish` ``.
 
 **Testlar:**
 
-- [ ] Kalendar ustunlari stadion nomlari bilan chiziladi
-- [ ] Ikki soatlik bron bitta blok bo'lib ko'rinadi (bitta tugma)
-- [ ] «Ertaga» bosilsa so'rovdagi `date` bir kunga siljiydi
-- [ ] Stadion filtri `venueIds` ni so'rovga qo'shadi
-- [ ] Hech qaysi stadion ochiq bo'lmasa «Bu kuni hamma stadion yopiq»
-- [ ] Commit: `feat: kunlik kalendar panjarasi`
+- [x] Kalendar ustunlari stadion nomlari bilan chiziladi
+- [x] Ikki soatlik bron bitta blok bo'lib ko'rinadi (bitta tugma)
+- [x] «Ertaga» bosilsa so'rovdagi `date` bir kunga siljiydi
+- [x] Stadion filtri `venueIds` ni so'rovga qo'shadi
+- [x] Hech qaysi stadion ochiq bo'lmasa «Bu kuni hamma stadion yopiq»
+- [x] Commit: `feat: kunlik kalendar panjarasi`
 
-### Task 4: Tez bron oynasi
+### ✅ Task 4: Tez bron oynasi
 
 **Fayllar:** yaratish `BookingFormModal.tsx`,
 `src/features/customers/api.ts` (faqat `lookup`), `hooks.ts`
@@ -206,18 +206,18 @@ Muvaffaqiyatda: oyna yopiladi, `message.success('Bron yaratildi')`,
 
 **Testlar:**
 
-- [ ] Bo'sh katak bosilsa oyna ochiladi va vaqt to'ldirilgan
-- [ ] Telefon kiritilib «Topish» bosilsa topilgan mijoz ismi chiqadi
-- [ ] Yangi telefon → ism maydoni ochiladi va `lookup` ikkalasini
+- [x] Bo'sh katak bosilsa oyna ochiladi va vaqt to'ldirilgan
+- [x] Telefon kiritilib «Topish» bosilsa topilgan mijoz ismi chiqadi
+- [x] Yangi telefon → ism maydoni ochiladi va `lookup` ikkalasini
       yuboradi
-- [ ] Saqlashda `POST /bookings` tanasi to'g'ri: `venueId`, `startsAt`,
+- [x] Saqlashda `POST /bookings` tanasi to'g'ri: `venueId`, `startsAt`,
       `endsAt`, `customerId`
-- [ ] `BOOKING_CONFLICT` oyna ichida ko'rsatiladi
-- [ ] Qora ro'yxatdagi mijozda ogohlantirish chiqadi, bron esa
+- [x] `BOOKING_CONFLICT` oyna ichida ko'rsatiladi
+- [x] Qora ro'yxatdagi mijozda ogohlantirish chiqadi, bron esa
       yaratiladi
-- [ ] Commit: `feat: kalendardan tez bron`
+- [x] Commit: `feat: kalendardan tez bron`
 
-### Task 5: Bron kartochkasi va o'yin natijasi
+### ✅ Task 5: Bron kartochkasi va o'yin natijasi
 
 **Fayllar:** yaratish `BookingDrawer.tsx`
 
@@ -231,14 +231,14 @@ holat `CONFIRMED` bo'lganda.
 
 **Testlar:**
 
-- [ ] Blok bosilsa kartochka ochiladi va manzilda `?booking=` paydo
+- [x] Blok bosilsa kartochka ochiladi va manzilda `?booking=` paydo
       bo'ladi
-- [ ] Kelajakdagi bronda natija tugmalari YO'Q
-- [ ] O'tgan bronda «Yakunlandi» bosilsa
+- [x] Kelajakdagi bronda natija tugmalari YO'Q
+- [x] O'tgan bronda «Yakunlandi» bosilsa
       `POST /bookings/:id/result` `{ result: 'COMPLETED' }` ketadi
-- [ ] Commit: `feat: bron kartochkasi va o'yin natijasi`
+- [x] Commit: `feat: bron kartochkasi va o'yin natijasi`
 
-### Task 6: Ko'chirish va narx tasdig'i
+### ✅ Task 6: Ko'chirish va narx tasdig'i
 
 **Fayllar:** yaratish `MoveBookingModal.tsx`
 
@@ -256,13 +256,13 @@ qaytaradi.
 
 **Testlar:**
 
-- [ ] Vaqt o'zgartirilsa `PATCH /bookings/:id/move` `startsAt` va
+- [x] Vaqt o'zgartirilsa `PATCH /bookings/:id/move` `startsAt` va
       `endsAt` bilan ketadi
-- [ ] `BOOKING_PRICE_CHANGED` da ikkala narx ko'rinadi va tasdiqdan
+- [x] `BOOKING_PRICE_CHANGED` da ikkala narx ko'rinadi va tasdiqdan
       keyingi so'rovda `confirmPriceChange: true` bo'ladi
-- [ ] Commit: `feat: bronni ko'chirish va narx tasdig'i`
+- [x] Commit: `feat: bronni ko'chirish va narx tasdig'i`
 
-### Task 7: Bekor qilish
+### ✅ Task 7: Bekor qilish
 
 **Fayllar:** yaratish `CancelBookingModal.tsx`
 
@@ -271,11 +271,11 @@ Oyna matnida: «Bekor qilingan bron tarixda qoladi, lekin vaqt bo'shaydi».
 
 **Testlar:**
 
-- [ ] Sababsiz saqlab bo'lmaydi — «Sababni tanlang» chiqadi
-- [ ] Tana `{ reason: 'WEATHER', comment: '...' }` ko'rinishida ketadi
-- [ ] Commit: `feat: bronni bekor qilish`
+- [x] Sababsiz saqlab bo'lmaydi — «Sababni tanlang» chiqadi
+- [x] Tana `{ reason: 'WEATHER', comment: '...' }` ko'rinishida ketadi
+- [x] Commit: `feat: bronni bekor qilish`
 
-### Task 8: Ro'yxat tabi
+### ✅ Task 8: Ro'yxat tabi
 
 **Fayllar:** yaratish `BookingsTable.tsx`
 
@@ -285,16 +285,16 @@ ISO). Qator bosilsa `?booking=` qo'yiladi.
 
 **Testlar:**
 
-- [ ] Ro'yxat chiziladi va holat yorlig'i ko'rinadi
-- [ ] Qidiruv `?search=` yuboradi va sahifa 1 ga qaytadi
-- [ ] Qator bosilsa kartochka ochiladi
-- [ ] Commit: `feat: bronlar ro'yxati`
+- [x] Ro'yxat chiziladi va holat yorlig'i ko'rinadi
+- [x] Qidiruv `?search=` yuboradi va sahifa 1 ga qaytadi
+- [x] Qator bosilsa kartochka ochiladi
+- [x] Commit: `feat: bronlar ro'yxati`
 
 ---
 
 ## 2-qism: M5 — mijozlar
 
-### Task 9: Mijozlar ro'yxati
+### ✅ Task 9: Mijozlar ro'yxati
 
 **Fayllar:** o'zgartirish `src/features/customers/api.ts`, `hooks.ts`;
 yaratish `CustomersPage.tsx`, `CustomerFormModal.tsx`; nav va router
@@ -322,12 +322,12 @@ belgisi. «Yangi mijoz» tugmasi — `customer.manage` ruxsati bilan.
 
 **Testlar:**
 
-- [ ] Ro'yxat chiziladi, telefon maskada
-- [ ] Qidiruv `?search=` yuboradi
-- [ ] «Faqat qora ro'yxat» `?blacklistedOnly=true` yuboradi
-- [ ] Commit: `feat: mijozlar ro'yxati`
+- [x] Ro'yxat chiziladi, telefon maskada
+- [x] Qidiruv `?search=` yuboradi
+- [x] «Faqat qora ro'yxat» `?blacklistedOnly=true` yuboradi
+- [x] Commit: `feat: mijozlar ro'yxati`
 
-### Task 10: Mijoz sahifasi
+### ✅ Task 10: Mijoz sahifasi
 
 **Fayllar:** yaratish `CustomerDetailPage.tsx`; o'zgartirish
 `src/app/layout/Breadcrumbs.tsx` (`/customers/:id` uchun nom)
@@ -363,17 +363,17 @@ Qora ro'yxat tugmasi — `useCan('customer.blacklist')` bo'lganda.
 
 **Testlar:**
 
-- [ ] Statistika va bronlar tarixi ko'rinadi
-- [ ] To'lov raqami emas, izoh ko'rinadi
-- [ ] Administrator rolida qora ro'yxat tugmasi YO'Q
-- [ ] Tahrirlash `PATCH /customers/:id` yuboradi
-- [ ] Commit: `feat: mijoz sahifasi va qora ro'yxat`
+- [x] Statistika va bronlar tarixi ko'rinadi
+- [x] To'lov raqami emas, izoh ko'rinadi
+- [x] Administrator rolida qora ro'yxat tugmasi YO'Q
+- [x] Tahrirlash `PATCH /customers/:id` yuboradi
+- [x] Commit: `feat: mijoz sahifasi va qora ro'yxat`
 
 ---
 
 ## 3-qism: M7 — seriya
 
-### Task 11: Seriyalar tabi
+### ✅ Task 11: Seriyalar tabi
 
 **Fayllar:** yaratish `src/features/series/api.ts`, `hooks.ts`,
 `SeriesTab.tsx`; `BookingsPage` ga uchinchi tab
@@ -403,11 +403,11 @@ soatlik narx. Filtr: stadion va «7 kun ichida tugaydiganlar».
 
 **Testlar:**
 
-- [ ] Seriyalar jadvali chiziladi
-- [ ] «Tugash arafasida» belgisi `?expiringWithinDays=7` yuboradi
-- [ ] Commit: `feat: seriyalar ro'yxati`
+- [x] Seriyalar jadvali chiziladi
+- [x] «Tugash arafasida» belgisi `?expiringWithinDays=7` yuboradi
+- [x] Commit: `feat: seriyalar ro'yxati`
 
-### Task 12: Seriya yaratish
+### ✅ Task 12: Seriya yaratish
 
 **Fayllar:** yaratish `SeriesFormModal.tsx`
 
@@ -451,12 +451,12 @@ Oldindan ko'rilmaguncha «Yaratish» tugmasi o'chiq turadi.
 
 **Testlar:**
 
-- [ ] Preview jadvali holatlar bilan ko'rinadi (`Band`, `Yopiq`)
-- [ ] `ABORT` da `SERIES_HAS_CONFLICTS` band sanalarni ko'rsatadi
-- [ ] `SKIP` da yaratilgach `skipped` ro'yxati chiqadi
-- [ ] Commit: `feat: seriya yaratish va oldindan ko'rish`
+- [x] Preview jadvali holatlar bilan ko'rinadi (`Band`, `Yopiq`)
+- [x] `ABORT` da `SERIES_HAS_CONFLICTS` band sanalarni ko'rsatadi
+- [x] `SKIP` da yaratilgach `skipped` ro'yxati chiqadi
+- [x] Commit: `feat: seriya yaratish va oldindan ko'rish`
 
-### Task 13: Seriya sahifasi
+### ✅ Task 13: Seriya sahifasi
 
 **Fayllar:** yaratish `SeriesDetailPage.tsx`; router
 (`/bookings/series/:id`), `Breadcrumbs`
@@ -492,18 +492,18 @@ bekor qilinadi.
 
 **Testlar:**
 
-- [ ] Kartochka statistikasi va uchrashuvlar ko'rinadi
-- [ ] Uzaytirish `{ weeks: 2, onConflict: 'SKIP' }` yuboradi
-- [ ] `SERIES_TOO_LONG` oynada ko'rinadi
-- [ ] Administrator rolida «Butun seriyani bekor qilish» YO'Q
-- [ ] Commit: `feat: seriya sahifasi, uzaytirish va bekor qilish`
+- [x] Kartochka statistikasi va uchrashuvlar ko'rinadi
+- [x] Uzaytirish `{ weeks: 2, onConflict: 'SKIP' }` yuboradi
+- [x] `SERIES_TOO_LONG` oynada ko'rinadi
+- [x] Administrator rolida «Butun seriyani bekor qilish» YO'Q
+- [x] Commit: `feat: seriya sahifasi, uzaytirish va bekor qilish`
 
 ---
 
 ## Yakuniy tekshiruv
 
-- [ ] `npm test` — barcha testlar yashil
-- [ ] `npm run lint`, `npx prettier --check`, `npm run build` toza
-- [ ] To'liq ssenariy qo'lda: kalendardan bron → kartochka →
+- [x] `npm test` — barcha testlar yashil
+- [x] `npm run lint`, `npx prettier --check`, `npm run build` toza
+- [x] To'liq ssenariy qo'lda: kalendardan bron → kartochka →
       ko'chirish → bekor qilish → mijoz sahifasi → seriya yaratish
-- [ ] README dagi papka tuzilishi yangilanadi
+- [x] README dagi papka tuzilishi yangilanadi

@@ -6,9 +6,6 @@ import tailwindcss from '@tailwindcss/vite';
 import { defineConfig } from 'vitest/config';
 
 export default defineConfig({
-  // `@vitejs/plugin-react` 6-versiyada `babel` sozlamasi YO'Q: u endi
-  // Babel emas, oxc ishlatadi. Locator shuning uchun `main.tsx` da
-  // ish vaqtida ulanadi — `@locator/babel-jsx` bu yerda ishlamaydi.
   plugins: [react(), tailwindcss()],
   resolve: {
     alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },

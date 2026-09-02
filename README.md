@@ -44,7 +44,12 @@ src/
     guards/     marshrut qo'riqchilari
     layout/     AppLayout, menyu jadvali
   features/     bo'limlar — har biri o'z api/hooks/sahifalari bilan
-    auth/  members/  organization/  venues/
+    auth/  dashboard/  members/  organization/  platform/
+    venues/       stadion, ish vaqti, narx, foto, yopilish
+    bookings/     kalendar, bron kartochkasi va amallari
+      calendar/   panjaraning joylashuvi va ustunlari
+    customers/    mijoz bazasi va kartochkasi
+    series/       takrorlanuvchi bron
   shared/
     api/        axios mijozi, token, xatolar, umumiy tiplar
     format/     sana va pul
