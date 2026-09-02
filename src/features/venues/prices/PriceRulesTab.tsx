@@ -11,6 +11,7 @@ import {
 } from 'antd';
 import { errorMessage } from '@/shared/api/error-handler';
 import { formatMoney } from '@/shared/format/money';
+import { formatDate } from '@/shared/format/time';
 import { WEEKDAYS } from '../enums';
 import type { PriceRule } from './api';
 import { PriceCalculator } from './PriceCalculator';
@@ -104,25 +105,40 @@ export function PriceRulesTab({ venueId }: { venueId: string }) {
             dataIndex: 'pricePerHour',
             render: (value: string) => formatMoney(value),
           },
+          {
+            title: 'Mavsum',
+            render: (_, row: PriceRule) =>
+              row.validFrom && row.validTo
+                ? `${formatDate(row.validFrom)} – ${formatDate(row.validTo)}`
+                : 'Muddatsiz',
+          },
           { title: 'Prioritet', dataIndex: 'priority' },
           {
             title: '',
+            // Tahrirlash amallar ustunida TURISHI SHART: nomni bosish
+            // ham ochadi, lekin uni ko'rinmas amal deb o'ylash oson —
+            // qatorga qaragan odam faqat "O'chirish" ni ko'rardi.
             render: (_, row: PriceRule) => (
-              <Popconfirm
-                title="Qoida o‘chirilsinmi?"
-                okText="Ha"
-                cancelText="Yo‘q"
-                onConfirm={() =>
-                  void remove
-                    .mutateAsync(row.id)
-                    .then(() => message.success('Qoida o‘chirildi'))
-                    .catch((e: unknown) => setXato(errorMessage(e)))
-                }
-              >
-                <Button type="text" danger size="small">
-                  O‘chirish
+              <Space size={0}>
+                <Button type="text" size="small" onClick={() => ochish(row)}>
+                  Tahrirlash
                 </Button>
-              </Popconfirm>
+                <Popconfirm
+                  title="Qoida o‘chirilsinmi?"
+                  okText="Ha"
+                  cancelText="Yo‘q"
+                  onConfirm={() =>
+                    void remove
+                      .mutateAsync(row.id)
+                      .then(() => message.success('Qoida o‘chirildi'))
+                      .catch((e: unknown) => setXato(errorMessage(e)))
+                  }
+                >
+                  <Button type="text" danger size="small">
+                    O‘chirish
+                  </Button>
+                </Popconfirm>
+              </Space>
             ),
           },
         ]}

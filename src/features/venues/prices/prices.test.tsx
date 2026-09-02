@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { screen, within } from '@testing-library/react';
+import { fireEvent, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { server } from '@/test/msw';
 import { renderApp } from '@/test/render';
@@ -146,6 +146,55 @@ describe('Narx qoidalari', () => {
       name: 'Kechki',
       // Satr, son EMAS: 260000 emas, '260000'.
       pricePerHour: '260000',
+    });
+  });
+
+  it('qoidani tahrirlaydi va vaqt oralig`ini tozalay oladi', async () => {
+    server.use(
+      ...baseHandlers(),
+      http.patch(`${API}/venues/v-1/price-rules/r-2`, async ({ request }) => {
+        yuborilgan.push({ url: request.url, body: await request.json() });
+        return HttpResponse.json({ ...KECHKI, pricePerHour: '300000' });
+      }),
+    );
+    renderApp(<AppRouter />, { route: '/venues' });
+
+    const narx = within(await narxBolimi());
+    // Tahrirlash amallar ustunida — nomni bosishni topish shart emas.
+    const qator = narx.getByRole('row', { name: /Kechki/ });
+    await userEvent.click(
+      within(qator).getByRole('button', { name: 'Tahrirlash' }),
+    );
+
+    const oynaEl = await oxirgiOyna();
+    const oyna = within(oynaEl);
+    const maydon = oyna.getByLabelText('Soatiga narx');
+    // Serverdagi qiymat formaga tushgan bo'lishi kerak.
+    expect(maydon).toHaveValue('260000');
+    await userEvent.clear(maydon);
+    await userEvent.type(maydon, '300000');
+
+    // Vaqt oralig'ini tozalaymiz: server uni `null` sifatida ko'rishi
+    // kerak, aks holda eski oraliq joyida qolardi. antd tozalash
+    // belgisining ochiq nomi yo'q, shuning uchun sinf bo'yicha.
+    const tozalash = oynaEl.querySelector('.ant-picker-clear');
+    if (!tozalash) throw new Error('Tozalash belgisi topilmadi');
+    // `userEvent` bu yerda ishlamaydi: belgi sichqoncha ustiga
+    // kelmaguncha `pointer-events: none` bo'lib turadi, jsdom esa
+    // hoverni chizmaydi. Hodisa to'g'ridan-to'g'ri yuboriladi.
+    fireEvent.mouseDown(tozalash);
+    fireEvent.click(tozalash);
+
+    await userEvent.click(oyna.getByRole('button', { name: 'Saqlash' }));
+
+    await screen.findByText(/qoida yangilandi/i);
+    expect(yuborilgan).toHaveLength(1);
+    expect(yuborilgan[0]?.url).toBe(`${API}/venues/v-1/price-rules/r-2`);
+    expect(yuborilgan[0]?.body).toMatchObject({
+      pricePerHour: '300000',
+      startsTime: null,
+      endsTime: null,
+      weekdays: [1, 2, 3, 4, 5],
     });
   });
 

@@ -26,15 +26,22 @@ export type PriceRule = {
   priority: number;
 };
 
+/**
+ * Ixtiyoriy chegaralarda `null` va `undefined` FARQ QILADI:
+ * `undefined` — maydonga tegilmasin, `null` — chegara olib tashlansin.
+ * Forma har doim aniq qiymat yuboradi, shuning uchun bo'shatilgan
+ * oraliq `null` bo'lib ketadi va serverda tozalanadi.
+ */
 export type PriceRuleInput = {
-  name?: string;
+  name?: string | null;
   isBase?: boolean;
   weekdays?: number[];
-  startsTime?: string;
-  endsTime?: string;
+  startsTime?: string | null;
+  endsTime?: string | null;
   pricePerHour: string;
-  validFrom?: string;
-  validTo?: string;
+  /** `YYYY-MM-DD` — mavsumiy narx uchun. */
+  validFrom?: string | null;
+  validTo?: string | null;
   priority?: number;
 };
 

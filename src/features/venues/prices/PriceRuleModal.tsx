@@ -2,6 +2,7 @@ import { useState } from 'react';
 import {
   Alert,
   App,
+  DatePicker,
   Form,
   Input,
   InputNumber,
@@ -21,12 +22,15 @@ import { useCreatePriceRule, useUpdatePriceRule } from './hooks';
 dayjs.extend(customParseFormat);
 
 const TIME = 'HH:mm';
+/** Backend mavsum chegarasini shu ko'rinishda kutadi. */
+const DATE = 'YYYY-MM-DD';
 
 type Values = {
   name?: string;
   isBase: boolean;
   weekdays?: number[];
   time?: [Dayjs, Dayjs] | null;
+  season?: [Dayjs, Dayjs] | null;
   pricePerHour: string;
   priority: number;
 };
@@ -52,15 +56,24 @@ function RuleForm({
   async function onFinish(values: Values): Promise<void> {
     setUmumiyXato(null);
     const [from, to] = values.time ?? [];
+    const [seasonFrom, seasonTo] = values.season ?? [];
+    /*
+     * Har bir ixtiyoriy maydon ANIQ qiymat bilan ketadi: bo'shatilgani
+     * `null`. `undefined` yuborilsa server "tegilmasin" deb tushunadi
+     * va foydalanuvchi qo'ygan oraliqni bekor qila olmasdi — tahrirlash
+     * yarim ishlagandek ko'rinardi.
+     */
     const input: PriceRuleInput = {
-      name: values.name?.trim(),
+      name: values.name?.trim() || null,
       isBase: values.isBase,
       weekdays: values.weekdays ?? [],
-      startsTime: from?.format(TIME),
-      endsTime: to?.format(TIME),
+      startsTime: from ? from.format(TIME) : null,
+      endsTime: to ? to.format(TIME) : null,
       // Narx SATR bo'lib qoladi: `InputNumber` ishlatilmaydi, chunki u
       // qiymatni songa aylantirib yuborardi (BR-13).
       pricePerHour: values.pricePerHour.trim(),
+      validFrom: seasonFrom ? seasonFrom.format(DATE) : null,
+      validTo: seasonTo ? seasonTo.format(DATE) : null,
       priority: values.priority,
     };
     try {
@@ -97,6 +110,10 @@ function RuleForm({
           time:
             rule?.startsTime && rule.endsTime
               ? [dayjs(rule.startsTime, TIME), dayjs(rule.endsTime, TIME)]
+              : null,
+          season:
+            rule?.validFrom && rule.validTo
+              ? [dayjs(rule.validFrom), dayjs(rule.validTo)]
               : null,
           pricePerHour: rule?.pricePerHour ?? '',
           priority: rule?.priority ?? 0,
@@ -145,6 +162,14 @@ function RuleForm({
 
         <Form.Item name="time" label="Vaqt oralig‘i">
           <TimePicker.RangePicker format={TIME} minuteStep={15} />
+        </Form.Item>
+
+        <Form.Item
+          name="season"
+          label="Mavsum"
+          extra="Bo‘sh qoldirilsa — muddatsiz. Masalan, faqat yozgi tarif"
+        >
+          <DatePicker.RangePicker format={DATE} className="w-full" />
         </Form.Item>
 
         <Form.Item
