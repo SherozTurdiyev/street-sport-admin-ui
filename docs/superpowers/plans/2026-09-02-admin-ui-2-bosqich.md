@@ -22,7 +22,7 @@ Shu bosqichdan keyin stadion bron qabul qilishga tayyor bo'ladi.
 
 ## 1-qism: stadion ishlaydigan holga keladi
 
-### Task 1: Stadionlar ro'yxati va profili
+### ✅ Task 1: Stadionlar ro'yxati va profili
 
 **Fayllar:** `src/features/venues/api.ts` (kengaytiriladi), `hooks.ts`,
 `VenuesPage.tsx`, `VenueFormModal.tsx`, `enums.ts`
@@ -47,7 +47,7 @@ export type VenueDetail = Venue & { hours: VenueHours[]; closures: Closure[] };
 - Enum yorliqlari `enums.ts` da — bitta joyda, `ROLE_LABELS` uslubida
 - Commit: `feat: stadionlar ro'yxati va profili`
 
-### Task 2: Kartochka, arxivlash va qaytarish
+### ✅ Task 2: Kartochka, arxivlash va qaytarish
 
 **Fayllar:** `VenueCardDrawer.tsx`
 
@@ -58,7 +58,7 @@ export type VenueDetail = Venue & { hours: VenueHours[]; closures: Closure[] };
   ko'rinadi
 - Commit: `feat: stadion kartochkasi va arxivlash`
 
-### Task 3: Haftalik ish vaqti
+### ✅ Task 3: Haftalik ish vaqti
 
 **Fayllar:** `WeeklyHoursForm.tsx`
 

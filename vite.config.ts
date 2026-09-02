@@ -58,5 +58,16 @@ export default defineConfig({
      * Bu kutish muddati, tekshiruv emas: tasdiqlar o'zgarmadi.
      */
     testTimeout: 15_000,
+    /*
+     * Parallel fayllar soni cheklangan. Bu testlar butun ilovani
+     * ko'taradi va antd uslublarini hisoblaydi — ya'ni ular protsessorga
+     * bog'liq. Sakkizta yadroda o'nlab fayl birdan ishlaganda har biri
+     * bir necha barobar sekinlashadi va sog'lom testlar ham muddatga
+     * tegib yiqiladi.
+     *
+     * Chegara umumiy vaqtni deyarli o'zgartirmaydi (ish baribir shu),
+     * lekin natijani BARQAROR qiladi.
+     */
+    maxWorkers: 4,
   },
 });

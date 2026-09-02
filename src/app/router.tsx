@@ -32,6 +32,11 @@ const OrganizationPage = lazy(() =>
     default: m.OrganizationPage,
   })),
 );
+const VenuesPage = lazy(() =>
+  import('@/features/venues/VenuesPage').then((m) => ({
+    default: m.VenuesPage,
+  })),
+);
 const OrganizationsPage = lazy(() =>
   import('@/features/platform/OrganizationsPage').then((m) => ({
     default: m.OrganizationsPage,
@@ -82,6 +87,7 @@ export function AppRouter() {
             </Route>
             <Route element={<RequireOrg />}>
               <Route path="/organization" element={<OrganizationPage />} />
+              <Route path="/venues" element={<VenuesPage />} />
               <Route
                 element={<RequirePermission permission="member.admin.manage" />}
               >

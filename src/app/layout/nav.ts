@@ -1,4 +1,9 @@
-import { BankOutlined, ShopOutlined, TeamOutlined } from '@ant-design/icons';
+import {
+  BankOutlined,
+  EnvironmentOutlined,
+  ShopOutlined,
+  TeamOutlined,
+} from '@ant-design/icons';
 import type { ComponentType } from 'react';
 
 /**
@@ -44,6 +49,15 @@ export const NAV: readonly NavItem[] = [
     permission: 'member.admin.manage',
     label: 'Xodimlar',
     icon: TeamOutlined,
+    requiresOrg: true,
+  },
+  {
+    path: '/venues',
+    // Ko'rish uchun alohida ruxsat yo'q — kirgan har bir xodim o'ziga
+    // ochiq stadionlarni ko'radi (BR-08 backendda cheklaydi).
+    permission: null,
+    label: 'Stadionlar',
+    icon: EnvironmentOutlined,
     requiresOrg: true,
   },
   {

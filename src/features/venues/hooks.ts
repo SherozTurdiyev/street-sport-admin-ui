@@ -1,8 +1,22 @@
-import { useQuery } from '@tanstack/react-query';
-import { venuesApi } from './api';
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from '@tanstack/react-query';
+import {
+  venuesApi,
+  type VenueHours,
+  type VenueInput,
+  type VenuesQuery,
+} from './api';
 
 export const venueKeys = {
+  all: ['venues'] as const,
   options: ['venues', 'options'] as const,
+  list: (query: VenuesQuery) => ['venues', 'list', query] as const,
+  detail: (id: string) => ['venues', 'detail', id] as const,
+  hours: (id: string) => ['venues', 'hours', id] as const,
 };
 
 /**
@@ -14,7 +28,63 @@ export function useVenueOptions(enabled: boolean) {
     queryKey: venueKeys.options,
     queryFn: venuesApi.options,
     enabled,
-    // Stadion ro'yxati kamdan-kam o'zgaradi.
     staleTime: 5 * 60_000,
   });
+}
+
+export function useVenues(query: VenuesQuery) {
+  return useQuery({
+    queryKey: venueKeys.list(query),
+    queryFn: () => venuesApi.list(query),
+    placeholderData: keepPreviousData,
+  });
+}
+
+export function useVenue(id: string | null) {
+  return useQuery({
+    queryKey: venueKeys.detail(id ?? ''),
+    queryFn: () => venuesApi.detail(id as string),
+    enabled: id !== null,
+  });
+}
+
+export function useVenueHours(id: string) {
+  return useQuery({
+    queryKey: venueKeys.hours(id),
+    queryFn: () => venuesApi.hours(id),
+  });
+}
+
+function useVenueAction<TInput, TOutput>(
+  mutationFn: (input: TInput) => Promise<TOutput>,
+) {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn,
+    onSuccess: () => {
+      void queryClient.invalidateQueries({ queryKey: venueKeys.all });
+    },
+  });
+}
+
+export function useCreateVenue() {
+  return useVenueAction((input: VenueInput) => venuesApi.create(input));
+}
+
+export function useUpdateVenue(id: string) {
+  return useVenueAction((input: Partial<VenueInput>) =>
+    venuesApi.update(id, input),
+  );
+}
+
+export function useArchiveVenue(id: string) {
+  return useVenueAction((confirm: boolean) => venuesApi.archive(id, confirm));
+}
+
+export function useRestoreVenue(id: string) {
+  return useVenueAction<void, unknown>(() => venuesApi.restore(id));
+}
+
+export function useSetVenueHours(id: string) {
+  return useVenueAction((hours: VenueHours[]) => venuesApi.setHours(id, hours));
 }
