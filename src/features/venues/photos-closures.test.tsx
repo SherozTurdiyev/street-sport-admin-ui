@@ -63,7 +63,7 @@ function baseHandlers() {
 
 async function bolimniOch(nomi: string): Promise<HTMLElement> {
   await userEvent.click(
-    await screen.findByRole('button', { name: 'Chilonzor Arena' }),
+    await screen.findByRole('button', { name: 'Chilonzor Arena — ochish' }),
   );
   const karta = await screen.findByRole('dialog');
   await userEvent.click(within(karta).getByRole('tab', { name: nomi }));

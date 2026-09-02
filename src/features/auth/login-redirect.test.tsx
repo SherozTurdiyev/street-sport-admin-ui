@@ -9,6 +9,7 @@ import {
   DIRECTOR_ME,
   anonHandlers,
   authedHandlers,
+  dashboardHandlers,
 } from '@/test/handlers';
 import { setAccessToken } from '@/shared/api/token';
 import { AppRouter } from '@/app/router';
@@ -86,6 +87,7 @@ describe('Logindan keyingi yo`nalish', () => {
       http.get(`${API}/auth/me`, () => HttpResponse.json(DIRECTOR_ME)),
       membersHandler(),
       organizationHandler(),
+      ...dashboardHandlers(),
     );
     renderApp(<AppRouter />, { route: '/login' });
 
@@ -104,6 +106,7 @@ describe('Logindan keyingi yo`nalish', () => {
       http.get(`${API}/auth/me`, () => HttpResponse.json(DIRECTOR_ME)),
       membersHandler(),
       organizationHandler(),
+      ...dashboardHandlers(),
     );
     // Parol almashgach backend barcha sessiyalarni yopadi va foydalanuvchi
     // aynan shu sahifada turib login sahifasiga tushadi. U bu yerga o'zi
@@ -113,8 +116,11 @@ describe('Logindan keyingi yo`nalish', () => {
     await screen.findByRole('button', { name: 'Kirish' });
     await kirish();
 
-    // Bosh sahifaga tushadi — ya'ni birinchi ochiq bo'limga.
-    expect(await screen.findByText('Neon Sports Group')).toBeInTheDocument();
+    // Bosh sahifaga tushadi — ya'ni birinchi ochiq bo'lim, ya'ni
+    // boshqaruv paneli.
+    expect(
+      await screen.findByRole('heading', { name: 'Boshqaruv paneli' }),
+    ).toBeInTheDocument();
     expect(screen.queryByLabelText('Joriy parol')).not.toBeInTheDocument();
   });
 
@@ -123,6 +129,7 @@ describe('Logindan keyingi yo`nalish', () => {
       ...authedHandlers(DIRECTOR_ME),
       membersHandler(),
       organizationHandler(),
+      ...dashboardHandlers(),
     );
     renderApp(<AppRouter />, { route: '/login' });
 

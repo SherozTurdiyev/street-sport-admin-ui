@@ -123,7 +123,15 @@ function VenueProfileTab({ venueId }: { venueId: string }) {
   );
 }
 
-function VenueCardBody({ venueId }: { venueId: string }) {
+export type VenueTab = 'profile' | 'prices';
+
+function VenueCardBody({
+  venueId,
+  initialTab,
+}: {
+  venueId: string;
+  initialTab: VenueTab;
+}) {
   const { data, isPending, error } = useVenue(venueId);
 
   if (error !== null) {
@@ -133,6 +141,7 @@ function VenueCardBody({ venueId }: { venueId: string }) {
 
   return (
     <Tabs
+      defaultActiveKey={initialTab}
       items={[
         {
           key: 'profile',
@@ -166,9 +175,12 @@ function VenueCardBody({ venueId }: { venueId: string }) {
 
 export function VenueCardDrawer({
   venueId,
+  initialTab = 'profile',
   onClose,
 }: {
   venueId: string | null;
+  /** Kartochka qaysi bo'limda ochilsin — chaqiruvchi tugma hal qiladi. */
+  initialTab?: VenueTab;
   onClose: () => void;
 }) {
   return (
@@ -179,7 +191,15 @@ export function VenueCardDrawer({
       title="Stadion"
       destroyOnHidden
     >
-      {venueId !== null && <VenueCardBody key={venueId} venueId={venueId} />}
+      {venueId !== null && (
+        // `key` da bo'lim ham bor: bir xil stadionni boshqa tugma bilan
+        // ochganda kartochka qaytadan quriladi va o'sha bo'lim ochiladi.
+        <VenueCardBody
+          key={`${venueId}:${initialTab}`}
+          venueId={venueId}
+          initialTab={initialTab}
+        />
+      )}
     </Drawer>
   );
 }

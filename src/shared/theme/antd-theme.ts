@@ -13,6 +13,12 @@ export const antdTheme: ThemeConfig = {
   algorithm: theme.darkAlgorithm,
   token: {
     colorPrimary: figma.primary,
+    /**
+     * Havola rangi ALOHIDA beriladi: antd standarti ko'k va u brend
+     * palitrasidan tashqarida turadi. Brend binafshasining o'zi quyuq
+     * fonda o'qilmaydi, shuning uchun yorug' varianti.
+     */
+    colorLink: figma.primaryBright,
     colorSuccess: figma.success,
     colorWarning: figma.warning,
     colorError: figma.danger,

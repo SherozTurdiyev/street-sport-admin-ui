@@ -1,5 +1,6 @@
 import {
   BankOutlined,
+  DashboardOutlined,
   EnvironmentOutlined,
   ShopOutlined,
   TeamOutlined,
@@ -37,6 +38,16 @@ export type NavItem = {
 };
 
 export const NAV: readonly NavItem[] = [
+  {
+    // BIRINCHI o'rin ataylab: `/` shu ro'yxatdagi birinchi ochiq
+    // bo'limga yo'naltiradi, ya'ni tashkilot xodimi kirgach boshqaruv
+    // paneliga tushadi.
+    path: '/dashboard',
+    permission: null,
+    label: 'Boshqaruv paneli',
+    icon: DashboardOutlined,
+    requiresOrg: true,
+  },
   {
     path: '/organization',
     permission: null,

@@ -27,6 +27,11 @@ const ChangePasswordPage = lazy(() =>
     default: m.ChangePasswordPage,
   })),
 );
+const DashboardPage = lazy(() =>
+  import('@/features/dashboard/DashboardPage').then((m) => ({
+    default: m.DashboardPage,
+  })),
+);
 const MembersPage = lazy(() =>
   import('@/features/members/MembersPage').then((m) => ({
     default: m.MembersPage,
@@ -94,6 +99,7 @@ export function AppRouter() {
               />
             </Route>
             <Route element={<RequireOrg />}>
+              <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/organization" element={<OrganizationPage />} />
               <Route path="/venues" element={<VenuesPage />} />
               <Route

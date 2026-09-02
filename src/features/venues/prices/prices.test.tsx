@@ -99,12 +99,12 @@ async function oxirgiOyna(): Promise<HTMLElement> {
 }
 
 async function narxBolimi(): Promise<HTMLElement> {
+  // Kartochkadagi tishli g'ildirak tugmasi to'g'ridan-to'g'ri narxlar
+  // bo'limini ochadi — alohida "Narxlar" ilovasini bosish shart emas.
   await userEvent.click(
-    await screen.findByRole('button', { name: 'Chilonzor Arena' }),
+    await screen.findByRole('button', { name: 'Chilonzor Arena — narxlar' }),
   );
-  const karta = await screen.findByRole('dialog');
-  await userEvent.click(within(karta).getByRole('tab', { name: 'Narxlar' }));
-  return karta;
+  return await screen.findByRole('dialog');
 }
 
 beforeEach(() => {

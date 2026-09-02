@@ -1,54 +1,31 @@
 import { useState } from 'react';
-import { Alert, Button, Card, Input, Select, Space, Table, Tag } from 'antd';
-import type { ColumnsType } from 'antd/es/table';
+import {
+  Alert,
+  Button,
+  Card,
+  Empty,
+  Input,
+  Pagination,
+  Select,
+  Skeleton,
+  Space,
+} from 'antd';
 import { errorMessage } from '@/shared/api/error-handler';
 import { DEFAULT_PAGE_SIZE } from '@/shared/api/types';
-import type { Venue, VenuesQuery } from './api';
+import type { VenuesQuery } from './api';
 import {
-  SPORT_TYPE_LABELS,
   SPORT_TYPE_OPTIONS,
   VENUE_STATUS_OPTIONS,
-  VENUE_STATUS_VIEW,
   type SportType,
   type VenueStatus,
 } from './enums';
-import { VenueCardDrawer } from './VenueCardDrawer';
+import { VenueCard } from './VenueCard';
+import { VenueCardDrawer, type VenueTab } from './VenueCardDrawer';
 import { VenueFormModal } from './VenueFormModal';
 import { useVenues } from './hooks';
 
-function buildColumns(onOpen: (id: string) => void): ColumnsType<Venue> {
-  return [
-    {
-      title: 'Nomi',
-      dataIndex: 'name',
-      render: (value: string, row: Venue) => (
-        <Button type="link" className="!px-0" onClick={() => onOpen(row.id)}>
-          {value}
-        </Button>
-      ),
-    },
-    {
-      title: 'Sport turi',
-      dataIndex: 'sportType',
-      render: (value: SportType) => SPORT_TYPE_LABELS[value],
-    },
-    { title: 'Shahar', dataIndex: 'city' },
-    {
-      title: 'Holat',
-      dataIndex: 'status',
-      render: (value: VenueStatus) => (
-        <Tag color={VENUE_STATUS_VIEW[value].color}>
-          {VENUE_STATUS_VIEW[value].label}
-        </Tag>
-      ),
-    },
-    {
-      title: 'Bron qadami',
-      dataIndex: 'slotMinutes',
-      render: (value: number) => `${value} daq.`,
-    },
-  ];
-}
+/** Ochilgan kartochka: qaysi stadion va qaysi bo'lim. */
+type Ochilgan = { venueId: string; tab: VenueTab };
 
 export function VenuesPage() {
   const [query, setQuery] = useState<VenuesQuery>({
@@ -56,12 +33,14 @@ export function VenuesPage() {
     pageSize: DEFAULT_PAGE_SIZE,
   });
   const [formOpen, setFormOpen] = useState(false);
-  const [cardId, setCardId] = useState<string | null>(null);
-  const { data, isFetching, error } = useVenues(query);
+  const [ochilgan, setOchilgan] = useState<Ochilgan | null>(null);
+  const { data, isPending, isFetching, error } = useVenues(query);
 
   function setFilter(patch: Partial<VenuesQuery>): void {
     setQuery((prev) => ({ ...prev, ...patch, page: 1 }));
   }
+
+  const items = data?.items ?? [];
 
   return (
     <Card
@@ -72,7 +51,7 @@ export function VenuesPage() {
         </Button>
       }
     >
-      <Space className="mb-4" wrap>
+      <Space className="mb-6" wrap>
         <Input.Search
           aria-label="Qidiruv"
           placeholder="Nomi bo‘yicha"
@@ -114,28 +93,45 @@ export function VenuesPage() {
         />
       )}
 
-      <Table<Venue>
-        rowKey="id"
-        columns={buildColumns(setCardId)}
-        dataSource={data?.items ?? []}
-        loading={isFetching}
-        pagination={{
-          current: query.page,
-          pageSize: query.pageSize,
-          total: data?.total ?? 0,
-          showSizeChanger: false,
-        }}
-        onChange={(pagination) =>
-          setQuery((prev) => ({
-            ...prev,
-            page: pagination.current ?? 1,
-            pageSize: pagination.pageSize ?? DEFAULT_PAGE_SIZE,
-          }))
-        }
-      />
+      {isPending ? (
+        <Skeleton active />
+      ) : items.length === 0 ? (
+        <Empty description="Stadion topilmadi" />
+      ) : (
+        <div
+          // Panjara ekran kengligiga qarab o'zi moslashadi: ustunlar
+          // soni qotirilsa, tor oynada kartochka siqilib ketardi.
+          className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6"
+          style={{ opacity: isFetching ? 0.6 : 1 }}
+        >
+          {items.map((venue) => (
+            <VenueCard
+              key={venue.id}
+              venue={venue}
+              onOpen={(tab) => setOchilgan({ venueId: venue.id, tab })}
+            />
+          ))}
+        </div>
+      )}
+
+      {(data?.total ?? 0) > (query.pageSize ?? DEFAULT_PAGE_SIZE) && (
+        <Pagination
+          className="mt-6 text-right"
+          align="end"
+          current={query.page}
+          pageSize={query.pageSize}
+          total={data?.total ?? 0}
+          showSizeChanger={false}
+          onChange={(page) => setQuery((prev) => ({ ...prev, page }))}
+        />
+      )}
 
       <VenueFormModal open={formOpen} onClose={() => setFormOpen(false)} />
-      <VenueCardDrawer venueId={cardId} onClose={() => setCardId(null)} />
+      <VenueCardDrawer
+        venueId={ochilgan?.venueId ?? null}
+        initialTab={ochilgan?.tab}
+        onClose={() => setOchilgan(null)}
+      />
     </Card>
   );
 }

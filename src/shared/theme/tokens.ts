@@ -17,6 +17,16 @@ export const figma = {
   primarySoft: 'rgba(90, 0, 219, 0.2)',
   primarySoftBorder: 'rgba(90, 0, 219, 0.3)',
   primaryGlow: 'rgba(90, 0, 219, 0.5)',
+  /**
+   * Brend binafshasining YORUG' varianti — faqat MATN uchun.
+   *
+   * Figma'da stadion kartochkasidagi narx `#5a00db` bilan yozilgan, lekin
+   * u quyuq karta foni (`#1b0c36`) ustida taxminan 2:1 kontrast beradi va
+   * o'qilmaydi. Rang tonini saqlab yorug'ligi ko'tarildi (HSL 265deg,
+   * 100%, 43% -> 65%) — kartochkadagi eng muhim qiymat ko'rinib turishi
+   * kerak. Fon va chegara uchun `primary` o'zgarishsiz qoladi.
+   */
+  primaryBright: '#974cff',
 
   /** Asosiy maydon foni. */
   bg: '#130726',

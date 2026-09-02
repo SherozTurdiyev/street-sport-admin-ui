@@ -117,7 +117,10 @@ describe('1-bosqich: to`liq ssenariy', () => {
     // 3. Yangi xodim qo'shiladi.
     await userEvent.click(screen.getByRole('button', { name: /Yangi xodim/ }));
     const oyna = within(await screen.findByRole('dialog'));
-    await userEvent.type(oyna.getByLabelText('Ism va familiya'), 'Test Menejer');
+    await userEvent.type(
+      oyna.getByLabelText('Ism va familiya'),
+      'Test Menejer',
+    );
     await userEvent.type(oyna.getByLabelText('Telefon'), '+998903517021');
     await userEvent.click(oyna.getByLabelText('Lavozim'));
     await userEvent.click(await screen.findByTitle('Menejer'));

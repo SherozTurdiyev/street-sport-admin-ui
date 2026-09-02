@@ -27,6 +27,7 @@ const STADION = {
   status: 'ACTIVE',
   createdAt: '2026-01-01T00:00:00.000Z',
   updatedAt: '2026-01-01T00:00:00.000Z',
+  basePricePerHour: '150000',
 };
 
 const DETAIL = {
@@ -66,7 +67,7 @@ function oxirgi(): URL {
 
 async function kartochkaniOch(): Promise<HTMLElement> {
   await userEvent.click(
-    await screen.findByRole('button', { name: 'Chilonzor Arena' }),
+    await screen.findByRole('button', { name: 'Chilonzor Arena — ochish' }),
   );
   return await screen.findByRole('dialog');
 }
@@ -81,9 +82,12 @@ describe('Stadionlar', () => {
     server.use(...baseHandlers());
     renderApp(<AppRouter />, { route: '/venues' });
 
-    const jadval = within(await screen.findByRole('table'));
-    expect(await jadval.findByText('Chilonzor Arena')).toBeInTheDocument();
-    expect(jadval.getByText('Futbol 5x5')).toBeInTheDocument();
+    expect(
+      await screen.findByRole('heading', { name: 'Chilonzor Arena' }),
+    ).toBeInTheDocument();
+    expect(screen.getByText('Futbol 5x5')).toBeInTheDocument();
+    // Bazaviy narx kartochkadagi eng ko'rinarli qiymat (BR-13: satr).
+    expect(screen.getByText(/150 000 so'm\/soat/)).toBeInTheDocument();
 
     await userEvent.type(screen.getByLabelText('Shahar'), 'Toshkent{enter}');
 
@@ -102,7 +106,7 @@ describe('Stadionlar', () => {
     );
     renderApp(<AppRouter />, { route: '/venues' });
 
-    await screen.findByRole('table');
+    await screen.findByRole('heading', { name: 'Chilonzor Arena' });
     await userEvent.click(
       screen.getByRole('button', { name: /Yangi stadion/ }),
     );

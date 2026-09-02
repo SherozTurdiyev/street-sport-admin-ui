@@ -55,6 +55,34 @@ export function authedHandlers(me: object = DIRECTOR_ME) {
   ];
 }
 
+/**
+ * Bosh sahifa (`/dashboard`) so'raydigan endpointlar.
+ *
+ * Ular ILOVA ROOT ini (`/`) ochadigan har bir testga kerak: menyudagi
+ * birinchi bo'lim endi boshqaruv paneli. Har bir testda takrorlanmasin
+ * deb shu yerda.
+ */
+export function dashboardHandlers() {
+  return [
+    http.get(`${API}/bookings/today-panel`, () =>
+      HttpResponse.json({
+        date: '2026-09-02',
+        nextGames: [],
+        todayRevenue: '0',
+        unpaidCount: 0,
+        freeHours: 0,
+        pendingModule: 'M8',
+      }),
+    ),
+    http.get(`${API}/bookings`, () =>
+      HttpResponse.json({ items: [], total: 0, page: 1, pageSize: 1 }),
+    ),
+    http.get(`${API}/venues`, () =>
+      HttpResponse.json({ items: [], total: 0, page: 1, pageSize: 100 }),
+    ),
+  ];
+}
+
 /** Kirmagan foydalanuvchi: cookie yo'q, refresh 401 qaytaradi. */
 export function anonHandlers() {
   return [

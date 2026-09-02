@@ -56,6 +56,19 @@ export type Venue = {
   updatedAt: string;
 };
 
+/**
+ * Ro'yxat elementi stadion obyektidan bitta maydonga boy: bazaviy narx.
+ * U `venues` jadvalida emas, `price_rules` dagi bazaviy qoidadan keladi,
+ * shuning uchun kartochka (`VenueDetail`) da yo'q — u yerda narxlarning
+ * to'liq ro'yxati ko'rsatiladi.
+ *
+ * `null` — bazaviy qoida hali qo'yilmagan. Bunday stadionda bron
+ * yaratib bo'lmaydi, shuning uchun kartochkada bu ochiq aytiladi.
+ *
+ * Pul SATR (BR-13).
+ */
+export type VenueListRow = Venue & { basePricePerHour: string | null };
+
 /** Kartochka: stadion obyekti, ustiga ish vaqti va yopilishlar. */
 export type VenueDetail = Venue & {
   hours: VenueHours[];
@@ -114,7 +127,9 @@ export const venuesApi = {
       .then((r) => r.data.items),
 
   list: (query: VenuesQuery) =>
-    api.get<Paginated<Venue>>('/venues', { params: query }).then((r) => r.data),
+    api
+      .get<Paginated<VenueListRow>>('/venues', { params: query })
+      .then((r) => r.data),
 
   detail: (id: string) =>
     api.get<VenueDetail>(`/venues/${id}`).then((r) => r.data),

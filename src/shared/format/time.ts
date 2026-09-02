@@ -21,6 +21,11 @@ export function formatDateTime(iso: string | null | undefined): string {
   return iso ? dayjs(iso).tz(TASHKENT).format('DD.MM.YYYY HH:mm') : NONE;
 }
 
+/** Faqat soat va daqiqa — kalendar va ro'yxatlarda sana takrorlanmaydi. */
+export function formatTime(iso: string | null | undefined): string {
+  return iso ? dayjs(iso).tz(TASHKENT).format('HH:mm') : NONE;
+}
+
 export function formatDate(iso: string | null | undefined): string {
   return iso ? dayjs(iso).tz(TASHKENT).format('DD.MM.YYYY') : NONE;
 }
@@ -37,4 +42,28 @@ export function formatDate(iso: string | null | undefined): string {
  */
 export function tashkentToIso(wallClock: string): string {
   return dayjs.tz(wallClock, TASHKENT).toISOString();
+}
+
+/**
+ * Toshkent kunining chegaralari, ISO UTC ko'rinishida.
+ *
+ * "Bugun" — STADION kuni, brauzer kuni emas: yarim tunda boshqa
+ * mintaqadagi foydalanuvchi uchun sana allaqachon almashgan bo'lishi
+ * mumkin, stadion uchun esa yo'q (BR-12).
+ */
+export function tashkentDayRange(now: dayjs.ConfigType = undefined): {
+  from: string;
+  to: string;
+} {
+  const start = dayjs(now).tz(TASHKENT).startOf('day');
+  return {
+    from: start.toISOString(),
+    to: start.add(1, 'day').toISOString(),
+  };
+}
+
+/** Shu paytdan boshlab `days` kunlik oraliq — "yaqin bronlar" uchun. */
+export function nextDaysRange(days: number): { from: string; to: string } {
+  const now = dayjs();
+  return { from: now.toISOString(), to: now.add(days, 'day').toISOString() };
 }
