@@ -1,6 +1,8 @@
 import { useState } from 'react';
 import { Alert, Button, Card, Form, Input, Typography } from 'antd';
 import { errorMessage } from '@/shared/api/error-handler';
+import { figma } from '@/shared/theme/tokens';
+import logoUrl from '@/assets/logo.svg';
 import { useAuth } from './hooks';
 
 type Values = { phone: string; password: string };
@@ -28,9 +30,26 @@ export function LoginPage() {
   return (
     <div className="flex min-h-full items-center justify-center p-4">
       <Card className="w-full max-w-sm">
-        <Typography.Title level={4} className="!mb-6 text-center">
-          Stadion boshqaruvi
-        </Typography.Title>
+        <div className="mb-6 flex flex-col items-center gap-3">
+          <div
+            className="flex items-center justify-center"
+            style={{
+              width: 48,
+              height: 48,
+              borderRadius: figma.radiusPill,
+              background: figma.primary,
+              boxShadow: `0 0 12px ${figma.primaryGlow}`,
+            }}
+          >
+            <img src={logoUrl} alt="" width={28} height={28} />
+          </div>
+          <Typography.Title level={4} className="!mb-0">
+            StreetSport
+          </Typography.Title>
+          <Typography.Text style={{ color: figma.textMuted }}>
+            Stadion boshqaruvi
+          </Typography.Text>
+        </div>
 
         {error && (
           <Alert type="error" message={error} showIcon className="!mb-4" />

@@ -17,3 +17,13 @@ body,
   height: 100%;
   margin: 0;
 }
+
+/*
+ * Fon ATAYLAB shu yerda ham: antd mavzusi React ishga tushgandan keyin
+ * qo'llanadi. Usiz sahifa yuklanayotganda oq ekran chaqnab o'tadi.
+ * Qiymat `shared/theme/tokens.ts` dagi `bg` bilan bir xil.
+ */
+body {
+  background: #130726;
+  color-scheme: dark;
+}

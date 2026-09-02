@@ -5,6 +5,7 @@ import { ConfigProvider } from 'antd';
 import uzUZ from 'antd/locale/uz_UZ';
 import { MemoryRouter } from 'react-router';
 import { AuthProvider } from '@/features/auth/AuthProvider';
+import { antdTheme } from '@/shared/theme/antd-theme';
 
 /**
  * Har bir test o'z `QueryClient` iga ega: kesh testlar orasida oqib
@@ -29,7 +30,7 @@ export function renderApp(
   function Wrapper({ children }: { children: ReactNode }) {
     return (
       <QueryClientProvider client={createTestClient()}>
-        <ConfigProvider locale={uzUZ}>
+        <ConfigProvider locale={uzUZ} theme={antdTheme}>
           <MemoryRouter initialEntries={[route]}>
             <AuthProvider>{children}</AuthProvider>
           </MemoryRouter>

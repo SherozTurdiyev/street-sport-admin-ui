@@ -3,6 +3,7 @@ import { ConfigProvider } from 'antd';
 import uzUZ from 'antd/locale/uz_UZ';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { isApiError } from '@/shared/api/errors';
+import { antdTheme } from '@/shared/theme/antd-theme';
 
 /**
  * 4xx qayta so'ralmaydi: 403 uch marta ham 403 qaytaradi, foydalanuvchi
@@ -30,7 +31,9 @@ const queryClient = createQueryClient();
 export function Providers({ children }: PropsWithChildren) {
   return (
     <QueryClientProvider client={queryClient}>
-      <ConfigProvider locale={uzUZ}>{children}</ConfigProvider>
+      <ConfigProvider locale={uzUZ} theme={antdTheme}>
+        {children}
+      </ConfigProvider>
     </QueryClientProvider>
   );
 }
