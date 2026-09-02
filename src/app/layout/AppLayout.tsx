@@ -7,6 +7,8 @@ import { ROLE_LABELS } from '@/shared/api/types';
 import { figma } from '@/shared/theme/tokens';
 import { SubscriptionBanner } from '@/app/SubscriptionBanner';
 import logoUrl from '@/assets/logo.svg';
+import { Breadcrumbs } from './Breadcrumbs';
+import { NotificationsBell } from './NotificationsBell';
 import { allowedNav } from './nav';
 
 const { Header, Sider, Content } = Layout;
@@ -44,8 +46,6 @@ export function AppLayout() {
   const selected = nav
     .map((item) => item.path)
     .filter((path) => location.pathname.startsWith(path));
-
-  const current = nav.find((item) => item.path === selected[0]);
 
   return (
     <Layout className="min-h-screen">
@@ -157,9 +157,10 @@ export function AppLayout() {
           className="flex items-center justify-between"
           style={{ borderBottom: `1px solid ${figma.border}` }}
         >
-          <Typography.Text style={{ color: figma.textMuted }}>
-            {current?.label ?? ''}
-          </Typography.Text>
+          {/* Yo'lakcha har doim shu yerda: sahifa ichida chizilsa,
+              har bir sahifada boshqacha joyda turib qolardi. */}
+          <Breadcrumbs />
+          <NotificationsBell />
         </Header>
         <SubscriptionBanner />
         <Content className="p-8">

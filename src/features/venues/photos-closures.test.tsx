@@ -4,7 +4,12 @@ import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { server } from '@/test/msw';
 import { renderApp } from '@/test/render';
-import { API, DIRECTOR_ME, authedHandlers } from '@/test/handlers';
+import {
+  API,
+  DIRECTOR_ME,
+  authedHandlers,
+  venueDayHandlers,
+} from '@/test/handlers';
 import { AppRouter } from '@/app/router';
 
 const FOTO = {
@@ -58,16 +63,18 @@ function baseHandlers() {
     http.get(`${API}/venues/v-1`, () =>
       HttpResponse.json({ ...STADION, hours: [], closures: [YOPILISH] }),
     ),
+    http.get(`${API}/venues/v-1/hours`, () =>
+      HttpResponse.json({ venueId: 'v-1', hours: [] }),
+    ),
+    http.get(`${API}/venues/v-1/price-rules`, () => HttpResponse.json([])),
+    ...venueDayHandlers('v-1'),
   ];
 }
 
+/** Stadion sahifasini ochib kerakli bo'limga o'tadi. */
 async function bolimniOch(nomi: string): Promise<HTMLElement> {
-  await userEvent.click(
-    await screen.findByRole('button', { name: 'Chilonzor Arena — ochish' }),
-  );
-  const karta = await screen.findByRole('dialog');
-  await userEvent.click(within(karta).getByRole('tab', { name: nomi }));
-  return karta;
+  await userEvent.click(await screen.findByRole('tab', { name: nomi }));
+  return document.body;
 }
 
 beforeEach(() => {
@@ -78,7 +85,7 @@ beforeEach(() => {
 describe('Stadion fotolari', () => {
   it('rasmni backend manzilidan ko`rsatadi', async () => {
     server.use(...baseHandlers());
-    renderApp(<AppRouter />, { route: '/venues' });
+    renderApp(<AppRouter />, { route: '/venues/v-1' });
 
     const fotolar = within(await bolimniOch('Fotolar'));
     // Nom bo'yicha: antd oynasining yopish ikonkasi ham `role="img"`.
@@ -101,7 +108,7 @@ describe('Stadion fotolari', () => {
         return HttpResponse.json({ photos: [FOTO] }, { status: 201 });
       }),
     );
-    renderApp(<AppRouter />, { route: '/venues' });
+    renderApp(<AppRouter />, { route: '/venues/v-1' });
 
     const fotolar = within(await bolimniOch('Fotolar'));
     const file = new File(['x'], 'maydon.png', { type: 'image/png' });
@@ -126,7 +133,7 @@ describe('Stadion fotolari', () => {
         ),
       ),
     );
-    renderApp(<AppRouter />, { route: '/venues' });
+    renderApp(<AppRouter />, { route: '/venues/v-1' });
 
     const fotolar = within(await bolimniOch('Fotolar'));
     await userEvent.upload(
@@ -155,7 +162,7 @@ describe('Vaqtinchalik yopilishlar', () => {
         return HttpResponse.json(YOPILISH, { status: 201 });
       }),
     );
-    renderApp(<AppRouter />, { route: '/venues' });
+    renderApp(<AppRouter />, { route: '/venues/v-1' });
 
     const yopilishlar = within(await bolimniOch('Yopilishlar'));
     // Davr AVVAL to'ldiriladi. Tanlagichdagi Enter qiymatni tasdiqlaydi,
@@ -194,7 +201,7 @@ describe('Vaqtinchalik yopilishlar', () => {
 
   it('bekor qilingan bronlar tiklanmasligini aytadi', async () => {
     server.use(...baseHandlers());
-    renderApp(<AppRouter />, { route: '/venues' });
+    renderApp(<AppRouter />, { route: '/venues/v-1' });
 
     const yopilishlar = within(await bolimniOch('Yopilishlar'));
     expect(

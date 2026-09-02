@@ -20,12 +20,8 @@ import {
   type VenueStatus,
 } from './enums';
 import { VenueCard } from './VenueCard';
-import { VenueCardDrawer, type VenueTab } from './VenueCardDrawer';
 import { VenueFormModal } from './VenueFormModal';
 import { useVenues } from './hooks';
-
-/** Ochilgan kartochka: qaysi stadion va qaysi bo'lim. */
-type Ochilgan = { venueId: string; tab: VenueTab };
 
 export function VenuesPage() {
   const [query, setQuery] = useState<VenuesQuery>({
@@ -33,7 +29,6 @@ export function VenuesPage() {
     pageSize: DEFAULT_PAGE_SIZE,
   });
   const [formOpen, setFormOpen] = useState(false);
-  const [ochilgan, setOchilgan] = useState<Ochilgan | null>(null);
   const { data, isPending, isFetching, error } = useVenues(query);
 
   function setFilter(patch: Partial<VenuesQuery>): void {
@@ -105,11 +100,7 @@ export function VenuesPage() {
           style={{ opacity: isFetching ? 0.6 : 1 }}
         >
           {items.map((venue) => (
-            <VenueCard
-              key={venue.id}
-              venue={venue}
-              onOpen={(tab) => setOchilgan({ venueId: venue.id, tab })}
-            />
+            <VenueCard key={venue.id} venue={venue} />
           ))}
         </div>
       )}
@@ -127,11 +118,6 @@ export function VenuesPage() {
       )}
 
       <VenueFormModal open={formOpen} onClose={() => setFormOpen(false)} />
-      <VenueCardDrawer
-        venueId={ochilgan?.venueId ?? null}
-        initialTab={ochilgan?.tab}
-        onClose={() => setOchilgan(null)}
-      />
     </Card>
   );
 }

@@ -10,7 +10,7 @@ import {
   Switch,
 } from 'antd';
 import { applyServerErrors, errorMessage } from '@/shared/api/error-handler';
-import type { VenueInput } from './api';
+import type { Venue, VenueInput } from './api';
 import {
   AMENITY_OPTIONS,
   SPORT_TYPE_OPTIONS,
@@ -19,7 +19,7 @@ import {
   type SportType,
   type Surface,
 } from './enums';
-import { useCreateVenue } from './hooks';
+import { useCreateVenue, useUpdateVenue } from './hooks';
 
 type Values = {
   name: string;
@@ -40,17 +40,39 @@ const FIELDS = ['name', 'sportType', 'city', 'contactPhone'] as const;
 /** Backend standarti bilan bir xil: bron qadami 60 daqiqa. */
 const DEFAULTS: Partial<Values> = { isIndoor: false, slotMinutes: 60 };
 
+/** Serverdagi stadionni forma qiymatlariga o'giradi. */
+function toValues(venue: Venue): Values {
+  return {
+    name: venue.name,
+    sportType: venue.sportType,
+    surface: venue.surface ?? undefined,
+    sizeLabel: venue.sizeLabel ?? undefined,
+    isIndoor: venue.isIndoor,
+    city: venue.city ?? undefined,
+    address: venue.address ?? undefined,
+    contactPhone: venue.contactPhone ?? undefined,
+    slotMinutes: venue.slotMinutes,
+    amenities: venue.amenities,
+    description: venue.description ?? undefined,
+  };
+}
+
 export function VenueFormModal({
   open,
+  venue = null,
   onClose,
 }: {
   open: boolean;
+  /** Berilsa — tahrirlash, aks holda yaratish. */
+  venue?: Venue | null;
   onClose: () => void;
 }) {
   const { message } = App.useApp();
   const [form] = Form.useForm<Values>();
   const [umumiyXato, setUmumiyXato] = useState<string | null>(null);
   const create = useCreateVenue();
+  const update = useUpdateVenue(venue?.id ?? '');
+  const busy = create.isPending || update.isPending;
 
   function yopish(): void {
     form.resetFields();
@@ -65,8 +87,13 @@ export function VenueFormModal({
       name: values.name.trim(),
     };
     try {
-      await create.mutateAsync(input);
-      message.success('Stadion yaratildi');
+      if (venue) {
+        await update.mutateAsync(input);
+        message.success('Stadion yangilandi');
+      } else {
+        await create.mutateAsync(input);
+        message.success('Stadion yaratildi');
+      }
       yopish();
     } catch (e) {
       if (!applyServerErrors(form, e, FIELDS)) setUmumiyXato(errorMessage(e));
@@ -76,12 +103,12 @@ export function VenueFormModal({
   return (
     <Modal
       open={open}
-      title="Yangi stadion"
+      title={venue ? 'Stadionni tahrirlash' : 'Yangi stadion'}
       onCancel={yopish}
       onOk={() => void form.submit()}
-      okText="Yaratish"
+      okText={venue ? 'Saqlash' : 'Yaratish'}
       cancelText="Bekor qilish"
-      confirmLoading={create.isPending}
+      confirmLoading={busy}
       destroyOnHidden
     >
       {umumiyXato === null ? null : (
@@ -91,7 +118,11 @@ export function VenueFormModal({
       <Form<Values>
         form={form}
         layout="vertical"
-        initialValues={DEFAULTS}
+        // `key` — tahrirlanayotgan stadion: `initialValues` faqat
+        // birinchi qurilishda o'qiladi, shuning uchun boshqa stadion
+        // ochilganda forma qaytadan qurilishi kerak.
+        key={venue?.id ?? 'yangi'}
+        initialValues={venue ? toValues(venue) : DEFAULTS}
         onFinish={onFinish}
       >
         <Form.Item

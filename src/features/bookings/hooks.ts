@@ -5,7 +5,22 @@ export const bookingKeys = {
   all: ['bookings'] as const,
   search: (query: BookingsQuery) => ['bookings', 'search', query] as const,
   todayPanel: ['bookings', 'today-panel'] as const,
+  day: (date: string, venueId: string) =>
+    ['bookings', 'day', date, venueId] as const,
 };
+
+/** Bitta stadionning bitta kuni — panjara va kunlik ko'rsatkichlar uchun. */
+export function useDayCalendar(date: string, venueId: string) {
+  return useQuery({
+    queryKey: bookingKeys.day(date, venueId),
+    queryFn: () => bookingsApi.calendarDay(date, [venueId]),
+    select: (data) => ({
+      from: data.from,
+      to: data.to,
+      venue: data.venues[0] ?? null,
+    }),
+  });
+}
 
 export function useTodayPanel() {
   return useQuery({

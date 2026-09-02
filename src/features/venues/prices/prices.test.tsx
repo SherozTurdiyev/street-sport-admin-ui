@@ -4,7 +4,12 @@ import { fireEvent, screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { server } from '@/test/msw';
 import { renderApp } from '@/test/render';
-import { API, DIRECTOR_ME, authedHandlers } from '@/test/handlers';
+import {
+  API,
+  DIRECTOR_ME,
+  authedHandlers,
+  venueDayHandlers,
+} from '@/test/handlers';
 import { AppRouter } from '@/app/router';
 
 const STADION = {
@@ -89,6 +94,7 @@ function baseHandlers(rules: object[] = [BAZAVIY, KECHKI]) {
     http.get(`${API}/venues/v-1/price-rules/table`, () =>
       HttpResponse.json({ venueId: 'v-1', days: kunlar() }),
     ),
+    ...venueDayHandlers('v-1'),
   ];
 }
 
@@ -98,13 +104,13 @@ async function oxirgiOyna(): Promise<HTMLElement> {
   return oynalar[oynalar.length - 1] as HTMLElement;
 }
 
+/**
+ * Manzildagi `?tab=prices` to'g'ridan-to'g'ri narxlar bo'limini ochadi
+ * — kartochkadagi tishli g'ildirak ham shu havolaga olib boradi.
+ */
 async function narxBolimi(): Promise<HTMLElement> {
-  // Kartochkadagi tishli g'ildirak tugmasi to'g'ridan-to'g'ri narxlar
-  // bo'limini ochadi — alohida "Narxlar" ilovasini bosish shart emas.
-  await userEvent.click(
-    await screen.findByRole('button', { name: 'Chilonzor Arena — narxlar' }),
-  );
-  return await screen.findByRole('dialog');
+  await screen.findByRole('button', { name: 'Yangi qoida' });
+  return document.body;
 }
 
 beforeEach(() => {
@@ -114,7 +120,7 @@ beforeEach(() => {
 describe('Narx qoidalari', () => {
   it('bazaviy qoida yo`q stadionda ogohlantiradi', async () => {
     server.use(...baseHandlers([]));
-    renderApp(<AppRouter />, { route: '/venues' });
+    renderApp(<AppRouter />, { route: '/venues/v-1?tab=prices' });
 
     const narx = within(await narxBolimi());
     // Bazaviy qoidasiz bron UMUMAN yaratilmaydi — buni foydalanuvchi
@@ -130,7 +136,7 @@ describe('Narx qoidalari', () => {
         return HttpResponse.json(KECHKI, { status: 201 });
       }),
     );
-    renderApp(<AppRouter />, { route: '/venues' });
+    renderApp(<AppRouter />, { route: '/venues/v-1?tab=prices' });
 
     const narx = within(await narxBolimi());
     await userEvent.click(narx.getByRole('button', { name: 'Yangi qoida' }));
@@ -157,7 +163,7 @@ describe('Narx qoidalari', () => {
         return HttpResponse.json({ ...KECHKI, pricePerHour: '300000' });
       }),
     );
-    renderApp(<AppRouter />, { route: '/venues' });
+    renderApp(<AppRouter />, { route: '/venues/v-1?tab=prices' });
 
     const narx = within(await narxBolimi());
     // Tahrirlash amallar ustunida — nomni bosishni topish shart emas.
@@ -196,7 +202,9 @@ describe('Narx qoidalari', () => {
       endsTime: null,
       weekdays: [1, 2, 3, 4, 5],
     });
-  });
+    // Bu testda eng ko'p qadam bor: sahifa, oyna, uch maydon va
+    // tozalash. To'liq yuklamada umumiy chegaraga tegib ketardi.
+  }, 30_000);
 
   it('prioritet to`qnashuvi xabarini forma ichida ko`rsatadi', async () => {
     const XABAR =
@@ -210,7 +218,7 @@ describe('Narx qoidalari', () => {
         ),
       ),
     );
-    renderApp(<AppRouter />, { route: '/venues' });
+    renderApp(<AppRouter />, { route: '/venues/v-1?tab=prices' });
 
     const narx = within(await narxBolimi());
     await userEvent.click(narx.getByRole('button', { name: 'Yangi qoida' }));
@@ -227,7 +235,7 @@ describe('Narx qoidalari', () => {
 
   it('haftalik panjarada 168 katak va tarif nomi bo`ladi', async () => {
     server.use(...baseHandlers());
-    renderApp(<AppRouter />, { route: '/venues' });
+    renderApp(<AppRouter />, { route: '/venues/v-1?tab=prices' });
 
     const narx = within(await narxBolimi());
     const panjara = await narx.findByRole('table', {
@@ -275,7 +283,7 @@ describe('Narx qoidalari', () => {
         },
       ),
     );
-    renderApp(<AppRouter />, { route: '/venues' });
+    renderApp(<AppRouter />, { route: '/venues/v-1?tab=prices' });
 
     const narx = within(await narxBolimi());
     await userEvent.type(

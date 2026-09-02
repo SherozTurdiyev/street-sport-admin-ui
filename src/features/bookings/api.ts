@@ -62,6 +62,31 @@ export type TodayPanel = {
   pendingModule: 'M8';
 };
 
+/**
+ * Kunlik kalendar: panjarani chizish uchun kerakli HAMMA narsa bitta
+ * javobda — ish vaqti, yopilishlar va bronlar.
+ *
+ * `from` va `to` — so'ralgan Toshkent kunining UTC chegaralari. Ular
+ * ataylab serverdan keladi: mintaqa hisob-kitobi ikki joyda
+ * takrorlansa, ular vaqt o'tishi bilan bir-biridan farq qila boshlaydi.
+ */
+export type CalendarVenue = {
+  venueId: string;
+  name: string;
+  slotMinutes: number;
+  status: string;
+  hours: { weekday: number; opensAt: string; closesAt: string }[];
+  closures: { startsAt: string; endsAt: string; reason: string }[];
+  bookings: Booking[];
+};
+
+export type DayCalendar = {
+  date: string;
+  from: string;
+  to: string;
+  venues: CalendarVenue[];
+};
+
 export const bookingsApi = {
   search: (query: BookingsQuery) =>
     api
@@ -70,4 +95,12 @@ export const bookingsApi = {
 
   todayPanel: () =>
     api.get<TodayPanel>('/bookings/today-panel').then((r) => r.data),
+
+  /** `date` — `YYYY-MM-DD`, Toshkent kuni. */
+  calendarDay: (date: string, venueIds?: string[]) =>
+    api
+      .get<DayCalendar>('/bookings/calendar/day', {
+        params: { date, venueIds },
+      })
+      .then((r) => r.data),
 };

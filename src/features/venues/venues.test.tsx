@@ -4,7 +4,12 @@ import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { server } from '@/test/msw';
 import { renderApp } from '@/test/render';
-import { API, DIRECTOR_ME, authedHandlers } from '@/test/handlers';
+import {
+  API,
+  DIRECTOR_ME,
+  authedHandlers,
+  venueDayHandlers,
+} from '@/test/handlers';
 import { AppRouter } from '@/app/router';
 
 const STADION = {
@@ -56,6 +61,8 @@ function baseHandlers() {
     http.get(`${API}/venues/v-1/hours`, () =>
       HttpResponse.json({ venueId: 'v-1', hours: DETAIL.hours }),
     ),
+    http.get(`${API}/venues/v-1/price-rules`, () => HttpResponse.json([])),
+    ...venueDayHandlers('v-1', { hours: DETAIL.hours }),
   ];
 }
 
@@ -65,11 +72,14 @@ function oxirgi(): URL {
   return url;
 }
 
-async function kartochkaniOch(): Promise<HTMLElement> {
+/** Ro'yxatdan stadion sahifasiga o'tadi va sahifani qaytaradi. */
+async function stadionSahifasi(): Promise<HTMLElement> {
   await userEvent.click(
     await screen.findByRole('button', { name: 'Chilonzor Arena — ochish' }),
   );
-  return await screen.findByRole('dialog');
+  return (
+    await screen.findByRole('heading', { name: 'Chilonzor Arena' })
+  ).closest('div')!;
 }
 
 beforeEach(() => {
@@ -146,18 +156,21 @@ describe('Stadionlar', () => {
         return HttpResponse.json({ ...STADION, status: 'ARCHIVED' });
       }),
     );
+    // Ro'yxatdan sahifaga o'tish ham shu testda tekshiriladi.
     renderApp(<AppRouter />, { route: '/venues' });
+    await stadionSahifasi();
 
-    const karta = within(await kartochkaniOch());
-    await userEvent.click(karta.getByRole('button', { name: 'Arxivlash' }));
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Arxivlash' }),
+    );
 
     // Birinchi urinish `confirm: false` bilan ketdi va 409 qaytdi.
-    expect(await karta.findByText(/faol bronlar bor/i)).toBeInTheDocument();
+    expect(await screen.findByText(/faol bronlar bor/i)).toBeInTheDocument();
     expect(confirmed).toBe(false);
 
     // Endi tasdiq tugmasi paydo bo'ladi.
     await userEvent.click(
-      karta.getByRole('button', { name: 'Baribir arxivlash' }),
+      screen.getByRole('button', { name: 'Baribir arxivlash' }),
     );
 
     expect(yuborilgan).toEqual([
@@ -175,19 +188,17 @@ describe('Stadionlar', () => {
         return HttpResponse.json({ venueId: 'v-1', hours: [] });
       }),
     );
-    renderApp(<AppRouter />, { route: '/venues' });
-
-    const karta = within(await kartochkaniOch());
-    await userEvent.click(karta.getByRole('tab', { name: 'Ish vaqti' }));
+    // "Ish vaqti" — sahifaning standart bo'limi.
+    renderApp(<AppRouter />, { route: '/venues/v-1' });
 
     // Yettala kun ko'rinadi — "kun qo'shish" tugmasi emas.
     for (const kun of ['Dushanba', 'Seshanba', 'Yakshanba']) {
-      expect(await karta.findByLabelText(kun)).toBeInTheDocument();
+      expect(await screen.findByLabelText(kun)).toBeInTheDocument();
     }
 
     // Serverda faqat dushanba ochiq edi; yopiq kunlar massivga kirmaydi.
     await userEvent.click(
-      karta.getByRole('button', { name: 'Ish vaqtini saqlash' }),
+      screen.getByRole('button', { name: 'Ish vaqtini saqlash' }),
     );
 
     expect(yuborilgan).toEqual([
@@ -214,12 +225,10 @@ describe('Stadionlar', () => {
       }),
       ...baseHandlers(),
     );
-    renderApp(<AppRouter />, { route: '/venues' });
+    renderApp(<AppRouter />, { route: '/venues/v-1' });
 
-    const karta = within(await kartochkaniOch());
-    await userEvent.click(karta.getByRole('tab', { name: 'Ish vaqti' }));
     await userEvent.click(
-      await karta.findByRole('button', { name: 'Ish vaqtini saqlash' }),
+      await screen.findByRole('button', { name: 'Ish vaqtini saqlash' }),
     );
 
     expect(yuborilgan).toEqual([

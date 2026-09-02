@@ -83,6 +83,49 @@ export function dashboardHandlers() {
   ];
 }
 
+/**
+ * Stadion sahifasi (`/venues/:id`) qo'shimcha so'raydigan endpointlar:
+ * kunlik kalendar va bronlar soni. Panjara, bandlik va tushum shulardan
+ * hisoblanadi.
+ */
+export function venueDayHandlers(
+  venueId: string,
+  venue: Partial<{
+    name: string;
+    slotMinutes: number;
+    hours: { weekday: number; opensAt: string; closesAt: string }[];
+    closures: { startsAt: string; endsAt: string; reason: string }[];
+    bookings: object[];
+  }> = {},
+) {
+  return [
+    http.get(`${API}/bookings/calendar/day`, ({ request }) => {
+      const url = new URL(request.url);
+      const date = url.searchParams.get('date') ?? '2026-09-02';
+      return HttpResponse.json({
+        date,
+        // Toshkent kuni UTC da 19:00 da boshlanadi.
+        from: `${date}T19:00:00.000Z`,
+        to: `${date}T19:00:00.000Z`,
+        venues: [
+          {
+            venueId,
+            name: venue.name ?? 'Chilonzor Arena',
+            slotMinutes: venue.slotMinutes ?? 60,
+            status: 'ACTIVE',
+            hours: venue.hours ?? [],
+            closures: venue.closures ?? [],
+            bookings: venue.bookings ?? [],
+          },
+        ],
+      });
+    }),
+    http.get(`${API}/bookings`, () =>
+      HttpResponse.json({ items: [], total: 0, page: 1, pageSize: 1 }),
+    ),
+  ];
+}
+
 /** Kirmagan foydalanuvchi: cookie yo'q, refresh 401 qaytaradi. */
 export function anonHandlers() {
   return [

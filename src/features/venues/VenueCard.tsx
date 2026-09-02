@@ -1,5 +1,6 @@
 import { ArrowRightOutlined, SettingOutlined } from '@ant-design/icons';
 import { Button, Tooltip, Typography } from 'antd';
+import { Link } from 'react-router';
 import { assetUrl } from '@/shared/api/client';
 import { figma } from '@/shared/theme/tokens';
 import { formatMoney } from '@/shared/format/money';
@@ -106,19 +107,13 @@ function PhotoArea({ venue }: { venue: VenueListRow }) {
   );
 }
 
-export function VenueCard({
-  venue,
-  onOpen,
-}: {
-  venue: VenueListRow;
-  /**
-   * Ikkala tugma ham kartochkani ochadi, lekin BOSHQA bo'limda:
-   * tishli g'ildirak narx yonida turibdi va narxlarga olib boradi,
-   * o'q esa umumiy profilga. Bir xil ish qiladigan ikki tugma
-   * foydalanuvchini chalg'itardi.
-   */
-  onOpen: (tab: 'profile' | 'prices') => void;
-}) {
+/**
+ * Ikkala tugma ham stadion sahifasini ochadi, lekin BOSHQA joyda:
+ * tishli g'ildirak narx yonida turibdi va narx qoidalariga olib
+ * boradi, o'q esa sahifaning boshiga. Bir xil ish qiladigan ikki
+ * tugma foydalanuvchini chalg'itardi.
+ */
+export function VenueCard({ venue }: { venue: VenueListRow }) {
   return (
     <div
       className="flex h-full flex-col overflow-hidden"
@@ -191,28 +186,30 @@ export function VenueCard({
 
           <div className="flex shrink-0 gap-2">
             <Tooltip title="Narxlar">
-              <Button
-                aria-label={`${venue.name} — narxlar`}
-                icon={<SettingOutlined aria-hidden />}
-                style={{
-                  ...ROUND_BUTTON,
-                  background: figma.bgSider,
-                  borderColor: figma.border,
-                }}
-                onClick={() => onOpen('prices')}
-              />
+              <Link to={`/venues/${venue.id}?tab=prices`}>
+                <Button
+                  aria-label={`${venue.name} — narxlar`}
+                  icon={<SettingOutlined aria-hidden />}
+                  style={{
+                    ...ROUND_BUTTON,
+                    background: figma.bgSider,
+                    borderColor: figma.border,
+                  }}
+                />
+              </Link>
             </Tooltip>
             <Tooltip title="Ochish">
-              <Button
-                aria-label={`${venue.name} — ochish`}
-                icon={<ArrowRightOutlined aria-hidden />}
-                style={{
-                  ...ROUND_BUTTON,
-                  background: figma.primarySoft,
-                  borderColor: figma.primarySoftBorder,
-                }}
-                onClick={() => onOpen('profile')}
-              />
+              <Link to={`/venues/${venue.id}`}>
+                <Button
+                  aria-label={`${venue.name} — ochish`}
+                  icon={<ArrowRightOutlined aria-hidden />}
+                  style={{
+                    ...ROUND_BUTTON,
+                    background: figma.primarySoft,
+                    borderColor: figma.primarySoftBorder,
+                  }}
+                />
+              </Link>
             </Tooltip>
           </div>
         </div>
