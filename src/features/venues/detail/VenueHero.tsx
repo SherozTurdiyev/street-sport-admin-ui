@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Alert, App, Button, Space, Typography } from 'antd';
 import { assetUrl } from '@/shared/api/client';
 import { errorCode, errorMessage } from '@/shared/api/error-handler';
@@ -51,12 +51,23 @@ function Photo({ venue }: { venue: VenueDetail }) {
   );
 }
 
-export function VenueHero({ venue }: { venue: VenueDetail }) {
+/**
+ * Amallar ATAYLAB alohida komponentada: platforma xodimi shu kartani
+ * ko'radi, lekin tahrirlash va arxivlash unga yopiq. Tugmalar shu
+ * yerda turgani uchun platforma sahifasida mutatsiya hooklari ham,
+ * tahrirlash oynasi ham umuman yaratilmaydi.
+ */
+export function VenueHeroActions({
+  venue,
+  onError,
+}: {
+  venue: VenueDetail;
+  onError: (xato: string | null) => void;
+}) {
   const { message } = App.useApp();
   const archive = useArchiveVenue(venue.id);
   const restore = useRestoreVenue(venue.id);
   const [formOpen, setFormOpen] = useState(false);
-  const [xato, setXato] = useState<string | null>(null);
   /**
    * Faol bronlari bor stadionni arxivlash `confirm: true` talab qiladi.
    * Darrov `true` yuborish to'siqni ma'nosiz qilardi: u aynan
@@ -64,19 +75,68 @@ export function VenueHero({ venue }: { venue: VenueDetail }) {
    */
   const [tasdiqKerak, setTasdiqKerak] = useState(false);
 
-  const status = VENUE_STATUS_VIEW[venue.status];
-
   async function arxivla(confirm: boolean): Promise<void> {
-    setXato(null);
+    onError(null);
     try {
       await archive.mutateAsync(confirm);
       message.success('Stadion arxivlandi');
       setTasdiqKerak(false);
     } catch (e) {
-      setXato(errorMessage(e));
+      onError(errorMessage(e));
       if (errorCode(e) === 'VENUE_HAS_ACTIVE_BOOKINGS') setTasdiqKerak(true);
     }
   }
+
+  return (
+    <>
+      <Space>
+        <Button onClick={() => setFormOpen(true)}>Tahrirlash</Button>
+        {venue.status === 'ARCHIVED' ? (
+          <Button
+            type="primary"
+            loading={restore.isPending}
+            onClick={() =>
+              void restore
+                .mutateAsync()
+                .then(() => message.success('Stadion qaytarildi'))
+                .catch((e: unknown) => onError(errorMessage(e)))
+            }
+          >
+            Arxivdan qaytarish
+          </Button>
+        ) : (
+          <Button
+            danger
+            loading={archive.isPending}
+            onClick={() => void arxivla(tasdiqKerak)}
+          >
+            {tasdiqKerak ? 'Baribir arxivlash' : 'Arxivlash'}
+          </Button>
+        )}
+      </Space>
+
+      <VenueFormModal
+        open={formOpen}
+        venue={venue}
+        onClose={() => setFormOpen(false)}
+      />
+    </>
+  );
+}
+
+export function VenueHero({
+  venue,
+  /** Qo'shimcha yozuv — platformada stadion qaysi tashkilotniki ekani. */
+  meta = null,
+  actions,
+}: {
+  venue: VenueDetail;
+  meta?: ReactNode;
+  /** Berilmasa amallar chizilmaydi: karta faqat o'qish uchun bo'ladi. */
+  actions?: (onError: (xato: string | null) => void) => ReactNode;
+}) {
+  const [xato, setXato] = useState<string | null>(null);
+  const status = VENUE_STATUS_VIEW[venue.status];
 
   return (
     <div
@@ -109,6 +169,7 @@ export function VenueHero({ venue }: { venue: VenueDetail }) {
             />
             {status.label}
           </span>
+          {meta}
         </div>
 
         <div
@@ -126,37 +187,7 @@ export function VenueHero({ venue }: { venue: VenueDetail }) {
         )}
       </div>
 
-      <Space>
-        <Button onClick={() => setFormOpen(true)}>Tahrirlash</Button>
-        {venue.status === 'ARCHIVED' ? (
-          <Button
-            type="primary"
-            loading={restore.isPending}
-            onClick={() =>
-              void restore
-                .mutateAsync()
-                .then(() => message.success('Stadion qaytarildi'))
-                .catch((e: unknown) => setXato(errorMessage(e)))
-            }
-          >
-            Arxivdan qaytarish
-          </Button>
-        ) : (
-          <Button
-            danger
-            loading={archive.isPending}
-            onClick={() => void arxivla(tasdiqKerak)}
-          >
-            {tasdiqKerak ? 'Baribir arxivlash' : 'Arxivlash'}
-          </Button>
-        )}
-      </Space>
-
-      <VenueFormModal
-        open={formOpen}
-        venue={venue}
-        onClose={() => setFormOpen(false)}
-      />
+      {actions?.(setXato)}
     </div>
   );
 }

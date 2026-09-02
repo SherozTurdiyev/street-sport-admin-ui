@@ -237,10 +237,12 @@ describe('Platforma paneli', () => {
     expect(screen.getByText("150 000 so'm/soat")).toBeInTheDocument();
     // Jadval EMAS: bo'limda endi panjara bor.
     expect(screen.queryByRole('table')).not.toBeInTheDocument();
-    // Platforma xodimi stadion sahifasiga kira olmaydi — havola yo'q.
+    // Havola platformaning o'z sahifasiga boradi: `/venues/v-1` ga
+    // emas — u tashkilot ichidagi sahifa va platformaga yopiq.
     expect(
-      screen.queryByRole('button', { name: /Chilonzor Arena —/ }),
-    ).not.toBeInTheDocument();
+      screen.getByRole('button', { name: 'Chilonzor Arena — ochish' })
+        .parentElement,
+    ).toHaveAttribute('href', '/platform/venues/v-1');
   });
 
   it('tor ekranda jadval o`rniga kartochka chizadi', async () => {

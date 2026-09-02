@@ -6,6 +6,7 @@ import { assetUrl } from '@/shared/api/client';
 import { figma } from '@/shared/theme/tokens';
 import { formatMoney } from '@/shared/format/money';
 import type { VenueListRow } from './api';
+import { ROUND_BUTTON } from './card-style';
 import {
   SPORT_TYPE_LABELS,
   VENUE_STATUS_VIEW,
@@ -45,16 +46,6 @@ const STATUS_PILL: Record<
     color: figma.textMuted,
   },
 };
-
-/** Kichik, doim bir xil o'lchamli dumaloq tugma (Figma: 36x36). */
-const ROUND_BUTTON = {
-  width: 36,
-  height: 36,
-  borderRadius: 24,
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-} as const;
 
 function PhotoArea({ venue }: { venue: VenueListRow }) {
   const primary = venue.photos.find((p) => p.isPrimary) ?? venue.photos[0];
@@ -150,6 +141,11 @@ export function VenueCardLinks({ venue }: { venue: VenueListRow }) {
 export function VenueCard({
   venue,
   /**
+   * Nom ostidagi qatorga qo'shimcha yozuv — platforma ro'yxatida
+   * stadion qaysi tashkilotniki ekani shu yerda ko'rsatiladi.
+   */
+  meta = null,
+  /**
    * Amallar ATAYLAB tashqaridan: platforma xodimi shu kartochkani
    * tashkilot sahifasida ko'radi, lekin stadion sahifasiga kira
    * olmaydi (uning tashkiloti yo'q). U yerda `null` uzatiladi —
@@ -158,6 +154,7 @@ export function VenueCard({
   actions = <VenueCardLinks venue={venue} />,
 }: {
   venue: VenueListRow;
+  meta?: ReactNode;
   actions?: ReactNode;
 }) {
   return (
@@ -192,6 +189,7 @@ export function VenueCard({
               {venue.city}
             </span>
           )}
+          {meta}
         </div>
 
         <div

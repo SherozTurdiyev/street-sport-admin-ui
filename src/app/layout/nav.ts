@@ -80,6 +80,16 @@ export const NAV: readonly NavItem[] = [
     icon: BankOutlined,
     requiresOrg: false,
   },
+  {
+    // Platforma xodimi uchun BARCHA tashkilotlarning stadionlari.
+    // Manzil `/venues` dan ayri: u tashkilot ichidagi ro'yxat va
+    // boshqa endpointga boradi.
+    path: '/platform/venues',
+    permission: 'platform.org.manage',
+    label: 'Stadionlar',
+    icon: EnvironmentOutlined,
+    requiresOrg: false,
+  },
 ];
 
 export function allowedNav(

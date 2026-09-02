@@ -1,6 +1,12 @@
 import { api } from '@/shared/api/client';
 import type { PageQuery, Paginated, Role } from '@/shared/api/types';
-import type { VenueListRow } from '@/features/venues/api';
+import type {
+  VenueClosure,
+  VenueHours,
+  VenueListRow,
+} from '@/features/venues/api';
+import type { SportType, VenueStatus } from '@/features/venues/enums';
+import type { PriceRule } from '@/features/venues/prices/api';
 
 /**
  * AMALDAGI holat — hisoblangan. `subscriptionStatus` (bazadagi ustun)
@@ -70,6 +76,35 @@ export type OrganizationMember = {
  */
 export type OrganizationVenue = VenueListRow;
 
+/**
+ * Platforma ro'yxatida stadion qaysi tashkilotniki ekani ko'rinib
+ * turishi shart — bir nechta tashkilotning stadionlari aralash keladi.
+ */
+export type PlatformVenue = VenueListRow & {
+  organization: { id: string; name: string };
+};
+
+/**
+ * Stadion kartochkasi bitta javobda keladi: platformada tahrirlash
+ * yo'q, ya'ni har bo'lim uchun alohida so'rov ham kerak emas.
+ *
+ * Bronlar va tushum bu yerda YO'Q — TZ 4.2 bo'yicha ish ma'lumoti
+ * platformaga yopiq.
+ */
+export type PlatformVenueCard = PlatformVenue & {
+  hours: VenueHours[];
+  closures: VenueClosure[];
+  priceRules: PriceRule[];
+};
+
+export type PlatformVenuesQuery = PageQuery & {
+  orgId?: string;
+  city?: string;
+  sportType?: SportType;
+  status?: VenueStatus;
+  search?: string;
+};
+
 export type OrganizationsQuery = PageQuery & {
   search?: string;
   /** Filtr AMALDAGI holat bo'yicha va bazada bajariladi. */
@@ -134,6 +169,15 @@ export const platformApi = {
         params: query,
       })
       .then((r) => r.data),
+
+  /** Barcha tashkilotlarning stadionlari — platforma bo'limi uchun. */
+  allVenues: (query: PlatformVenuesQuery) =>
+    api
+      .get<Paginated<PlatformVenue>>('/platform/venues', { params: query })
+      .then((r) => r.data),
+
+  venue: (id: string) =>
+    api.get<PlatformVenueCard>(`/platform/venues/${id}`).then((r) => r.data),
 
   /** Arxivlangan stadionlar ham qaytadi — `stats.venueCount` bilan mos kelishi uchun. */
   venues: (id: string, query: PageQuery) =>

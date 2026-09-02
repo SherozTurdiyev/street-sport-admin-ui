@@ -62,6 +62,16 @@ const OrganizationsPage = lazy(() =>
     default: m.OrganizationsPage,
   })),
 );
+const PlatformVenuesPage = lazy(() =>
+  import('@/features/platform/venues/PlatformVenuesPage').then((m) => ({
+    default: m.PlatformVenuesPage,
+  })),
+);
+const PlatformVenueDetailPage = lazy(() =>
+  import('@/features/platform/venues/PlatformVenueDetailPage').then((m) => ({
+    default: m.PlatformVenueDetailPage,
+  })),
+);
 
 /**
  * Bosh sahifa qat'iy emas: foydalanuvchi o'ziga ochiq BIRINCHI bo'limga
@@ -110,6 +120,11 @@ export function AppRouter() {
               <Route
                 path="/platform/organizations/:id"
                 element={<OrganizationDetailPage />}
+              />
+              <Route path="/platform/venues" element={<PlatformVenuesPage />} />
+              <Route
+                path="/platform/venues/:id"
+                element={<PlatformVenueDetailPage />}
               />
             </Route>
             <Route element={<RequireOrg />}>

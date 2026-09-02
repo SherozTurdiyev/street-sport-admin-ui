@@ -3,6 +3,7 @@ import { DEFAULT_PAGE_SIZE, ROLE_LABELS } from '@/shared/api/types';
 import { displayPhone } from '@/shared/format/phone';
 import { formatDateTime } from '@/shared/format/time';
 import { VenueCard } from '@/features/venues/VenueCard';
+import { PlatformVenueLink } from '../venues/PlatformVenueLink';
 import type { OrganizationMember } from '../api';
 import { useOrganizationMembers, useOrganizationVenues } from '../hooks';
 
@@ -64,10 +65,14 @@ export function OrgVenuesTab({ id }: { id: string }) {
           style={{ opacity: isFetching ? 0.6 : 1 }}
         >
           {items.map((venue) => (
-            // Amallarsiz: platforma xodimining tashkiloti yo'q, ya'ni
-            // stadion sahifasi unga ochilmaydi (BR-08/BR-09). Ishlamaydigan
-            // tugma qo'yishdan ko'ra qo'ymagan ma'qul.
-            <VenueCard key={venue.id} venue={venue} actions={null} />
+            // Havola platformaning O'Z sahifasiga: `/venues/:id`
+            // tashkilot ichidagi sahifa va platforma xodimiga yopiq
+            // (BR-08/BR-09).
+            <VenueCard
+              key={venue.id}
+              venue={venue}
+              actions={<PlatformVenueLink venue={venue} />}
+            />
           ))}
         </div>
       )}

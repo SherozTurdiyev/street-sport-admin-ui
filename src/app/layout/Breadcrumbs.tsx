@@ -1,7 +1,7 @@
 import { Breadcrumb } from 'antd';
 import { Link, useLocation, useMatch } from 'react-router';
 import { useCan, useHasOrg } from '@/features/auth/hooks';
-import { useOrganization } from '@/features/platform/hooks';
+import { useOrganization, usePlatformVenue } from '@/features/platform/hooks';
 import { useVenue } from '@/features/venues/hooks';
 import { allowedNav } from './nav';
 
@@ -30,6 +30,8 @@ export function Breadcrumbs() {
   const venue = useVenue(venueMatch?.params.id ?? null);
   const orgMatch = useMatch('/platform/organizations/:id');
   const org = useOrganization(orgMatch?.params.id ?? null);
+  const platformVenueMatch = useMatch('/platform/venues/:id');
+  const platformVenue = usePlatformVenue(platformVenueMatch?.params.id ?? null);
 
   const section = allowedNav(can, hasOrg).find((item) =>
     location.pathname.startsWith(item.path),
@@ -40,7 +42,9 @@ export function Breadcrumbs() {
     ? (venue.data?.name ?? '…')
     : orgMatch
       ? (org.data?.name ?? '…')
-      : null;
+      : platformVenueMatch
+        ? (platformVenue.data?.name ?? '…')
+        : null;
 
   return (
     <Breadcrumb

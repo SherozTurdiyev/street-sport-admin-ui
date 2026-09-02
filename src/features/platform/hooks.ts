@@ -9,6 +9,7 @@ import {
   platformApi,
   type CreateOrganizationInput,
   type OrganizationsQuery,
+  type PlatformVenuesQuery,
   type UpdateOrganizationInput,
 } from './api';
 
@@ -20,6 +21,9 @@ export const platformKeys = {
     ['platform', 'members', id, query] as const,
   venues: (id: string, query: PageQuery) =>
     ['platform', 'venues', id, query] as const,
+  allVenues: (query: PlatformVenuesQuery) =>
+    ['platform', 'all-venues', query] as const,
+  venue: (id: string) => ['platform', 'venue', id] as const,
 };
 
 export function useOrganizations(query: OrganizationsQuery) {
@@ -43,6 +47,26 @@ export function useOrganizationMembers(id: string, query: PageQuery) {
     queryKey: platformKeys.members(id, query),
     queryFn: () => platformApi.members(id, query),
     placeholderData: keepPreviousData,
+  });
+}
+
+export function usePlatformVenues(query: PlatformVenuesQuery) {
+  return useQuery({
+    queryKey: platformKeys.allVenues(query),
+    queryFn: () => platformApi.allVenues(query),
+    placeholderData: keepPreviousData,
+  });
+}
+
+/**
+ * `id` — `null` bo'lishi mumkin: yo'lakcha (breadcrumb) stadion
+ * sahifasida bo'lmaganda ham chaqiriladi.
+ */
+export function usePlatformVenue(id: string | null) {
+  return useQuery({
+    queryKey: platformKeys.venue(id ?? ''),
+    queryFn: () => platformApi.venue(id as string),
+    enabled: id !== null,
   });
 }
 

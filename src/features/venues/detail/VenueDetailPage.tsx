@@ -23,7 +23,7 @@ import { usePriceRules } from '../prices/hooks';
 import { useVenue } from '../hooks';
 import { DayBookings } from './DayBookings';
 import { SlotGrid } from './SlotGrid';
-import { VenueHero } from './VenueHero';
+import { VenueHero, VenueHeroActions } from './VenueHero';
 import { VenueSpecs } from './VenueSpecs';
 import {
   bookedMinutes,
@@ -115,7 +115,12 @@ export function VenueDetailPage() {
 
   return (
     <div className="flex flex-col gap-6">
-      <VenueHero venue={venue.data} />
+      <VenueHero
+        venue={venue.data}
+        actions={(onError) => (
+          <VenueHeroActions venue={venue.data} onError={onError} />
+        )}
+      />
 
       <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-6">
         <StatCard
