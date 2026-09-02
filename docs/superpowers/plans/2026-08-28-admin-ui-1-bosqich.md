@@ -667,13 +667,13 @@ tugmasi emas).
 
 **Fayllar:** `src/test/scenario.test.tsx`, `README.md`
 
-- [ ] **13.1** Ssenariy testi: login → menyu → xodim qo'shish →
+- [x] **13.1** Ssenariy testi: login → menyu → xodim qo'shish →
       vaqtinchalik parol → rol o'zgartirish → faolsizlantirish
 
-- [ ] **13.2** README: ishga tushirish, muhit o'zgaruvchilari, papka
+- [x] **13.2** README: ishga tushirish, muhit o'zgaruvchilari, papka
       tuzilishi, qoidalar (rol tekshirilmaydi, xato matni yozilmaydi,
       pul satr)
 
-- [ ] **13.3** Qabul mezonlarini qo'lda tekshirish (spec 13-bo'lim)
+- [x] **13.3** Qabul mezonlarini qo'lda tekshirish (spec 13-bo'lim)
 
-- [ ] **13.4** Commit: `test: 1-bosqichning to'liq ssenariysi va README`
+- [x] **13.4** Commit: `test: 1-bosqichning to'liq ssenariysi va README`

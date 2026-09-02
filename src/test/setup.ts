@@ -1,6 +1,19 @@
 import '@testing-library/jest-dom/vitest';
+import { configure } from '@testing-library/react';
 import { afterAll, afterEach, beforeAll } from 'vitest';
 import { server } from './msw';
+
+/*
+ * `findBy*` va `waitFor` uchun standart chegara 1 soniya. Bu testlar
+ * butun ilovani ko'taradi va MSW orqali javob kutadi; o'nlab fayl
+ * parallel ishlaganda 1 soniya yetmay qoladi va xatolar fayldan faylga
+ * ko'chib yuradi.
+ *
+ * Bu KUTISH muddati, tekshiruv emas: element baribir paydo bo'lishi
+ * shart, faqat sabr uzaydi. Haqiqiy xatolik hech qayerda yashirilmaydi —
+ * u shunchaki bir necha soniya kechroq xabar beradi.
+ */
+configure({ asyncUtilTimeout: 5000 });
 
 /**
  * jsdom `matchMedia` ni amalga oshirmaydi, antd ning moslashuvchan
