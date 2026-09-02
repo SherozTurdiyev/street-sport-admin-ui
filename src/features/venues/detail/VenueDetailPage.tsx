@@ -32,7 +32,7 @@ import {
   occupancy,
   openMinutes,
   activeBookings,
-} from './slots';
+} from '@/features/bookings/slots';
 
 const TABS = ['hours', 'prices', 'photos', 'closures'] as const;
 type Tab = (typeof TABS)[number];

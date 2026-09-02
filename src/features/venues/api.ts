@@ -1,5 +1,6 @@
 import { api } from '@/shared/api/client';
 import type { PageQuery, Paginated } from '@/shared/api/types';
+import type { CancelReason } from '@/features/bookings/api';
 import type { Amenity, SportType, Surface, VenueStatus } from './enums';
 
 /**
@@ -95,16 +96,6 @@ export type VenueInput = {
   amenities?: Amenity[];
   description?: string | null;
 };
-
-export const CANCEL_REASON_LABELS = {
-  CUSTOMER_REFUSED: 'Mijoz voz kechdi',
-  WEATHER: 'Ob-havo',
-  VENUE_ISSUE: 'Stadion muammosi',
-  DOUBLE_BOOKING: 'Ikki marta bron',
-  OTHER: 'Boshqa',
-} as const;
-
-export type CancelReason = keyof typeof CANCEL_REASON_LABELS;
 
 export type ClosureInput = {
   /** ISO UTC. */

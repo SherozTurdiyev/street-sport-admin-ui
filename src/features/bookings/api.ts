@@ -1,5 +1,6 @@
 import { api } from '@/shared/api/client';
 import type { PageQuery, Paginated } from '@/shared/api/types';
+import type { SportType } from '@/features/venues/enums';
 
 /**
  * Bron obyekti — barcha bron endpoint'lari aynan shu shaklni qaytaradi
@@ -33,6 +34,23 @@ export const BOOKING_STATUS_VIEW = {
 } as const;
 
 export type BookingStatus = keyof typeof BOOKING_STATUS_VIEW;
+
+/**
+ * Bekor qilish sababi MAJBURIY (BR-07): u statistikaga kiradi va
+ * "nega bekor qilindi?" degan savol javobsiz qolmasligi kerak.
+ *
+ * Ro'yxat shu yerda: sabab bron bekor qilinganda ham, stadion
+ * vaqtinchalik yopilib bronlar bekor qilinganda ham bir xil.
+ */
+export const CANCEL_REASON_LABELS = {
+  CUSTOMER_REFUSED: 'Mijoz voz kechdi',
+  WEATHER: 'Ob-havo',
+  VENUE_ISSUE: 'Stadion muammosi',
+  DOUBLE_BOOKING: 'Ikki marta bron',
+  OTHER: 'Boshqa',
+} as const;
+
+export type CancelReason = keyof typeof CANCEL_REASON_LABELS;
 
 export type BookingsQuery = PageQuery & {
   search?: string;
@@ -87,6 +105,58 @@ export type DayCalendar = {
   venues: CalendarVenue[];
 };
 
+/** Kartochka: bron obyekti ustiga stadion va mijoz. */
+export type BookingCard = Booking & {
+  venue: {
+    id: string;
+    name: string;
+    sportType: SportType;
+    slotMinutes: number;
+  };
+  /** Anonim bronda `null`. */
+  customer: {
+    id: string;
+    phone: string;
+    fullName: string;
+    isBlacklisted: boolean;
+  } | null;
+};
+
+/**
+ * Narx bu yerda YO'Q va bo'lmasligi kerak: uni server narx
+ * qoidalaridan hisoblaydi. Mijozdan qabul qilinsa, ikki tomonda ikki
+ * xil raqam paydo bo'lardi.
+ */
+export type CreateBookingInput = {
+  venueId: string;
+  /** Berilmasa — anonim bron. */
+  customerId?: string;
+  startsAt: string;
+  endsAt: string;
+  /** So'm, SATR (BR-13). */
+  discount?: string;
+  note?: string;
+};
+
+/** `warnings` — masalan `["CUSTOMER_BLACKLISTED"]`. Taqiq emas, ogohlantirish. */
+export type CreatedBooking = Booking & { warnings: string[] };
+
+/**
+ * Hammasi ixtiyoriy, lekin kamida bittasi kerak. `confirmPriceChange`
+ * faqat server `BOOKING_PRICE_CHANGED` qaytargandan keyin yuboriladi.
+ */
+export type MoveBookingInput = {
+  venueId?: string;
+  startsAt?: string;
+  endsAt?: string;
+  confirmPriceChange?: boolean;
+};
+
+export type CancelBookingInput = { reason: CancelReason; comment?: string };
+
+/** O'yin natijasi faqat `endsAt` o'tgandan keyin qo'yiladi. */
+export type BookingResult = 'COMPLETED' | 'NO_SHOW';
+
 export const bookingsApi = {
   search: (query: BookingsQuery) =>
     api
@@ -103,4 +173,21 @@ export const bookingsApi = {
         params: { date, venueIds },
       })
       .then((r) => r.data),
+
+  card: (id: string) =>
+    api.get<BookingCard>(`/bookings/${id}`).then((r) => r.data),
+
+  create: (input: CreateBookingInput) =>
+    api.post<CreatedBooking>('/bookings', input).then((r) => r.data),
+
+  move: (id: string, input: MoveBookingInput) =>
+    api
+      .patch<CreatedBooking>(`/bookings/${id}/move`, input)
+      .then((r) => r.data),
+
+  cancel: (id: string, input: CancelBookingInput) =>
+    api.post<Booking>(`/bookings/${id}/cancel`, input).then((r) => r.data),
+
+  setResult: (id: string, result: BookingResult) =>
+    api.post<Booking>(`/bookings/${id}/result`, { result }).then((r) => r.data),
 };

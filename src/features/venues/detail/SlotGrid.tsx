@@ -1,6 +1,6 @@
 import { Empty, Tooltip } from 'antd';
 import { figma } from '@/shared/theme/tokens';
-import type { Slot, SlotStatus } from './slots';
+import type { Slot, SlotStatus } from '@/features/bookings/slots';
 
 /**
  * Figma: "Time Slot Manager" (2020:8587) — kunning ish vaqti

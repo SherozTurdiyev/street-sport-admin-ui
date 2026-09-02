@@ -18,8 +18,8 @@ import { formatDateTime, tashkentToIso } from '@/shared/format/time';
 import {
   CANCEL_REASON_LABELS,
   type CancelReason,
-  type VenueClosure,
-} from './api';
+} from '@/features/bookings/api';
+import type { VenueClosure } from './api';
 import { useAddClosure, useRemoveClosure, useVenue } from './hooks';
 
 const PICKER_FORMAT = 'YYYY-MM-DD HH:mm';

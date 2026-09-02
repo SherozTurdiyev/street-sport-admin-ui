@@ -1,5 +1,5 @@
 import dayjs from 'dayjs';
-import type { Booking, CalendarVenue } from '@/features/bookings/api';
+import type { Booking, CalendarVenue } from './api';
 import { TASHKENT } from '@/shared/format/time';
 
 /**
