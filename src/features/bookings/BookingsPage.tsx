@@ -5,10 +5,11 @@ import { tashkentToday } from '@/shared/format/time';
 import { BookingDrawer } from './BookingDrawer';
 import { BookingFormModal, type SelectedSlot } from './BookingFormModal';
 import { BookingsTable } from './BookingsTable';
+import { SeriesTab } from '@/features/series/SeriesTab';
 import { CalendarToolbar } from './calendar/CalendarToolbar';
 import { DayCalendar } from './calendar/DayCalendar';
 
-const TABS = ['calendar', 'list'] as const;
+const TABS = ['calendar', 'list', 'series'] as const;
 type Tab = (typeof TABS)[number];
 
 function isTab(value: string | null): value is Tab {
@@ -81,6 +82,11 @@ export function BookingsPage() {
                 onOpen={(booking) => patchParams({ booking: booking.id })}
               />
             ),
+          },
+          {
+            key: 'series',
+            label: 'Seriyalar',
+            children: <SeriesTab />,
           },
         ]}
       />

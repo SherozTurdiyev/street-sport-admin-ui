@@ -3,6 +3,7 @@ import { Link, useLocation, useMatch } from 'react-router';
 import { useCan, useHasOrg } from '@/features/auth/hooks';
 import { useOrganization, usePlatformVenue } from '@/features/platform/hooks';
 import { useCustomer } from '@/features/customers/hooks';
+import { useSeries } from '@/features/series/hooks';
 import { useVenue } from '@/features/venues/hooks';
 import { allowedNav } from './nav';
 
@@ -31,6 +32,8 @@ export function Breadcrumbs() {
   const venue = useVenue(venueMatch?.params.id ?? null);
   const orgMatch = useMatch('/platform/organizations/:id');
   const org = useOrganization(orgMatch?.params.id ?? null);
+  const seriesMatch = useMatch('/bookings/series/:id');
+  const series = useSeries(seriesMatch?.params.id ?? null);
   const customerMatch = useMatch('/customers/:id');
   const customer = useCustomer(customerMatch?.params.id ?? null);
   const platformVenueMatch = useMatch('/platform/venues/:id');
@@ -43,13 +46,15 @@ export function Breadcrumbs() {
 
   const leaf = venueMatch
     ? (venue.data?.name ?? '…')
-    : customerMatch
-      ? (customer.data?.fullName ?? '…')
-      : orgMatch
-        ? (org.data?.name ?? '…')
-        : platformVenueMatch
-          ? (platformVenue.data?.name ?? '…')
-          : null;
+    : seriesMatch
+      ? `${series.data?.customer.fullName ?? '…'} — seriya`
+      : customerMatch
+        ? (customer.data?.fullName ?? '…')
+        : orgMatch
+          ? (org.data?.name ?? '…')
+          : platformVenueMatch
+            ? (platformVenue.data?.name ?? '…')
+            : null;
 
   return (
     <Breadcrumb
