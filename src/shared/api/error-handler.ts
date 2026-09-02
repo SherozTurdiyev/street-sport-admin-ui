@@ -47,3 +47,12 @@ export function errorMessage(error: unknown): string {
 export function errorCode(error: unknown): string | null {
   return isApiError(error) ? (error as ApiError).code : null;
 }
+
+/**
+ * Xatoning qo'shimcha ma'lumoti. Ba'zi xatolar javob bilan birga
+ * qaror uchun kerakli qiymatni beradi — masalan `BOOKING_PRICE_CHANGED`
+ * eski va yangi narxni.
+ */
+export function errorDetails<T>(error: unknown): T | null {
+  return isApiError(error) ? ((error.details as T) ?? null) : null;
+}

@@ -76,6 +76,12 @@ function baseHandlers() {
   ];
 }
 
+/** antd oynalari ustma-ust ochiladi — oxirgisi kerak bo'ladi. */
+async function oxirgiOyna(): Promise<HTMLElement> {
+  const oynalar = await screen.findAllByRole('dialog');
+  return oynalar[oynalar.length - 1] as HTMLElement;
+}
+
 beforeEach(() => {
   soralgan = [];
   yuborilgan = [];
@@ -244,5 +250,153 @@ describe('Tez bron', () => {
 
     expect(await screen.findByText('Bron yaratildi')).toBeInTheDocument();
     expect(await screen.findByText('Mijoz qora ro‘yxatda')).toBeInTheDocument();
+  });
+});
+
+describe('Bron kartochkasi', () => {
+  const KARTOCHKA = {
+    ...BRON,
+    venue: {
+      id: 'v-1',
+      name: 'Chilonzor Arena',
+      sportType: 'FOOTBALL_5X5',
+      slotMinutes: 60,
+    },
+    customer: {
+      id: 'c-1',
+      phone: '+998901112233',
+      fullName: 'Alisher Rahimov',
+      isBlacklisted: false,
+    },
+  };
+
+  function kartochkaHandlers(card: object = KARTOCHKA) {
+    return [
+      http.get(`${API}/bookings/b-1`, () => HttpResponse.json(card)),
+      http.patch(`${API}/bookings/b-1/move`, async ({ request }) => {
+        const body = await request.json();
+        yuborilgan.push({ url: 'move', body });
+        return HttpResponse.json({ ...BRON, warnings: [] });
+      }),
+      http.post(`${API}/bookings/b-1/cancel`, async ({ request }) => {
+        const body = await request.json();
+        yuborilgan.push({ url: 'cancel', body });
+        return HttpResponse.json({ ...BRON, status: 'CANCELLED' });
+      }),
+      http.post(`${API}/bookings/b-1/result`, async ({ request }) => {
+        const body = await request.json();
+        yuborilgan.push({ url: 'result', body });
+        return HttpResponse.json({ ...BRON, status: 'COMPLETED' });
+      }),
+      ...baseHandlers(),
+    ];
+  }
+
+  it('blok bosilsa kartochka ochiladi va manzilga tushadi', async () => {
+    server.use(...kartochkaHandlers());
+    renderApp(<AppRouter />, { route: '/bookings' });
+
+    await userEvent.click(
+      await screen.findByRole('button', { name: /bronni ochish/ }),
+    );
+
+    const oyna = within(await screen.findByRole('dialog'));
+    expect(await oyna.findByText('Alisher Rahimov')).toBeInTheDocument();
+    expect(oyna.getByText("300 000 so'm")).toBeInTheDocument();
+    // Manzil orqali ochilishi keyingi testda: u `?booking=b-1` bilan
+    // boshlanadi va o'sha kartochkani ko'rsatadi.
+  });
+
+  it('o`yin tugamaguncha natija tugmalari yo`q', async () => {
+    server.use(...kartochkaHandlers());
+    renderApp(<AppRouter />, { route: '/bookings?booking=b-1' });
+
+    const oyna = within(await screen.findByRole('dialog'));
+    await oyna.findByText('Alisher Rahimov');
+    // Hozir 05:00Z, bron esa 16:00Z da tugaydi.
+    expect(oyna.queryByRole('button', { name: 'Yakunlandi' })).toBeNull();
+  });
+
+  it('tugagan o`yinga natija belgilanadi', async () => {
+    vi.setSystemTime(new Date('2026-09-02T05:00:00.000Z'));
+    server.use(...kartochkaHandlers());
+    renderApp(<AppRouter />, { route: '/bookings?booking=b-1' });
+
+    const oyna = within(await screen.findByRole('dialog'));
+    await userEvent.click(
+      await oyna.findByRole('button', { name: 'Yakunlandi' }),
+    );
+
+    await screen.findByText('Natija belgilandi');
+    expect(yuborilgan.at(-1)).toMatchObject({
+      url: 'result',
+      body: { result: 'COMPLETED' },
+    });
+  });
+
+  it('bekor qilishda sabab majburiy', async () => {
+    server.use(...kartochkaHandlers());
+    renderApp(<AppRouter />, { route: '/bookings?booking=b-1' });
+
+    const oyna = within(await screen.findByRole('dialog'));
+    await userEvent.click(
+      await oyna.findByRole('button', { name: 'Bekor qilish' }),
+    );
+
+    const modal = within(await oxirgiOyna());
+    await userEvent.click(modal.getByRole('button', { name: 'Bekor qilish' }));
+    expect(await modal.findByText('Sababni tanlang')).toBeInTheDocument();
+
+    await userEvent.click(modal.getByLabelText('Sabab'));
+    await userEvent.click(await screen.findByTitle('Ob-havo'));
+    await userEvent.click(modal.getByRole('button', { name: 'Bekor qilish' }));
+
+    await screen.findByText('Bron bekor qilindi');
+    expect(yuborilgan.at(-1)).toMatchObject({
+      url: 'cancel',
+      body: { reason: 'WEATHER' },
+    });
+  });
+
+  it('narx o`zgarsa tasdiq so`raydi va ikkinchi so`rov tasdiq bilan ketadi', async () => {
+    let birinchi = true;
+    server.use(
+      http.patch(`${API}/bookings/b-1/move`, async ({ request }) => {
+        const body = await request.json();
+        yuborilgan.push({ url: 'move', body });
+        if (birinchi) {
+          birinchi = false;
+          return HttpResponse.json(
+            {
+              code: 'BOOKING_PRICE_CHANGED',
+              message: 'Yangi vaqt uchun narx boshqacha.',
+              details: { oldPrice: '150000', newPrice: '260000' },
+            },
+            { status: 409 },
+          );
+        }
+        return HttpResponse.json({ ...BRON, warnings: [] });
+      }),
+      ...kartochkaHandlers(),
+    );
+    renderApp(<AppRouter />, { route: '/bookings?booking=b-1' });
+
+    const oyna = within(await screen.findByRole('dialog'));
+    await userEvent.click(
+      await oyna.findByRole('button', { name: 'Ko‘chirish' }),
+    );
+    const modal = within(await oxirgiOyna());
+    await userEvent.click(modal.getByRole('button', { name: 'Ko‘chirish' }));
+
+    expect(await screen.findByText('Narx o‘zgaradi')).toBeInTheDocument();
+    expect(screen.getByText("150 000 so'm")).toBeInTheDocument();
+    expect(screen.getByText("260 000 so'm")).toBeInTheDocument();
+
+    await userEvent.click(screen.getByRole('button', { name: 'Tasdiqlash' }));
+
+    await screen.findByText('Bron ko‘chirildi');
+    expect(yuborilgan.at(-1)?.body).toMatchObject({
+      confirmPriceChange: true,
+    });
   });
 });

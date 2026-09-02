@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Card } from 'antd';
 import { useSearchParams } from 'react-router';
+import { BookingDrawer } from './BookingDrawer';
 import { BookingFormModal, type SelectedSlot } from './BookingFormModal';
 import { tashkentToday } from '@/shared/format/time';
 import { CalendarToolbar } from './calendar/CalendarToolbar';
@@ -38,6 +39,15 @@ export function BookingsPage() {
       />
 
       <BookingFormModal selected={selected} onClose={() => setSelected(null)} />
+
+      <BookingDrawer
+        id={searchParams.get('booking')}
+        onClose={() => {
+          const next = new URLSearchParams(searchParams);
+          next.delete('booking');
+          setSearchParams(next, { replace: true });
+        }}
+      />
     </Card>
   );
 }
