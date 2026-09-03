@@ -179,6 +179,28 @@ va DOM siz sinaladi.
 frontendda takrorlansa ikki xil raqam chiqish xavfi bor. Bron
 yaratilgandan keyin kartochkada ko'rinadi.
 
+## Kassa: to'lov va smena
+
+**To'lov bron kartochkasida.** Yon panelda balans (to'langan / qarz /
+qaytarilgan), to'lovlar tarixi va ikkita amal. Summa oldindan qolgan
+qarz bilan to'ldiriladi — kassada eng ko'p uchraydigan holat
+"hammasini to'ladi".
+
+**Pul yozuvi o'chirilmaydi.** Backendda `DELETE` ham, `PATCH` ham yo'q:
+xato qaytarish bilan tuzatiladi va ikkala yozuv tarixda qoladi.
+Shuning uchun interfeysda ham tahrirlash tugmasi yo'q.
+
+**Qaytarish administratorga yopiq.** `payment.refund` unda yo'q —
+qaytarish suiiste'molning eng oson yo'li. Tugma umuman chizilmaydi.
+
+**Smena — `/shifts`.** Yuqorida joriy smena: kutilayotgan qoldiq va
+uning tarkibi. Yopishda tizim hisobi ko'rsatiladi va sanalgan summa
+o'sha raqam bilan oldindan to'ldiriladi. Farq yopishga to'sqinlik
+qilmaydi: aks holda kassir raqamni tizimga moslab yozardi.
+
+Naqd to'lov ochiq smenani talab qiladi (server `SHIFT_REQUIRED`
+qaytaradi). Smena yo'q bo'lganda kartochka buni oldindan aytadi.
+
 ## Hozircha yo'q
 
-To'lovlar (M8), smenalar (M9), hisobotlar (M10) va bildirishnomalar (M12).
+Hisobotlar (M10) va bildirishnomalar (M12).

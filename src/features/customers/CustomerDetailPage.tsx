@@ -4,6 +4,8 @@ import {
   CheckCircleOutlined,
   ClockCircleOutlined,
   CloseCircleOutlined,
+  DollarOutlined,
+  WalletOutlined,
 } from '@ant-design/icons';
 import {
   Alert,
@@ -197,6 +199,20 @@ export function CustomerDetailPage() {
           hint={`Kelmagan: ${data.stats.noShowCount}`}
         />
         <StatCard
+          label="Jami to‘lagan"
+          icon={DollarOutlined}
+          tint={figma.success}
+          value={formatMoney(data.stats.totalPaid)}
+        />
+        <StatCard
+          label="Joriy qarz"
+          icon={WalletOutlined}
+          // Qarzi bor mijoz ko'zga tashlanishi kerak, nol esa yo'q.
+          tint={data.stats.currentDebt === '0' ? figma.textMuted : figma.danger}
+          value={formatMoney(data.stats.currentDebt)}
+          hint="Bekor qilingan bronlar hisobga olinmaydi."
+        />
+        <StatCard
           label="Oxirgi tashrif"
           icon={ClockCircleOutlined}
           tint={figma.textMuted}
@@ -207,16 +223,6 @@ export function CustomerDetailPage() {
           }
         />
       </div>
-
-      {/* To'lov va qarz KO'RSATILMAYDI: backend ularni hozircha har doim
-          nol qaytaradi (`pendingModule: 'M8'`). Nol raqam yolg'on
-          bo'lardi — o'rniga sababi yozilgan. */}
-      <Alert
-        type="info"
-        showIcon
-        message="To‘lov va qarz hali ko‘rsatilmaydi"
-        description="To‘lovlar moduli (M8) qo‘shilgach, mijozning to‘lagan summasi va qarzi shu yerda chiqadi."
-      />
 
       <Card title="Bronlar tarixi">
         <History bookings={data.bookings} />

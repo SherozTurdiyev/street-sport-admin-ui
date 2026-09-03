@@ -48,8 +48,8 @@ export type CreatedMember = {
 };
 
 /**
- * M8 (to'lovlar) va M9 (smena) qo'shilgunicha backend `cashReceived` ni
- * `"0"`, `shiftDiscrepancies` ni bo'sh massiv qaytaradi.
+ * `cashReceived` va `shiftDiscrepancies` xodim kartochkasi uchun —
+ * backend ularni hozircha M10 (hisobotlar) gacha to'ldirmaydi.
  */
 export type MemberStats = {
   bookingsCreated: number;

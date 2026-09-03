@@ -5,6 +5,7 @@ import type { Dayjs } from 'dayjs';
 import { errorMessage } from '@/shared/api/error-handler';
 import { DEFAULT_PAGE_SIZE } from '@/shared/api/types';
 import { formatMoney } from '@/shared/format/money';
+import { figma } from '@/shared/theme/tokens';
 import { formatDateTime, formatTime } from '@/shared/format/time';
 import { displayPhone } from '@/shared/format/phone';
 import { useVenueOptions } from '@/features/venues/hooks';
@@ -62,6 +63,20 @@ export function BookingsTable({
       title: 'Narx',
       dataIndex: 'priceTotal',
       render: (value: string) => formatMoney(value),
+    },
+    {
+      // Qarz ustuni ATAYLAB narx yonida: operator "kim to'lamagan?"
+      // degan savolga ro'yxatning o'zidan javob topsin.
+      title: 'Qarz',
+      dataIndex: 'debt',
+      render: (value: string) =>
+        value === '0' ? (
+          <Tag color="success">To‘langan</Tag>
+        ) : (
+          <span style={{ color: figma.danger, fontWeight: 700 }}>
+            {formatMoney(value)}
+          </span>
+        ),
     },
     {
       title: 'Holat',

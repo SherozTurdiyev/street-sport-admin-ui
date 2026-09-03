@@ -29,10 +29,10 @@ export type SeriesStats = {
   cancelledCount: number;
   noShowCount: number;
   upcomingCount: number;
-  /** M8 gacha har doim nol — interfeys ularni ko'rsatmaydi. */
+  /** To'liq to'langan uchrashuvlar soni. */
   paidCount: number;
+  /** Bekor qilinmagan uchrashuvlarning umumiy qarzi. */
   totalDebt: string;
-  pendingModule: 'M8';
 };
 
 export type SeriesCard = Series & {

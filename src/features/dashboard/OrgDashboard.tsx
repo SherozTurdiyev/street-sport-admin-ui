@@ -136,9 +136,7 @@ export function OrgDashboard() {
             tint={figma.warning}
             loading={panel.isPending}
             value={formatMoney(panel.data?.todayRevenue)}
-            // Raqamning to'liq emasligini ekranda aytish SHART: aks holda
-            // direktor uni kassa hisoboti deb o'qirdi.
-            hint="Hozircha yakunlangan bronlar summasi. To‘lovlar moduli (M8) qo‘shilgach haqiqiy kassa ko‘rsatiladi."
+            hint="Bugun qabul qilingan pul — naqd va kartadagi to‘lovlar, qaytarilgani ayirilgan."
           />
         )}
         <StatCard

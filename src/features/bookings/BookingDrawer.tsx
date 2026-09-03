@@ -8,6 +8,7 @@ import {
   Skeleton,
   Space,
   Tag,
+  Typography,
 } from 'antd';
 import dayjs from 'dayjs';
 import { Link } from 'react-router';
@@ -15,6 +16,7 @@ import { errorMessage } from '@/shared/api/error-handler';
 import { formatMoney } from '@/shared/format/money';
 import { formatDateTime, formatTime } from '@/shared/format/time';
 import { displayPhone } from '@/shared/format/phone';
+import { PaymentsPanel } from '@/features/payments/PaymentsPanel';
 import { BOOKING_STATUS_VIEW, type BookingCard } from './api';
 import { useBookingCard, useSetBookingResult } from './hooks';
 import { CancelBookingModal } from './CancelBookingModal';
@@ -162,6 +164,17 @@ export function BookingDrawer({
               </Descriptions.Item>
             )}
           </Descriptions>
+
+          {/* Pul bo'limi amallardan YUQORIDA: kassada eng ko'p
+              qilinadigan ish — to'lov qabul qilish, ko'chirish va
+              bekor qilish esa kamdan-kam. */}
+          <div>
+            <Typography.Title level={5}>To‘lovlar</Typography.Title>
+            <PaymentsPanel
+              bookingId={data.id}
+              cancelled={data.status === 'CANCELLED'}
+            />
+          </div>
 
           <Actions booking={data} />
         </Space>

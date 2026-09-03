@@ -25,6 +25,8 @@ function bron(over: Partial<Booking> = {}): Booking {
     status: 'CONFIRMED',
     source: 'PANEL',
     cancelReason: null,
+    paidAmount: '0',
+    debt: '150000',
     createdAt: '2026-09-01T00:00:00.000Z',
     ...over,
   };

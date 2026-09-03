@@ -6,6 +6,7 @@ import {
   EnvironmentOutlined,
   ShopOutlined,
   TeamOutlined,
+  WalletOutlined,
 } from '@ant-design/icons';
 import type { ComponentType } from 'react';
 
@@ -57,6 +58,15 @@ export const NAV: readonly NavItem[] = [
     permission: null,
     label: 'Bronlar',
     icon: CalendarOutlined,
+    requiresOrg: true,
+  },
+  {
+    // Kassa bronlardan keyin: kunlik oqim "bron → to'lov → smena
+    // yopish" tartibida ketadi.
+    path: '/shifts',
+    permission: 'shift.own.view',
+    label: 'Smenalar',
+    icon: WalletOutlined,
     requiresOrg: true,
   },
   {

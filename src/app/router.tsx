@@ -36,6 +36,11 @@ const BookingsPage = lazy(() =>
     default: m.BookingsPage,
   })),
 );
+const ShiftsPage = lazy(() =>
+  import('@/features/shifts/ShiftsPage').then((m) => ({
+    default: m.ShiftsPage,
+  })),
+);
 const CustomersPage = lazy(() =>
   import('@/features/customers/CustomersPage').then((m) => ({
     default: m.CustomersPage,
@@ -154,6 +159,7 @@ export function AppRouter() {
                 path="/bookings/series/:id"
                 element={<SeriesDetailPage />}
               />
+              <Route path="/shifts" element={<ShiftsPage />} />
               <Route path="/customers" element={<CustomersPage />} />
               <Route path="/customers/:id" element={<CustomerDetailPage />} />
               <Route path="/organization" element={<OrganizationPage />} />

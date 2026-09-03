@@ -22,6 +22,10 @@ export type Booking = {
   status: BookingStatus;
   source: 'PANEL' | 'PUBLIC' | 'IMPORT';
   cancelReason: string | null;
+  /** Sof to'langan: qaytarilgani ayirilgan. Satr (BR-13). */
+  paidAmount: string;
+  /** `priceTotal − discount − paidAmount`. Nolga tushsa to'liq to'langan. */
+  debt: string;
   createdAt: string;
 };
 
@@ -72,12 +76,8 @@ export type BookingsQuery = PageQuery & {
 };
 
 /**
- * F6.10 — bosh sahifadagi panel.
- *
- * `todayRevenue` va `unpaidCount` M8 (to'lovlar) gacha vaqtinchalik
- * manbadan hisoblanadi; `pendingModule` shuni ochiq aytadi va ekranda
- * ham aytilishi kerak — aks holda direktor to'liq bo'lmagan raqamga
- * qarab qaror qabul qilardi.
+ * F6.10 — bosh sahifadagi panel. `todayRevenue` — bugun QABUL QILINGAN
+ * pul (qaytarilgani ayirilgan), `unpaidCount` — qarzi qolgan bronlar.
  */
 export type TodayPanel = {
   /** Toshkent sanasi, `YYYY-MM-DD`. */
@@ -87,7 +87,6 @@ export type TodayPanel = {
   todayRevenue: string;
   unpaidCount: number;
   freeHours: number;
-  pendingModule: 'M8';
 };
 
 /**

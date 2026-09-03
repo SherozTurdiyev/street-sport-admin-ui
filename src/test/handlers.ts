@@ -28,6 +28,11 @@ export const DIRECTOR_ME = {
     // pul kartochkasini aynan shu ruxsatga qarab ko'rsatadi.
     'report.profit.total',
     'report.profit.by_venue',
+    'payment.accept',
+    'payment.refund',
+    'shift.manage',
+    'shift.own.view',
+    'shift.others.view',
   ],
 };
 

@@ -15,9 +15,9 @@ export type Customer = {
 };
 
 /**
- * `totalPaid` va `currentDebt` hozircha HAR DOIM `"0"`: to'lovlar
- * moduli (M8) hali yozilmagan va `pendingModule` shuni ochiq aytadi.
- * Interfeys ularni ko'rsatmaydi — nol raqam yolg'on bo'lardi.
+ * `totalPaid` — mijoz jami to'lagan pul, `currentDebt` — bekor
+ * qilinmagan bronlar bo'yicha qolgan qarzi. Ikkalasi ham to'lovlar
+ * jadvalidan yig'iladi (M8).
  */
 export type CustomerStats = {
   totalBookings: number;
@@ -27,7 +27,6 @@ export type CustomerStats = {
   lastVisitAt: string | null;
   totalPaid: string;
   currentDebt: string;
-  pendingModule: 'M8';
 };
 
 export type CustomerCard = Customer & {

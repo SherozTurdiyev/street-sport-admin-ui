@@ -162,7 +162,7 @@ export function VenueDetailPage() {
           tint={figma.warning}
           loading={day.isPending}
           value={formatMoney(dayRevenue(bronlar))}
-          hint="Yakunlangan bronlar summasi. To‘lovlar moduli (M8) qo‘shilgach haqiqiy kassa ko‘rsatiladi."
+          hint="Shu kunda yakunlangan bronlar summasi. Kassaga tushgan pul — smena hisobida."
         />
         <StatCard
           label="Bandlik"

@@ -25,9 +25,8 @@ const KARTOCHKA = {
     cancelledCount: 2,
     noShowCount: 1,
     lastVisitAt: '2026-08-30T14:00:00.000Z',
-    totalPaid: '0',
-    currentDebt: '0',
-    pendingModule: 'M8',
+    totalPaid: '450000',
+    currentDebt: '120000',
   },
   bookings: [
     {
@@ -127,15 +126,13 @@ describe('Mijoz sahifasi', () => {
     expect(jadval.getByText("150 000 so'm")).toBeInTheDocument();
   });
 
-  it('to`lov raqami emas, sababi ko`rsatiladi', async () => {
+  it('to`lagan summasi va qarzi ko`rsatiladi', async () => {
     server.use(...baseHandlers());
     renderApp(<AppRouter />, { route: '/customers/c-1' });
 
-    expect(
-      await screen.findByText('To‘lov va qarz hali ko‘rsatilmaydi'),
-    ).toBeInTheDocument();
-    // Nol summa YOZILMAYDI: u yolg'on bo'lardi.
-    expect(screen.queryByText("0 so'm")).toBeNull();
+    expect(await screen.findByText("450 000 so'm")).toBeInTheDocument();
+    // Qarz alohida: kassada eng ko'p so'raladigan raqam.
+    expect(screen.getByText("120 000 so'm")).toBeInTheDocument();
   });
 
   it('administratorda qora ro`yxat tugmasi yo`q', async () => {
