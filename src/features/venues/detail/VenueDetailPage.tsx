@@ -7,6 +7,12 @@ import { errorMessage } from '@/shared/api/error-handler';
 import { formatMoney } from '@/shared/format/money';
 import { TASHKENT } from '@/shared/format/time';
 import { figma } from '@/shared/theme/tokens';
+import { useCan } from '@/features/auth/hooks';
+import { BookingDrawer } from '@/features/bookings/BookingDrawer';
+import {
+  BookingFormModal,
+  type SelectedSlot,
+} from '@/features/bookings/BookingFormModal';
 import { useBookingCount, useDayCalendar } from '@/features/bookings/hooks';
 import { StatCard } from '@/features/dashboard/StatCard';
 import {
@@ -84,6 +90,9 @@ export function VenueDetailPage() {
     dayjs().tz(TASHKENT).format('YYYY-MM-DD'),
   );
 
+  const can = useCan();
+  const [tanlangan, setTanlangan] = useState<SelectedSlot | null>(null);
+
   const venue = useVenue(id);
   const day = useDayCalendar(date, id);
   const jami = useBookingCount({ venueId: id });
@@ -107,6 +116,16 @@ export function VenueDetailPage() {
   const tab = isTab(searchParams.get('tab'))
     ? searchParams.get('tab')!
     : 'hours';
+
+  /** `tab` ni yo'qotmasdan bitta parametrni almashtiradi. */
+  function patchParams(patch: Record<string, string | null>): void {
+    const next = new URLSearchParams(searchParams);
+    for (const [key, value] of Object.entries(patch)) {
+      if (value === null) next.delete(key);
+      else next.set(key, value);
+    }
+    setSearchParams(next, { replace: true });
+  }
 
   if (venue.error !== null) {
     return <Alert type="error" showIcon message={errorMessage(venue.error)} />;
@@ -161,7 +180,21 @@ export function VenueDetailPage() {
             title="Vaqt jadvali"
             extra={<DaySwitcher date={date} onChange={setDate} />}
           >
-            {day.isPending ? <Skeleton active /> : <SlotGrid slots={slots} />}
+            {day.isPending ? (
+              <Skeleton active />
+            ) : (
+              <SlotGrid
+                slots={slots}
+                // Bron qila olmaydigan xodimda bo'sh katak bosilmaydi:
+                // oyna ochilib, keyin 403 qaytishi chalg'ituvchi bo'lardi.
+                onSlot={
+                  kun && can('booking.create')
+                    ? (slot) => setTanlangan({ venue: kun, slot })
+                    : undefined
+                }
+                onBooking={(booking) => patchParams({ booking: booking.id })}
+              />
+            )}
           </Card>
 
           <Card title="Shu kundagi bronlar">
@@ -210,6 +243,15 @@ export function VenueDetailPage() {
           ]}
         />
       </Card>
+
+      <BookingFormModal
+        selected={tanlangan}
+        onClose={() => setTanlangan(null)}
+      />
+      <BookingDrawer
+        id={searchParams.get('booking')}
+        onClose={() => patchParams({ booking: null })}
+      />
     </div>
   );
 }
