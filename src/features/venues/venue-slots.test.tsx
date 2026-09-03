@@ -84,7 +84,12 @@ function baseHandlers(me: object = DIRECTOR_ME, bookings: object[] = []) {
     http.get(`${API}/bookings/b-1`, () =>
       HttpResponse.json({
         ...BRON,
-        venue: { id: 'v-1', name: 'Chilonzor Arena', sportType: 'FOOTBALL_5X5', slotMinutes: 60 },
+        venue: {
+          id: 'v-1',
+          name: 'Chilonzor Arena',
+          sportType: 'FOOTBALL_5X5',
+          slotMinutes: 60,
+        },
         customer: {
           id: 'c-1',
           phone: '+998901112233',
