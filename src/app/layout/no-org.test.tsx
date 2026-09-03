@@ -3,7 +3,12 @@ import { describe, expect, it } from 'vitest';
 import { screen } from '@testing-library/react';
 import { server } from '@/test/msw';
 import { renderApp } from '@/test/render';
-import { API, SUPER_ADMIN_ME, authedHandlers } from '@/test/handlers';
+import {
+  API,
+  SUPER_ADMIN_ME,
+  authedHandlers,
+  platformDashboardHandlers,
+} from '@/test/handlers';
 import { AppRouter } from '@/app/router';
 
 /**
@@ -18,6 +23,7 @@ import { AppRouter } from '@/app/router';
 function platformHandlers() {
   return [
     ...authedHandlers(SUPER_ADMIN_ME),
+    ...platformDashboardHandlers(),
     http.get(`${API}/platform/organizations`, () =>
       HttpResponse.json({ items: [], total: 0, page: 1, pageSize: 20 }),
     ),

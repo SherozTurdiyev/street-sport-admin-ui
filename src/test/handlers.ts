@@ -24,6 +24,10 @@ export const DIRECTOR_ME = {
     'booking.series.cancel',
     'customer.manage',
     'customer.blacklist',
+    // TZ 4.3 da tushum hisoboti faqat direktorda — boshqaruv paneli
+    // pul kartochkasini aynan shu ruxsatga qarab ko'rsatadi.
+    'report.profit.total',
+    'report.profit.by_venue',
   ],
 };
 
@@ -89,6 +93,19 @@ export function dashboardHandlers() {
     ),
     http.get(`${API}/venues`, () =>
       HttpResponse.json({ items: [], total: 0, page: 1, pageSize: 100 }),
+    ),
+  ];
+}
+
+/**
+ * Platforma boshqaruv paneli (`/dashboard`) qo'shimcha so'raydigan
+ * endpoint. Tashkilotlar ro'yxati testning o'zida mock qilinadi —
+ * uning mazmuni har testda boshqacha.
+ */
+export function platformDashboardHandlers() {
+  return [
+    http.get(`${API}/platform/venues`, () =>
+      HttpResponse.json({ items: [], total: 0, page: 1, pageSize: 1 }),
     ),
   ];
 }

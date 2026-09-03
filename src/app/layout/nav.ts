@@ -41,14 +41,14 @@ export type NavItem = {
 
 export const NAV: readonly NavItem[] = [
   {
-    // BIRINCHI o'rin ataylab: `/` shu ro'yxatdagi birinchi ochiq
-    // bo'limga yo'naltiradi, ya'ni tashkilot xodimi kirgach boshqaruv
-    // paneliga tushadi.
+    // Yagona bo'lim: HAMMAGA ochiq. `requiresOrg: false` — platforma
+    // xodimida tashkilot yo'q, lekin uning ham paneli bor va u
+    // tashkilot ma'lumotini so'ramaydi (`PlatformDashboard`).
     path: '/dashboard',
     permission: null,
     label: 'Boshqaruv paneli',
     icon: DashboardOutlined,
-    requiresOrg: true,
+    requiresOrg: false,
   },
   {
     // Kalendar boshqaruv panelidan keyin: administratorning kunlik ishi

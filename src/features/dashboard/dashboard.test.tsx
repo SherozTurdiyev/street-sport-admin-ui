@@ -1,9 +1,15 @@
 import { http, HttpResponse } from 'msw';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { screen } from '@testing-library/react';
+import { screen, within } from '@testing-library/react';
 import { server } from '@/test/msw';
 import { renderApp } from '@/test/render';
-import { API, ADMIN_ME, DIRECTOR_ME, authedHandlers } from '@/test/handlers';
+import {
+  API,
+  ADMIN_ME,
+  DIRECTOR_ME,
+  SUPER_ADMIN_ME,
+  authedHandlers,
+} from '@/test/handlers';
 import { AppRouter } from '@/app/router';
 
 const STADION = { id: 'v-1', name: 'Chilonzor Arena' };
@@ -114,6 +120,17 @@ describe('Boshqaruv paneli', () => {
     }
   });
 
+  it('tushum kartochkasi faqat hisobot ruxsati bilan ko`rinadi', async () => {
+    // TZ 4.3: `report.profit.*` faqat direktorda. Administratorga nol
+    // ko'rsatilmaydi ham — kartochkaning o'zi chizilmaydi.
+    server.use(...baseHandlers(ADMIN_ME));
+    renderApp(<AppRouter />, { route: '/dashboard' });
+
+    expect(await screen.findByText('7 soat')).toBeInTheDocument();
+    expect(screen.queryByText("450 000 so'm")).not.toBeInTheDocument();
+    expect(screen.queryByText('Bugungi tushum')).not.toBeInTheDocument();
+  });
+
   it('administrator uchun ham ochiq — alohida ruxsat talab qilmaydi', async () => {
     // `VENUE_ADMIN` da `member.admin.manage` yo'q, lekin boshqaruv
     // paneli tashkilotning HAR BIR xodimiga ochiq.
@@ -126,5 +143,77 @@ describe('Boshqaruv paneli', () => {
     expect(
       screen.queryByRole('menuitem', { name: 'Xodimlar' }),
     ).not.toBeInTheDocument();
+  });
+});
+
+const TASHKILOT = {
+  id: 'org-1',
+  name: 'Neon Sports Group',
+  logoUrl: null,
+  phone: null,
+  address: null,
+  timezone: 'Asia/Tashkent',
+  currency: 'UZS',
+  subscriptionStatus: 'ACTIVE',
+  subscriptionEndsAt: null,
+  blockReason: null,
+  blockedAt: null,
+  createdAt: '2026-01-01T00:00:00.000Z',
+  updatedAt: '2026-01-01T00:00:00.000Z',
+  effectiveStatus: 'ACTIVE',
+  isBlocked: false,
+  stats: {
+    venueCount: 3,
+    memberCount: 5,
+    bookingCount: 120,
+    lastActivityAt: null,
+  },
+};
+
+describe('Platforma boshqaruv paneli', () => {
+  /** Holat filtri bo'yicha turli son qaytaradi — kartochkalar shundan. */
+  function platformHandlers() {
+    return [
+      ...authedHandlers(SUPER_ADMIN_ME),
+      http.get(`${API}/platform/venues`, () =>
+        HttpResponse.json({ items: [], total: 9, page: 1, pageSize: 1 }),
+      ),
+      http.get(`${API}/platform/organizations`, ({ request }) => {
+        const status = new URL(request.url).searchParams.get('status');
+        const jami = { ACTIVE: 4, EXPIRED: 2, SUSPENDED: 1 };
+        return HttpResponse.json({
+          items: status === null ? [TASHKILOT] : [],
+          total: status === null ? 7 : jami[status as keyof typeof jami],
+          page: 1,
+          pageSize: 5,
+        });
+      }),
+    ];
+  }
+
+  it('tashkilot ma`lumoti o`rniga platforma holatini ko`rsatadi', async () => {
+    server.use(...platformHandlers());
+    renderApp(<AppRouter />, { route: '/dashboard' });
+
+    expect(
+      await screen.findByRole('heading', { name: 'Boshqaruv paneli' }),
+    ).toBeInTheDocument();
+    // Jami 7, faol 4, muddati tugagan 2, bloklangan 1, stadion 9.
+    expect(await screen.findByText('7')).toBeInTheDocument();
+    expect(screen.getByText('4')).toBeInTheDocument();
+    expect(screen.getByText('9')).toBeInTheDocument();
+
+    const jadval = within(await screen.findByRole('table'));
+    expect(jadval.getByText('Neon Sports Group')).toBeInTheDocument();
+    expect(jadval.getByText('Faol')).toBeInTheDocument();
+  });
+
+  it('bugungi bron va tushumni umuman so`ramaydi (TZ 4.2)', async () => {
+    // `/bookings` mock QILINMAGAN: so'rov ketsa test yiqiladi.
+    server.use(...platformHandlers());
+    renderApp(<AppRouter />, { route: '/dashboard' });
+
+    await screen.findByRole('table');
+    expect(screen.queryByText('Bugungi tushum')).not.toBeInTheDocument();
   });
 });

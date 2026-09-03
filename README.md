@@ -101,6 +101,13 @@ olardi. Refresh token `httpOnly` cookie'da va JavaScript uni ko'rmaydi.
 **Sahifalash server tomonda.** `page` va `pageSize` nomlari backend
 bilan bir xil, shuning uchun o'girish kerak emas.
 
+**Bosh sahifa hamma uchun bitta — `/dashboard`.** Manzil hisobga
+bog'lanmaydi, o'zgaradigani panelning MAZMUNI: platforma ruxsati
+bo'lganga platforma holati, tashkilot xodimiga esa uning bugungi kuni
+ko'rsatiladi. Ilgari `/` menyudagi birinchi ochiq bo'limga yuborardi va
+platforma xodimi `/platform/organizations` da paydo bo'lardi — bir xodim
+yuborgan havola boshqasida boshqa sahifani ochardi.
+
 ## Sinov
 
 ```bash
@@ -157,6 +164,21 @@ soatni yuborardi.
 ildizidan. `<img src>` ga qo'yishdan oldin `assetUrl()` bilan backend
 manzili qo'shiladi, aks holda brauzer uni adminka manzilidan qidiradi.
 
+## Bronlar, mijozlar va seriya
+
+`/bookings` uchta tabdan iborat: kunlik kalendar, qidiruv ro'yxati va
+takrorlanuvchi bronlar. Ochilgan bron manzilda saqlanadi (`?booking=`) —
+kartochka havolasini yuborish mumkin.
+
+**Panjara ikki qatlam.** Fon kataklari ish vaqtidan chiziladi, bronlar
+esa ularning ustiga BITTA blok bo'lib tushadi: ikki soatlik o'yin ikkita
+katak emas, bitta uzun blok. Hisob-kitob `bookings/calendar/grid.ts` da
+va DOM siz sinaladi.
+
+**Narx oldindan ko'rsatilmaydi.** Uni narx qoidalaridan server hisoblaydi;
+frontendda takrorlansa ikki xil raqam chiqish xavfi bor. Bron
+yaratilgandan keyin kartochkada ko'rinadi.
+
 ## Hozircha yo'q
 
-Mijozlar, kalendar, bron, to'lovlar.
+To'lovlar (M8), smenalar (M9), hisobotlar (M10) va bildirishnomalar (M12).

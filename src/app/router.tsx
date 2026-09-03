@@ -1,13 +1,12 @@
 import { lazy, Suspense } from 'react';
 import { Navigate, Outlet, Route, Routes } from 'react-router';
-import { useCan, useHasOrg } from '@/features/auth/hooks';
+import { useHasOrg } from '@/features/auth/hooks';
 import { FullPageSpin } from '@/shared/ui/FullPageSpin';
 import { NoSectionsPage } from '@/shared/ui/NoSectionsPage';
 import { RedirectIfAuthed } from './guards/RedirectIfAuthed';
 import { RequireAuth } from './guards/RequireAuth';
 import { RequirePermission } from './guards/RequirePermission';
 import { AppLayout } from './layout/AppLayout';
-import { allowedNav } from './layout/nav';
 
 /**
  * Sahifalar talab bo'yicha yuklanadi. Login qilayotgan odamga xodimlar
@@ -94,19 +93,13 @@ const PlatformVenueDetailPage = lazy(() =>
 );
 
 /**
- * Bosh sahifa qat'iy emas: foydalanuvchi o'ziga ochiq BIRINCHI bo'limga
- * tushadi. Aks holda administrator har kirganda "ruxsat yo'q" sahifasini
- * ko'rardi.
- *
- * Birorta bo'lim ochiq bo'lmasa qat'iy manzilga yuborilmaydi: platforma
- * xodimini `/organization` ga tashlash uni ishlamaydigan sahifaga olib
- * borardi.
+ * Bosh sahifa HAMMA uchun bir xil: `/dashboard`. Panelning MAZMUNI
+ * foydalanuvchiga qarab o'zgaradi (`DashboardPage`), manzili emas —
+ * shunda bir xodim yuborgan havola boshqasida ham o'sha sahifani
+ * ochadi.
  */
 function HomeRedirect() {
-  const can = useCan();
-  const hasOrg = useHasOrg();
-  const first = allowedNav(can, hasOrg)[0];
-  return first ? <Navigate to={first.path} replace /> : <NoSectionsPage />;
+  return <Navigate to="/dashboard" replace />;
 }
 
 /** Tashkilot bo'limlari a'zolik talab qiladi — manzil qo'lda yozilsa ham. */
@@ -147,8 +140,10 @@ export function AppRouter() {
                 element={<PlatformVenueDetailPage />}
               />
             </Route>
+            {/* Boshqaruv paneli `RequireOrg` DAN TASHQARIDA: platforma
+                xodimining tashkiloti yo'q, lekin uning ham paneli bor. */}
+            <Route path="/dashboard" element={<DashboardPage />} />
             <Route element={<RequireOrg />}>
-              <Route path="/dashboard" element={<DashboardPage />} />
               <Route path="/bookings" element={<BookingsPage />} />
               <Route
                 path="/bookings/series/:id"

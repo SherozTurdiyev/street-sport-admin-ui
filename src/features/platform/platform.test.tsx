@@ -4,7 +4,12 @@ import { screen, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { server } from '@/test/msw';
 import { renderApp } from '@/test/render';
-import { API, SUPER_ADMIN_ME, authedHandlers } from '@/test/handlers';
+import {
+  API,
+  SUPER_ADMIN_ME,
+  authedHandlers,
+  platformDashboardHandlers,
+} from '@/test/handlers';
 import { AppRouter } from '@/app/router';
 
 const ROOT = `${API}/platform/organizations`;
@@ -69,6 +74,7 @@ let yuborilgan: { url: string; body: unknown }[] = [];
 function baseHandlers() {
   return [
     ...authedHandlers(SUPER_ADMIN_ME),
+    ...platformDashboardHandlers(),
     http.get(ROOT, () =>
       HttpResponse.json({
         items: [MUDDATI_TUGAGAN],
@@ -103,14 +109,19 @@ beforeEach(() => {
 });
 
 describe('Platforma paneli', () => {
-  it('platforma xodimi tashkilotlar bo`limiga tushadi', async () => {
+  it('platforma xodimi ham boshqaruv paneliga tushadi', async () => {
+    // Bosh sahifa HAMMA uchun `/dashboard`: ilgari bu yerda menyudagi
+    // birinchi ochiq bo'lim ochilardi va platforma xodimi
+    // `/platform/organizations` ga tushib qolardi.
     server.use(...baseHandlers());
     renderApp(<AppRouter />, { route: '/' });
 
     expect(
+      await screen.findByRole('heading', { name: 'Boshqaruv paneli' }),
+    ).toBeInTheDocument();
+    expect(
       await screen.findByRole('menuitem', { name: 'Tashkilotlar' }),
     ).toBeInTheDocument();
-    expect(await screen.findByText('Neon Sports Group')).toBeInTheDocument();
   });
 
   it('AMALDAGI holatni ko`rsatadi, bazadagi ustunni emas', async () => {
