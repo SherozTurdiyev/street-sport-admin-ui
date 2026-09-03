@@ -10,6 +10,7 @@ import {
   Skeleton,
   Space,
 } from 'antd';
+import { Link } from 'react-router';
 import { errorMessage } from '@/shared/api/error-handler';
 import { DEFAULT_PAGE_SIZE } from '@/shared/api/types';
 import type { VenuesQuery } from './api';
@@ -20,7 +21,6 @@ import {
   type VenueStatus,
 } from './enums';
 import { VenueCard } from './VenueCard';
-import { VenueFormModal } from './VenueFormModal';
 import { useVenues } from './hooks';
 
 export function VenuesPage() {
@@ -28,7 +28,6 @@ export function VenuesPage() {
     page: 1,
     pageSize: DEFAULT_PAGE_SIZE,
   });
-  const [formOpen, setFormOpen] = useState(false);
   const { data, isPending, isFetching, error } = useVenues(query);
 
   function setFilter(patch: Partial<VenuesQuery>): void {
@@ -41,9 +40,9 @@ export function VenuesPage() {
     <Card
       title="Stadionlar"
       extra={
-        <Button type="primary" onClick={() => setFormOpen(true)}>
-          Yangi stadion
-        </Button>
+        <Link to="/venues/new">
+          <Button type="primary">Yangi stadion</Button>
+        </Link>
       }
     >
       <Space className="mb-6" wrap>
@@ -116,8 +115,6 @@ export function VenuesPage() {
           onChange={(page) => setQuery((prev) => ({ ...prev, page }))}
         />
       )}
-
-      <VenueFormModal open={formOpen} onClose={() => setFormOpen(false)} />
     </Card>
   );
 }

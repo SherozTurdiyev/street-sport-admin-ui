@@ -1,12 +1,12 @@
 import { useState, type ReactNode } from 'react';
 import { Alert, App, Button, Space, Typography } from 'antd';
+import { Link } from 'react-router';
 import { assetUrl } from '@/shared/api/client';
 import { errorCode, errorMessage } from '@/shared/api/error-handler';
 import { figma } from '@/shared/theme/tokens';
 import type { VenueDetail } from '../api';
 import { SPORT_TYPE_LABELS, VENUE_STATUS_VIEW } from '../enums';
 import { useArchiveVenue, useRestoreVenue } from '../hooks';
-import { VenueFormModal } from '../VenueFormModal';
 
 /**
  * Figma: sahifa boshidagi karta (2020:8496) — 128x128 foto kartaning
@@ -67,7 +67,6 @@ export function VenueHeroActions({
   const { message } = App.useApp();
   const archive = useArchiveVenue(venue.id);
   const restore = useRestoreVenue(venue.id);
-  const [formOpen, setFormOpen] = useState(false);
   /**
    * Faol bronlari bor stadionni arxivlash `confirm: true` talab qiladi.
    * Darrov `true` yuborish to'siqni ma'nosiz qilardi: u aynan
@@ -88,39 +87,33 @@ export function VenueHeroActions({
   }
 
   return (
-    <>
-      <Space>
-        <Button onClick={() => setFormOpen(true)}>Tahrirlash</Button>
-        {venue.status === 'ARCHIVED' ? (
-          <Button
-            type="primary"
-            loading={restore.isPending}
-            onClick={() =>
-              void restore
-                .mutateAsync()
-                .then(() => message.success('Stadion qaytarildi'))
-                .catch((e: unknown) => onError(errorMessage(e)))
-            }
-          >
-            Arxivdan qaytarish
-          </Button>
-        ) : (
-          <Button
-            danger
-            loading={archive.isPending}
-            onClick={() => void arxivla(tasdiqKerak)}
-          >
-            {tasdiqKerak ? 'Baribir arxivlash' : 'Arxivlash'}
-          </Button>
-        )}
-      </Space>
-
-      <VenueFormModal
-        open={formOpen}
-        venue={venue}
-        onClose={() => setFormOpen(false)}
-      />
-    </>
+    <Space wrap>
+      <Link to={`/venues/${venue.id}/edit`}>
+        <Button>Tahrirlash</Button>
+      </Link>
+      {venue.status === 'ARCHIVED' ? (
+        <Button
+          type="primary"
+          loading={restore.isPending}
+          onClick={() =>
+            void restore
+              .mutateAsync()
+              .then(() => message.success('Stadion qaytarildi'))
+              .catch((e: unknown) => onError(errorMessage(e)))
+          }
+        >
+          Arxivdan qaytarish
+        </Button>
+      ) : (
+        <Button
+          danger
+          loading={archive.isPending}
+          onClick={() => void arxivla(tasdiqKerak)}
+        >
+          {tasdiqKerak ? 'Baribir arxivlash' : 'Arxivlash'}
+        </Button>
+      )}
+    </Space>
   );
 }
 

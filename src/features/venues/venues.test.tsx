@@ -121,11 +121,14 @@ describe('Stadionlar', () => {
       screen.getByRole('button', { name: /Yangi stadion/ }),
     );
 
-    const oyna = within(await screen.findByRole('dialog'));
-    await userEvent.type(oyna.getByLabelText('Nomi'), 'Chilonzor Arena');
-    await userEvent.click(oyna.getByLabelText('Sport turi'));
+    // Forma OYNA emas, alohida sahifa: o'n uchta maydon oynada tor
+    // ustunga siqilib qolardi. Sahifaga o'tganini faqat unda
+    // bo'ladigan maydon isbotlaydi.
+    await screen.findByLabelText('Bron qadami (daqiqa)');
+    await userEvent.type(screen.getByLabelText('Nomi'), 'Chilonzor Arena');
+    await userEvent.click(screen.getByLabelText('Sport turi'));
     await userEvent.click(await screen.findByTitle('Futbol 5x5'));
-    await userEvent.click(oyna.getByRole('button', { name: 'Yaratish' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Yaratish' }));
 
     await screen.findByText(/yaratildi/i);
     expect(yuborilgan).toHaveLength(1);

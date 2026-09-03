@@ -66,6 +66,11 @@ const VenuesPage = lazy(() =>
     default: m.VenuesPage,
   })),
 );
+const VenueFormPage = lazy(() =>
+  import('@/features/venues/VenueFormPage').then((m) => ({
+    default: m.VenueFormPage,
+  })),
+);
 const VenueDetailPage = lazy(() =>
   import('@/features/venues/detail/VenueDetailPage').then((m) => ({
     default: m.VenueDetailPage,
@@ -153,7 +158,11 @@ export function AppRouter() {
               <Route path="/customers/:id" element={<CustomerDetailPage />} />
               <Route path="/organization" element={<OrganizationPage />} />
               <Route path="/venues" element={<VenuesPage />} />
+              {/* `new` YO'LI `:id` DAN OLDIN: aks holda u stadion
+                  identifikatori deb o'qilardi. */}
+              <Route path="/venues/new" element={<VenueFormPage />} />
               <Route path="/venues/:id" element={<VenueDetailPage />} />
+              <Route path="/venues/:id/edit" element={<VenueFormPage />} />
               <Route
                 element={<RequirePermission permission="member.admin.manage" />}
               >
