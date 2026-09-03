@@ -37,10 +37,10 @@ export function OrganizationDetailPage() {
   if (isPending || !data) return <Skeleton active />;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6">
       <OrganizationHero org={data} />
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-6">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,220px),1fr))] gap-4 sm:gap-6">
         <StatCard
           label="Stadionlar"
           icon={EnvironmentOutlined}

@@ -61,7 +61,7 @@ export function OrgVenuesTab({ id }: { id: string }) {
         <div
           // Figma (2009:4486): kartochka 256 keng, oralig'i 24. Ustunlar
           // soni qotirilmaydi — tor oynada kartochka siqilib ketardi.
-          className="grid grid-cols-[repeat(auto-fill,minmax(256px,1fr))] gap-6"
+          className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,256px),1fr))] gap-4 sm:gap-6"
           style={{ opacity: isFetching ? 0.6 : 1 }}
         >
           {items.map((venue) => (

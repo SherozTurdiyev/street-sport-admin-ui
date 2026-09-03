@@ -190,7 +190,10 @@ function Hero({ series }: { series: SeriesCard }) {
       }}
     >
       <div className="min-w-0 flex-1">
-        <Typography.Title level={1} style={{ fontSize: 26, margin: 0 }}>
+        <Typography.Title
+          level={1}
+          style={{ fontSize: 'clamp(19px, 5vw, 26px)', margin: 0 }}
+        >
           <Link to={`/customers/${series.customer.id}`}>
             {series.customer.fullName}
           </Link>
@@ -240,10 +243,10 @@ export function SeriesDetailPage() {
   if (isPending || !data) return <Skeleton active />;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6">
       <Hero series={data} />
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-6">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,220px),1fr))] gap-4 sm:gap-6">
         <StatCard
           label="Jami uchrashuv"
           icon={CalendarOutlined}

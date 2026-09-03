@@ -85,6 +85,7 @@ export function PriceCalculator({ venueId }: { venueId: string }) {
               ularni ajratib bo'lishi kerak. */}
           <section aria-label="Narx segmentlari">
             <Table<PriceSegment>
+              scroll={{ x: 'max-content' }}
               rowKey="from"
               size="small"
               pagination={false}

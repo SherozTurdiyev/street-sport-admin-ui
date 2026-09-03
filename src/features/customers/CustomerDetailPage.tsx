@@ -63,7 +63,10 @@ function Hero({ customer }: { customer: CustomerCard }) {
     >
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-3">
-          <Typography.Title level={1} style={{ fontSize: 28, margin: 0 }}>
+          <Typography.Title
+            level={1}
+            style={{ fontSize: 'clamp(20px, 5vw, 28px)', margin: 0 }}
+          >
             {customer.fullName}
           </Typography.Title>
           {customer.isBlacklisted && <Tag color="error">Qora ro‘yxat</Tag>}
@@ -170,10 +173,10 @@ export function CustomerDetailPage() {
   if (isPending || !data) return <Skeleton active />;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6">
       <Hero customer={data} />
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-6">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,220px),1fr))] gap-4 sm:gap-6">
         <StatCard
           label="Jami bronlar"
           icon={CalendarOutlined}

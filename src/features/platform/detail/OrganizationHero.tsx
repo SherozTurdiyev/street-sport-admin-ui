@@ -63,7 +63,10 @@ export function OrganizationHero({ org }: { org: PlatformOrganizationDetail }) {
     >
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-3">
-          <Typography.Title level={1} style={{ fontSize: 28, margin: 0 }}>
+          <Typography.Title
+            level={1}
+            style={{ fontSize: 'clamp(20px, 5vw, 28px)', margin: 0 }}
+          >
             {org.name}
           </Typography.Title>
           <Tag color={status.color}>{status.label}</Tag>

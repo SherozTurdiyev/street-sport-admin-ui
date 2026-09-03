@@ -126,6 +126,7 @@ export function MembersPage() {
       )}
 
       <Table<Member>
+        scroll={{ x: 'max-content' }}
         rowKey="id"
         columns={buildColumns(setCardUserId)}
         dataSource={data?.items ?? []}

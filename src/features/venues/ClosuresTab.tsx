@@ -130,6 +130,7 @@ export function ClosuresTab({ venueId }: { venueId: string }) {
       </Form>
 
       <Table<VenueClosure>
+        scroll={{ x: 'max-content' }}
         rowKey="id"
         size="small"
         pagination={false}

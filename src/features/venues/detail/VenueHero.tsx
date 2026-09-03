@@ -22,9 +22,10 @@ const STATUS_DOT: Record<keyof typeof VENUE_STATUS_VIEW, string> = {
 
 function Photo({ venue }: { venue: VenueDetail }) {
   const primary = venue.photos.find((p) => p.isPrimary) ?? venue.photos[0];
+  // Foto tor ekranda kichrayadi: 128px sarlavhaga joy qoldirmasdi.
   const style = {
-    width: 128,
-    height: 128,
+    width: 'clamp(72px, 20vw, 128px)',
+    height: 'clamp(72px, 20vw, 128px)',
     borderRadius: figma.radiusCard,
     border: `2px solid ${figma.border}`,
   } as const;
@@ -133,7 +134,7 @@ export function VenueHero({
 
   return (
     <div
-      className="flex flex-wrap items-center gap-6 p-6"
+      className="flex flex-wrap items-center gap-4 p-4 sm:gap-6 sm:p-6"
       style={{
         background: 'rgba(27, 12, 54, 0.6)',
         border: `1px solid ${figma.border}`,
@@ -144,7 +145,10 @@ export function VenueHero({
 
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-3">
-          <Typography.Title level={1} style={{ fontSize: 30, margin: 0 }}>
+          <Typography.Title
+            level={1}
+            style={{ fontSize: 'clamp(20px, 5vw, 30px)', margin: 0 }}
+          >
             {venue.name}
           </Typography.Title>
           <span

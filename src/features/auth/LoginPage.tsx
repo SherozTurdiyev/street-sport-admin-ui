@@ -60,7 +60,11 @@ function BrandColumn() {
       <Typography.Title
         level={1}
         className="!mb-0"
-        style={{ fontSize: 40, lineHeight: '48px', maxWidth: 496 }}
+        style={{
+          fontSize: 'clamp(28px, 4vw, 40px)',
+          lineHeight: 1.2,
+          maxWidth: 496,
+        }}
       >
         Stadion boshqaruvining yagona joyi
       </Typography.Title>
@@ -173,7 +177,7 @@ export function LoginPage() {
             <Typography.Title
               level={2}
               className="!mb-2"
-              style={{ fontSize: 32 }}
+              style={{ fontSize: 'clamp(24px, 6vw, 32px)' }}
             >
               Xush kelibsiz
             </Typography.Title>

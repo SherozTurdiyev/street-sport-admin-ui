@@ -95,7 +95,7 @@ export function VenuesPage() {
         <div
           // Panjara ekran kengligiga qarab o'zi moslashadi: ustunlar
           // soni qotirilsa, tor oynada kartochka siqilib ketardi.
-          className="grid grid-cols-[repeat(auto-fill,minmax(280px,1fr))] gap-6"
+          className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,280px),1fr))] gap-4 sm:gap-6"
           style={{ opacity: isFetching ? 0.6 : 1 }}
         >
           {items.map((venue) => (

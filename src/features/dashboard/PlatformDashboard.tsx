@@ -47,7 +47,7 @@ export function PlatformDashboard() {
     stadionlar.error;
 
   return (
-    <div className="flex flex-col gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6">
       <div>
         <Typography.Title level={2} style={{ margin: 0 }}>
           Boshqaruv paneli
@@ -61,7 +61,7 @@ export function PlatformDashboard() {
         <Alert type="error" showIcon message={errorMessage(xato)} />
       )}
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(240px,1fr))] gap-6">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,240px),1fr))] gap-4 sm:gap-6">
         <StatCard
           label="Jami tashkilot"
           icon={BankOutlined}

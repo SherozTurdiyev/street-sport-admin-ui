@@ -146,8 +146,8 @@ export function OrganizationsPage() {
   );
 
   return (
-    <div className="flex flex-col gap-6">
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(220px,1fr))] gap-6">
+    <div className="flex flex-col gap-4 sm:gap-6">
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,220px),1fr))] gap-4 sm:gap-6">
         <StatCard
           label="Jami tashkilotlar"
           icon={BankOutlined}
@@ -214,6 +214,7 @@ export function OrganizationsPage() {
           )
         ) : (
           <Table<PlatformOrganization>
+            scroll={{ x: 'max-content' }}
             rowKey="id"
             columns={buildColumns()}
             dataSource={items}

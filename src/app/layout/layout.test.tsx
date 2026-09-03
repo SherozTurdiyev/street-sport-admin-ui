@@ -1,6 +1,7 @@
 import { http, HttpResponse } from 'msw';
-import { describe, expect, it } from 'vitest';
+import { afterEach, describe, expect, it, vi } from 'vitest';
 import { screen } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { server } from '@/test/msw';
 import { renderApp } from '@/test/render';
 import { ADMIN_ME, API, DIRECTOR_ME, authedHandlers } from '@/test/handlers';
@@ -58,5 +59,60 @@ describe('Ruxsatsiz bo`limga qo`lda kirish', () => {
     expect(await screen.findByText("Ruxsat yo'q")).toBeInTheDocument();
     // Ro'yxatning o'zi umuman yuklanmaydi.
     expect(screen.queryByRole('table')).not.toBeInTheDocument();
+  });
+});
+
+/**
+ * Tor ekranda yon panel yo'qoladi. Ilgari uni ochadigan hech narsa
+ * yo'q edi — ya'ni telefondan menyuga umuman kirib bo'lmasdi.
+ */
+describe('Tor ekranda menyu', () => {
+  /** antd `Sider` chegarani `matchMedia` orqali o'qiydi. */
+  function torEkran(): void {
+    vi.spyOn(window, 'matchMedia').mockImplementation(
+      (query: string) =>
+        ({
+          matches: true,
+          media: query,
+          onchange: null,
+          addListener: () => {},
+          removeListener: () => {},
+          addEventListener: () => {},
+          removeEventListener: () => {},
+          dispatchEvent: () => false,
+        }) as unknown as MediaQueryList,
+    );
+  }
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it('tugma bosilganda menyu chetdan chiqadi', async () => {
+    torEkran();
+    server.use(...authedHandlers(DIRECTOR_ME), orgHandler());
+    renderApp(<AppRouter />, { route: '/organization' });
+
+    const tugma = await screen.findByRole('button', {
+      name: 'Menyuni ochish',
+    });
+    await userEvent.click(tugma);
+
+    // Menyu mazmuni bitta joydan keladi, shuning uchun oynada ham
+    // o'sha bo'limlar turadi.
+    const bolimlar = await screen.findAllByRole('menuitem', {
+      name: 'Xodimlar',
+    });
+    expect(bolimlar.length).toBeGreaterThan(0);
+  });
+
+  it('keng ekranda ochish tugmasi umuman chizilmaydi', async () => {
+    server.use(...authedHandlers(DIRECTOR_ME), orgHandler());
+    renderApp(<AppRouter />, { route: '/organization' });
+
+    await screen.findByRole('menuitem', { name: 'Tashkilot' });
+    expect(
+      screen.queryByRole('button', { name: 'Menyuni ochish' }),
+    ).not.toBeInTheDocument();
   });
 });

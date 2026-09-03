@@ -28,7 +28,7 @@ export function StatCard({
 }) {
   return (
     <div
-      className="flex items-center gap-4 p-5"
+      className="flex items-center gap-3 p-4 sm:gap-4 sm:p-5"
       style={{
         background: 'rgba(27, 12, 54, 0.6)',
         border: `1px solid ${figma.border}`,
@@ -73,7 +73,9 @@ export function StatCard({
           <Typography.Text
             strong
             className="block truncate"
-            style={{ fontSize: 24, lineHeight: '32px' }}
+            // Raqam ekranga qarab kichrayadi: telefonda 24px da uzun
+            // summa ("1 250 000 so'm") kartochkadan chiqib ketardi.
+            style={{ fontSize: 'clamp(18px, 4.5vw, 24px)', lineHeight: 1.35 }}
           >
             {value}
           </Typography.Text>

@@ -64,6 +64,7 @@ export function PriceRulesTab({ venueId }: { venueId: string }) {
       </div>
 
       <Table<PriceRule>
+        scroll={{ x: 'max-content' }}
         rowKey="id"
         size="small"
         pagination={false}
