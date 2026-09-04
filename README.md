@@ -201,6 +201,29 @@ qilmaydi: aks holda kassir raqamni tizimga moslab yozardi.
 Naqd to'lov ochiq smenani talab qiladi (server `SHIFT_REQUIRED`
 qaytaradi). Smena yo'q bo'lganda kartochka buni oldindan aytadi.
 
+## Hisobotlar
+
+`/reports` — yettita hisobot, bitta sahifada tab bilan. Foydalanuvchi
+faqat **ruxsati bor** tab'larni ko'radi: direktorga yettalasi,
+menejerga bandlik, bekor qilish va qarzdorlar, administratorga faqat
+qarzdorlar.
+
+- **Daromad kassa asosida.** Shu davrda qabul qilingan to'lovlardan
+  qaytarishlar ayriladi. Bron qilingan-u to'lanmagan pul daromadda
+  emas — u qarzdorlik hisobotida turadi.
+- **Sana oralig'i URL da.** Hisobotga havola yuborilganda qabul
+  qiluvchi aynan o'sha raqamlarni ko'radi. Tushum va qarzdorlar
+  tab'larida oraliq o'chirilgan: birinchisida davrlar qat'iy
+  (bugun/hafta/oy), ikkinchisida qarz — joriy holat.
+- **O'sish foizi noldan hisoblanmaydi.** Backend `null` qaytaradi,
+  adminka esa "+100%" deb to'ldirmaydi — o'rniga "solishtirish uchun
+  ma'lumot yo'q" deb yozadi.
+- **CSV alohida ruxsat talab qiladi** (`export.data`). Tugma bu ruxsat
+  yo'q foydalanuvchiga umuman chizilmaydi. Fayl `;` ajratkich va UTF-8
+  BOM bilan keladi — Excel uni to'g'ri ochadi.
+- **Diagramma kutubxonasi yo'q.** Ulushlar CSS ustunchalari bilan
+  chiziladi; raqam har doim yonida turadi.
+
 ## Hozircha yo'q
 
-Hisobotlar (M10) va bildirishnomalar (M12).
+Bildirishnomalar (M12) va audit jurnalini ko'rish (M11).

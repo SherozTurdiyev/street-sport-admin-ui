@@ -95,17 +95,17 @@ export const reportsApi = {
 
 **Qadamlar:**
 
-- [ ] `api.ts` — turlar va chaqiruvlar. Yo'llar: `/reports/summary`,
+- [x] `api.ts` — turlar va chaqiruvlar. Yo'llar: `/reports/summary`,
       `/reports/revenue/by-venue`, `/reports/revenue/by-method`,
       `/reports/occupancy`, `/reports/cancellations`, `/reports/debtors`,
       `/reports/staff`.
-- [ ] `downloadCsv` — `api.get(url, { params: { ...range, format: 'csv' },
+- [x] `downloadCsv` — `api.get(url, { params: { ...range, format: 'csv' },
       responseType: 'blob' })`, fayl nomi `Content-Disposition` dan,
       bo'lmasa `hisobot-<name>.csv`. Yuklash `URL.createObjectURL` +
       vaqtinchalik `<a download>`; oxirida `URL.revokeObjectURL`.
-- [ ] `hooks.ts` — `reportKeys` va yettita hook, har birida
+- [x] `hooks.ts` — `reportKeys` va yettita hook, har birida
       `enabled: boolean` argumenti (yopiq tab so'rov yubormasin).
-- [ ] Commit: `feat: hisobot API si va hooklari`
+- [x] Commit: `feat: hisobot API si va hooklari`
 
 ---
 
@@ -129,21 +129,21 @@ export function RangeToolbar({ range, onChange, disabled, onExport, exporting }:
 
 **Qadamlar:**
 
-- [ ] `nav.ts` ga band: `{ path: '/reports', permission: 'report.debtors',
+- [x] `nav.ts` ga band: `{ path: '/reports', permission: 'report.debtors',
       label: 'Hisobotlar', icon: BarChartOutlined, requiresOrg: true }`.
       `report.debtors` tanlangan, chunki u eng keng ruxsat — uchala rolda
       ham bor, ya'ni bo'lim menyuda kimga ko'rinsa, ichida hech
       bo'lmasa bitta tab bo'ladi.
-- [ ] `router.tsx` — `/reports` `RequireOrg` ichida.
-- [ ] `ReportsPage.tsx` — tab ro'yxati ruxsat bo'yicha filtrlanadi;
+- [x] `router.tsx` — `/reports` `RequireOrg` ichida.
+- [x] `ReportsPage.tsx` — tab ro'yxati ruxsat bo'yicha filtrlanadi;
       `searchParams` dan `tab`, `from`, `to` o'qiladi va yoziladi.
       Ruxsat yo'q tab URL da so'ralsa — birinchi ochiq tabga tushadi.
-- [ ] `RangeToolbar` — `DatePicker.RangePicker` (`aria-label="Sana
+- [x] `RangeToolbar` — `DatePicker.RangePicker` (`aria-label="Sana
       oralig'i"`), o'ng tomonda "CSV yuklab olish" tugmasi.
       `disabled` bo'lganda tanlagich yonida sabab yoziladi.
-- [ ] Test: menejerda "Tushum" tabi yo'q, "Bandlik" bor;
+- [x] Test: menejerda "Tushum" tabi yo'q, "Bandlik" bor;
       administratorda faqat "Qarzdorlar".
-- [ ] Commit: `feat: hisobotlar sahifasi va sana oralig'i`
+- [x] Commit: `feat: hisobotlar sahifasi va sana oralig'i`
 
 ---
 
@@ -164,16 +164,16 @@ export function ShareBar({ percent, tone }: {
 
 **Qadamlar:**
 
-- [ ] `SummaryTab` — uchta kartochka (bugun/hafta/oy): summa, ostida
+- [x] `SummaryTab` — uchta kartochka (bugun/hafta/oy): summa, ostida
       "o'tgan davr: X" va o'sish belgisi. `growthPercent === null`
       bo'lsa foiz **chizilmaydi**, o'rniga "solishtirish uchun ma'lumot
       yo'q".
-- [ ] `VenuesTab` — jadval: stadion, tushum, ulush (`ShareBar`).
+- [x] `VenuesTab` — jadval: stadion, tushum, ulush (`ShareBar`).
       Tepasida jami.
-- [ ] `MethodsTab` — uchta qator. Naqd ulushi 70% dan oshsa `tone="warning"`
+- [x] `MethodsTab` — uchta qator. Naqd ulushi 70% dan oshsa `tone="warning"`
       va izoh: "Naqd ulushi yuqori — kassa nazoratini kuchaytiring."
-- [ ] Test: nol bazada o'sish foizi chizilmasligi; naqd ogohlantirishi.
-- [ ] Commit: `feat: tushum hisobotlari — panel, stadion va usul kesimi`
+- [x] Test: nol bazada o'sish foizi chizilmasligi; naqd ogohlantirishi.
+- [x] Commit: `feat: tushum hisobotlari — panel, stadion va usul kesimi`
 
 ---
 
@@ -183,13 +183,13 @@ export function ShareBar({ percent, tone }: {
 
 **Qadamlar:**
 
-- [ ] Uchta kartochka: ochiq soat, band soat, bandlik %.
-- [ ] Stadionlar jadvali — `ShareBar` bilan.
-- [ ] Soatlar ro'yxati: 24 qator, `08:00`, ustuncha va `40%`.
+- [x] Uchta kartochka: ochiq soat, band soat, bandlik %.
+- [x] Stadionlar jadvali — `ShareBar` bilan.
+- [x] Soatlar ro'yxati: 24 qator, `08:00`, ustuncha va `40%`.
       Ochiq soati `0` bo'lgan qator bo'sh ustuncha va "yopiq" izohi
       bilan qoladi — yashirilmaydi.
-- [ ] Test: 24 qator chizilishi; yopiq soat "yopiq" deb belgilanishi.
-- [ ] Commit: `feat: bandlik hisoboti — soatlar kesimi bilan`
+- [x] Test: 24 qator chizilishi; yopiq soat "yopiq" deb belgilanishi.
+- [x] Commit: `feat: bandlik hisoboti — soatlar kesimi bilan`
 
 ---
 
@@ -199,15 +199,15 @@ export function ShareBar({ percent, tone }: {
 
 **Qadamlar:**
 
-- [ ] `CancellationsTab` — to'rtta kartochka va uchta jadval (sabab,
+- [x] `CancellationsTab` — to'rtta kartochka va uchta jadval (sabab,
       stadion, xodim). Sabablar `CANCEL_REASON_LABELS` orqali o'zbekcha;
       `UNKNOWN` — "Sabab yozilmagan".
-- [ ] Xodim jadvali ostida izoh: kelmagan holatini kim belgilagani
+- [x] Xodim jadvali ostida izoh: kelmagan holatini kim belgilagani
       saqlanmaydi.
-- [ ] `StaffTab` — jadval; kassa farqi manfiy bo'lsa qizil, `"0"` bo'lsa
+- [x] `StaffTab` — jadval; kassa farqi manfiy bo'lsa qizil, `"0"` bo'lsa
       oddiy rangda.
-- [ ] Test: `UNKNOWN` sababi o'zbekcha chiqishi; manfiy farq rangi.
-- [ ] Commit: `feat: bekor qilish va xodimlar hisobotlari`
+- [x] Test: `UNKNOWN` sababi o'zbekcha chiqishi; manfiy farq rangi.
+- [x] Commit: `feat: bekor qilish va xodimlar hisobotlari`
 
 ---
 
@@ -217,12 +217,12 @@ export function ShareBar({ percent, tone }: {
 
 **Qadamlar:**
 
-- [ ] To'rtta kartochka: jami, ≤7 kun, 7–30 kun, 30+ kun.
-- [ ] Sahifalanadigan jadval; mijoz ismi `/customers/:id` ga havola.
-- [ ] Anonim qator: "Anonim bron", havolasiz.
-- [ ] 30 kundan oshgan qarz qizil.
-- [ ] Test: havola manzili; anonim qatorda havola yo'qligi; sahifalash.
-- [ ] Commit: `feat: qarzdorlar hisoboti`
+- [x] To'rtta kartochka: jami, ≤7 kun, 7–30 kun, 30+ kun.
+- [x] Sahifalanadigan jadval; mijoz ismi `/customers/:id` ga havola.
+- [x] Anonim qator: "Anonim bron", havolasiz.
+- [x] 30 kundan oshgan qarz qizil.
+- [x] Test: havola manzili; anonim qatorda havola yo'qligi; sahifalash.
+- [x] Commit: `feat: qarzdorlar hisoboti`
 
 ---
 
@@ -232,14 +232,14 @@ export function ShareBar({ percent, tone }: {
 
 **Qadamlar:**
 
-- [ ] `report.profit.total` bor foydalanuvchiga tushum kartochkasi
+- [x] `report.profit.total` bor foydalanuvchiga tushum kartochkasi
       `useSummary()` dan o'qiydi: bugungi summa va o'sish belgisi.
-- [ ] Ruxsat yo'q bo'lsa kartochka **eski holicha** `today-panel` dan
+- [x] Ruxsat yo'q bo'lsa kartochka **eski holicha** `today-panel` dan
       chiziladi — menejerga kunlik tushum baribir kerak.
-- [ ] Kartochkadan `/reports` ga havola.
-- [ ] Test: direktorda o'sish foizi ko'rinishi; menejerda so'rov
+- [x] Kartochkadan `/reports` ga havola.
+- [x] Test: direktorda o'sish foizi ko'rinishi; menejerda so'rov
       yuborilmasligi.
-- [ ] Commit: `feat: panelda tushum o'sishi`
+- [x] Commit: `feat: panelda tushum o'sishi`
 
 ---
 
@@ -249,13 +249,13 @@ export function ShareBar({ percent, tone }: {
 
 **Qadamlar:**
 
-- [ ] Jadvallar `scroll={{ x: true }}`, kartochkalar `grid-cols-1
+- [x] Jadvallar `scroll={{ x: true }}`, kartochkalar `grid-cols-1
       sm:grid-cols-2 lg:grid-cols-4`.
-- [ ] 390 px kenglikda gorizontal skroll yo'qligini tekshirish.
-- [ ] README ga "Hisobotlar" bo'limi: qaysi rol nimani ko'radi, daromad
+- [x] 390 px kenglikda gorizontal skroll yo'qligini tekshirish.
+- [x] README ga "Hisobotlar" bo'limi: qaysi rol nimani ko'radi, daromad
       kassa asosida ekani, CSV `export.data` talab qilishi.
-- [ ] `npm run lint && npx vitest run --no-file-parallelism && npm run build`
-- [ ] Commit: `docs: adminka hisobotlari hujjatlashtirildi`
+- [x] `npm run lint && npx vitest run --no-file-parallelism && npm run build`
+- [x] Commit: `docs: adminka hisobotlari hujjatlashtirildi`
 
 ---
 

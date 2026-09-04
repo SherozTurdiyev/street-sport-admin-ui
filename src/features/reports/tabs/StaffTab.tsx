@@ -39,7 +39,7 @@ export function StaffTab({ range }: { range: ReportRange }) {
       dataSource={data.items}
       loading={isFetching}
       pagination={false}
-      scroll={{ x: true }}
+      scroll={{ x: 'max-content' }}
       locale={{
         emptyText: <Empty description="Bu davrda xodim amali bo‘lmagan" />,
       }}

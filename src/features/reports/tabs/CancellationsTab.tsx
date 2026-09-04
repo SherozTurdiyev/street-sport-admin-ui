@@ -77,7 +77,7 @@ export function CancellationsTab({ range }: { range: ReportRange }) {
           dataSource={data.byReason}
           loading={isFetching}
           pagination={false}
-          scroll={{ x: true }}
+          scroll={{ x: 'max-content' }}
           locale={{
             emptyText: <Empty description="Bu davrda bekor qilish yo‘q" />,
           }}
@@ -97,7 +97,7 @@ export function CancellationsTab({ range }: { range: ReportRange }) {
           rowKey="venueId"
           dataSource={data.byVenue}
           pagination={false}
-          scroll={{ x: true }}
+          scroll={{ x: 'max-content' }}
           locale={{ emptyText: <Empty description="Stadion yo‘q" /> }}
           columns={[
             { title: 'Stadion', dataIndex: 'venueName' },
@@ -112,7 +112,7 @@ export function CancellationsTab({ range }: { range: ReportRange }) {
           rowKey="userId"
           dataSource={data.byStaff}
           pagination={false}
-          scroll={{ x: true }}
+          scroll={{ x: 'max-content' }}
           locale={{
             emptyText: (
               <Empty description="Bu davrda hech kim bekor qilmagan" />

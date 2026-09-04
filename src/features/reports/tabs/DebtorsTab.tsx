@@ -83,7 +83,7 @@ export function DebtorsTab({ venueIds }: { venueIds?: string[] }) {
         rowKey={(row) => row.customerId ?? 'anonim'}
         dataSource={data.items}
         loading={isFetching}
-        scroll={{ x: true }}
+        scroll={{ x: 'max-content' }}
         locale={{ emptyText: <Empty description="Qarzdor yo‘q" /> }}
         pagination={{
           current: data.page,

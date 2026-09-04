@@ -58,7 +58,7 @@ export function OccupancyTab({ range }: { range: ReportRange }) {
           dataSource={data.byVenue}
           loading={isFetching}
           pagination={false}
-          scroll={{ x: true }}
+          scroll={{ x: 'max-content' }}
           locale={{ emptyText: <Empty description="Stadion yo‘q" /> }}
           columns={[
             { title: 'Stadion', dataIndex: 'venueName' },
