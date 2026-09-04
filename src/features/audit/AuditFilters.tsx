@@ -79,7 +79,10 @@ export function AuditFilters({
           placeholder="Amal"
           mode="multiple"
           allowClear
-          maxTagCount="responsive"
+          // `responsive` o'rniga aniq son: o'lchamga qarab hisoblash
+          // tor ekranda "+ 0 ..." degan bo'sh hisoblagich chizib
+          // qo'yardi.
+          maxTagCount={2}
           style={{ minWidth: 220 }}
           value={filters.action ?? []}
           onChange={(value: string[]) =>

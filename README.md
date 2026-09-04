@@ -224,6 +224,27 @@ qarzdorlar.
 - **Diagramma kutubxonasi yo'q.** Ulushlar CSS ustunchalari bilan
   chiziladi; raqam har doim yonida turadi.
 
+## Audit jurnali
+
+`/audit` — kim, qachon, nima qilgani. Bo'lim **faqat direktorga**
+ko'rinadi (`audit.view`, TZ 4.3).
+
+- **Tarjima backenddan keladi.** `actionLabel`, `entityLabel` va maydon
+  nomlari javobda tayyor matn bo'lib turadi. Adminka o'z lug'atini
+  yuritmaydi: CSV faylini ham backend yasaydi, ikkita lug'at esa bir
+  kun kelib bir-biridan farq qilardi.
+- **O'zgarishlar kengaytiriladigan qatorda.** Bitta amal beshta
+  maydonni o'zgartirishi mumkin — ular asosiy jadvalda qator
+  balandligini o'nlab piksel qilib yuborardi. O'zgarishsiz yozuvda
+  kengaytirish tugmasi umuman chizilmaydi.
+- **Obyektga havola turi bo'yicha.** Stadion, ish vaqti, yopilish va
+  foto — `/venues/:id` ga; xodim — `/members` ga. Bron va to'lovda
+  havola yo'q, chunki adminkada ularning o'z manzili yo'q: ishlamaydigan
+  havoladan ko'ra ko'chiriladigan identifikator foydaliroq.
+- **Filtrlar URL da** — topilgan izni hamkasbga havola qilib yuborish
+  mumkin.
+
 ## Hozircha yo'q
 
-Bildirishnomalar (M12) va audit jurnalini ko'rish (M11).
+Bildirishnomalar (M12) — qo'ng'iroqcha hali doim nolda, chunki
+backendda o'qish endpointi yo'q.

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { App, Empty, Skeleton, Table, Tooltip, Typography } from 'antd';
+import { Alert, App, Empty, Skeleton, Table, Tooltip, Typography } from 'antd';
 import { Link, useSearchParams } from 'react-router';
 import { errorMessage } from '@/shared/api/error-handler';
 import { formatDateTime } from '@/shared/format/time';
@@ -85,7 +85,12 @@ export function AuditPage() {
         exporting={yuklanmoqda}
       />
 
-      {jurnal.isPending ? (
+      {jurnal.error !== null ? (
+        // Xato ko'pincha filtrdan keladi (oraliq 366 kundan uzun,
+        // noma'lum amal turi) — shuning uchun filtrlar ekranda qoladi
+        // va foydalanuvchi tanlovini tuzatishi mumkin.
+        <Alert type="error" showIcon message={errorMessage(jurnal.error)} />
+      ) : jurnal.isPending ? (
         <Skeleton active />
       ) : (
         <Table<AuditEntry>
