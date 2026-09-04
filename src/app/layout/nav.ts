@@ -1,6 +1,7 @@
 import {
   BankOutlined,
   BarChartOutlined,
+  FileSearchOutlined,
   CalendarOutlined,
   ContactsOutlined,
   DashboardOutlined,
@@ -82,6 +83,18 @@ export const NAV: readonly NavItem[] = [
     permission: 'report.debtors',
     label: 'Hisobotlar',
     icon: BarChartOutlined,
+    requiresOrg: true,
+  },
+  {
+    /*
+     * Jurnal hisobotlardan keyin: ikkalasi ham "nima bo'ldi" degan
+     * savolga javob beradi, lekin biri raqamlar, ikkinchisi izlar
+     * bilan. `audit.view` faqat direktorda (TZ 4.3).
+     */
+    path: '/audit',
+    permission: 'audit.view',
+    label: 'Audit jurnali',
+    icon: FileSearchOutlined,
     requiresOrg: true,
   },
   {

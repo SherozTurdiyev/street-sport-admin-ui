@@ -41,6 +41,11 @@ const ShiftsPage = lazy(() =>
     default: m.ShiftsPage,
   })),
 );
+const AuditPage = lazy(() =>
+  import('@/features/audit/AuditPage').then((m) => ({
+    default: m.AuditPage,
+  })),
+);
 const ReportsPage = lazy(() =>
   import('@/features/reports/ReportsPage').then((m) => ({
     default: m.ReportsPage,
@@ -166,6 +171,9 @@ export function AppRouter() {
               />
               <Route path="/shifts" element={<ShiftsPage />} />
               <Route path="/reports" element={<ReportsPage />} />
+              <Route element={<RequirePermission permission="audit.view" />}>
+                <Route path="/audit" element={<AuditPage />} />
+              </Route>
               <Route path="/customers" element={<CustomersPage />} />
               <Route path="/customers/:id" element={<CustomerDetailPage />} />
               <Route path="/organization" element={<OrganizationPage />} />
