@@ -231,10 +231,7 @@ export const reportsApi = {
     try {
       const link = document.createElement('a');
       link.href = url;
-      link.download = fileNameOf(
-        response.headers['content-disposition'],
-        name,
-      );
+      link.download = fileNameOf(response.headers['content-disposition'], name);
       document.body.append(link);
       link.click();
       link.remove();

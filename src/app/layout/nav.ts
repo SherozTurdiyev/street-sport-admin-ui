@@ -1,5 +1,6 @@
 import {
   BankOutlined,
+  BarChartOutlined,
   CalendarOutlined,
   ContactsOutlined,
   DashboardOutlined,
@@ -67,6 +68,20 @@ export const NAV: readonly NavItem[] = [
     permission: 'shift.own.view',
     label: 'Smenalar',
     icon: WalletOutlined,
+    requiresOrg: true,
+  },
+  {
+    /*
+     * `report.debtors` — hisobotlar ichidagi ENG KENG ruxsat: u uchala
+     * rolda ham bor. Ya'ni bo'lim menyuda kimga ko'rinsa, ichida hech
+     * bo'lmasa bitta tab ochiladi. Torroq ruxsat (masalan
+     * `report.profit.total`) qo'yilsa, administrator o'zining qarzdorlar
+     * hisobotini umuman topa olmasdi.
+     */
+    path: '/reports',
+    permission: 'report.debtors',
+    label: 'Hisobotlar',
+    icon: BarChartOutlined,
     requiresOrg: true,
   },
   {

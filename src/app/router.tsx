@@ -41,6 +41,11 @@ const ShiftsPage = lazy(() =>
     default: m.ShiftsPage,
   })),
 );
+const ReportsPage = lazy(() =>
+  import('@/features/reports/ReportsPage').then((m) => ({
+    default: m.ReportsPage,
+  })),
+);
 const CustomersPage = lazy(() =>
   import('@/features/customers/CustomersPage').then((m) => ({
     default: m.CustomersPage,
@@ -160,6 +165,7 @@ export function AppRouter() {
                 element={<SeriesDetailPage />}
               />
               <Route path="/shifts" element={<ShiftsPage />} />
+              <Route path="/reports" element={<ReportsPage />} />
               <Route path="/customers" element={<CustomersPage />} />
               <Route path="/customers/:id" element={<CustomerDetailPage />} />
               <Route path="/organization" element={<OrganizationPage />} />
