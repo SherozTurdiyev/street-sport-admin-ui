@@ -1,4 +1,5 @@
 import { api } from '@/shared/api/client';
+import { downloadBlob } from '@/shared/api/download';
 import type { PaymentMethod } from '@/features/payments/api';
 
 /**
@@ -156,20 +157,6 @@ function params(range: ReportRange): Record<string, string> {
   return out;
 }
 
-/**
- * Fayl nomi backend bergan sarlavhadan olinadi — unda oraliq ham bor
- * (`hisobot-occupancy-2026-09-01-2026-09-30.csv`). Sarlavha yetib
- * kelmasa (proxy uni kesib tashlashi mumkin) nom hisobot nomidan
- * yig'iladi.
- */
-function fileNameOf(disposition: unknown, name: ReportName): string {
-  if (typeof disposition === 'string') {
-    const match = /filename="([^"]+)"/.exec(disposition);
-    if (match) return match[1]!;
-  }
-  return `hisobot-${name}.csv`;
-}
-
 export const reportsApi = {
   summary: (range: ReportRange) =>
     api
@@ -216,29 +203,13 @@ export const reportsApi = {
       .get<StaffReport>(PATHS.staff, { params: params(range) })
       .then((r) => r.data),
 
-  /**
-   * CSV oddiy `<a href>` bilan yuklanmaydi: havola `Authorization`
-   * sarlavhasini yubormaydi va backend 401 qaytarardi. Token esa
-   * ataylab xotirada (XSS), ya'ni uni URL ga qo'yib ham bo'lmaydi.
-   */
+  /** CSV: `Authorization` kerak, shuning uchun blob orqali (`downloadBlob`). */
   async downloadCsv(name: ReportName, range: ReportRange): Promise<void> {
     const response = await api.get<Blob>(PATHS[name], {
       params: { ...params(range), format: 'csv' },
       responseType: 'blob',
     });
 
-    const url = URL.createObjectURL(response.data);
-    try {
-      const link = document.createElement('a');
-      link.href = url;
-      link.download = fileNameOf(response.headers['content-disposition'], name);
-      document.body.append(link);
-      link.click();
-      link.remove();
-    } finally {
-      // Ob'ekt havolasi tozalanmasa, fayl brauzer yopilguncha
-      // xotirada qolib ketardi.
-      URL.revokeObjectURL(url);
-    }
+    downloadBlob(response, `hisobot-${name}.csv`);
   },
 };
