@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { screen, within } from '@testing-library/react';
+import { screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { server } from '@/test/msw';
 import { renderApp } from '@/test/render';
@@ -297,5 +297,27 @@ describe('Kontekstli "Tarix" havolasi', () => {
 
     expect(await screen.findByText('ruxsatlar yuklandi')).toBeVisible();
     expect(container.querySelector('a')).toBeNull();
+  });
+});
+
+describe('Aniq obyekt filtri', () => {
+  it('teg bilan ko`rsatiladi va olib tashlanadi', async () => {
+    server.use(...baseHandlers());
+    renderApp(<AppRouter />, {
+      route: '/audit?entityType=booking&entityId=b-1',
+    });
+
+    // Belgisiz qolsa, bitta bronning tarixi "barcha bronlar" deb
+    // o'qilardi.
+    expect(await screen.findByText('Bitta obyekt')).toBeVisible();
+    expect(soralgan.at(-1)?.searchParams.get('entityId')).toBe('b-1');
+
+    // antd tegining yopish tugmasi — ikonka, matnsiz.
+    const teg = screen.getByText('Bitta obyekt').closest('.ant-tag');
+    await userEvent.click(teg!.querySelector('.ant-tag-close-icon')!);
+
+    await waitFor(() =>
+      expect(soralgan.at(-1)?.searchParams.get('entityId')).toBeNull(),
+    );
   });
 });

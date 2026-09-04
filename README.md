@@ -243,6 +243,12 @@ ko'rinadi (`audit.view`, TZ 4.3).
   havoladan ko'ra ko'chiriladigan identifikator foydaliroq.
 - **Filtrlar URL da** — topilgan izni hamkasbga havola qilib yuborish
   mumkin.
+- **Obyekt sahifasidan kirish.** Stadion, bron va xodim kartochkasida
+  "Tarix" havolasi bor: u tayyor filtrlangan jurnalni ochadi. Havola
+  `audit.view` yo'q foydalanuvchiga umuman chizilmaydi.
+- **Aniq obyekt filtri teg bilan ko'rsatiladi.** Uning o'z tanlagichi
+  yo'q (u havoladan keladi), belgisiz qolsa bitta bronning tarixi
+  "barcha bronlar" deb o'qilardi.
 
 ## Hozircha yo'q
 

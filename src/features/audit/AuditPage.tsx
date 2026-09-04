@@ -37,6 +37,7 @@ export function AuditPage() {
     actorId: qiymat('actorId'),
     action: amallar === undefined ? undefined : amallar.split(','),
     entityType: qiymat('entityType'),
+    entityId: qiymat('entityId'),
     // `|| 1` ataylab: URL da buzuq qiymat (`?page=abc`) bo'lsa `NaN`
     // so'rovga tushib, backend 400 qaytarardi.
     page: Number(searchParams.get('page')) || 1,

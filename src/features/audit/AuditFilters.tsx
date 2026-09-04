@@ -1,5 +1,5 @@
 import { DownloadOutlined } from '@ant-design/icons';
-import { Button, DatePicker, Select, Space } from 'antd';
+import { Button, DatePicker, Select, Space, Tag, Tooltip } from 'antd';
 import dayjs, { type Dayjs } from 'dayjs';
 import { useMembers } from '@/features/members/hooks';
 import type { AuditFilters as Filters, AuditOption } from './api';
@@ -7,7 +7,10 @@ import type { AuditFilters as Filters, AuditOption } from './api';
 const DATE = 'DD.MM.YYYY';
 
 export type FilterPatch = Partial<
-  Record<'from' | 'to' | 'actorId' | 'action' | 'entityType', string | undefined>
+  Record<
+    'from' | 'to' | 'actorId' | 'action' | 'entityType' | 'entityId',
+    string | undefined
+  >
 >;
 
 /**
@@ -100,6 +103,25 @@ export function AuditFilters({
           onChange={(value?: string) => onChange({ entityType: value })}
           options={entityTypes}
         />
+
+        {/*
+         * Aniq obyekt filtri boshqa sahifadagi "Tarix" havolasidan
+         * keladi va uning o'z tanlagichi yo'q. Belgisiz qolsa,
+         * foydalanuvchi bitta bronning tarixini BARCHA bronlar deb
+         * o'qirdi — shuning uchun u ko'rinadigan va olib tashlanadigan
+         * teg sifatida turadi.
+         */}
+        {filters.entityId !== undefined && (
+          <Tooltip title={filters.entityId}>
+            <Tag
+              closable
+              onClose={() => onChange({ entityId: undefined })}
+              style={{ marginInlineEnd: 0 }}
+            >
+              Bitta obyekt
+            </Tag>
+          </Tooltip>
+        )}
       </Space>
 
       {onExport !== null && (
