@@ -32,3 +32,27 @@ export function entityPath(
       return null;
   }
 }
+
+/**
+ * Boshqa sahifadan jurnalga o'tish uchun manzil.
+ *
+ * `entityType` ATAYLAB majburiy emas. Stadionning tarixi uchun faqat
+ * `entityId` beriladi: stadion sozlamasi, ish vaqti va fotolari uch
+ * XIL `entityType` bilan, lekin bir xil `entityId` (stadion o'zi)
+ * bilan yoziladi — turini ham qo'shsak, uchtadan faqat bittasi
+ * ko'rinardi.
+ */
+export function auditQuery(filter: {
+  actorId?: string;
+  entityType?: string;
+  entityId?: string;
+}): string {
+  const params = new URLSearchParams();
+  if (filter.actorId !== undefined) params.set('actorId', filter.actorId);
+  if (filter.entityType !== undefined) {
+    params.set('entityType', filter.entityType);
+  }
+  if (filter.entityId !== undefined) params.set('entityId', filter.entityId);
+
+  return `/audit?${params.toString()}`;
+}

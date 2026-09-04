@@ -6,6 +6,8 @@ import { server } from '@/test/msw';
 import { renderApp } from '@/test/render';
 import { API, DIRECTOR_ME, authedHandlers } from '@/test/handlers';
 import { AppRouter } from '@/app/router';
+import { useCan } from '@/features/auth/hooks';
+import { AuditLink } from './AuditLink';
 
 /** Direktorda `audit.view` va `export.data` bor (TZ 4.3). */
 const DIREKTOR = {
@@ -249,5 +251,51 @@ describe('Audit jurnali xatolari', () => {
     );
     // Filtrlar joyida — foydalanuvchi tanlovini tuzatishi mumkin.
     expect(screen.getByRole('combobox', { name: 'Amal' })).toBeVisible();
+  });
+});
+
+describe('Kontekstli "Tarix" havolasi', () => {
+  it('tayyor filtr bilan jurnalga olib boradi', async () => {
+    server.use(...baseHandlers());
+    renderApp(<AuditLink entityType="booking" entityId="b-1" />);
+
+    const havola = await screen.findByRole('link', { name: /Tarix/ });
+    expect(havola).toHaveAttribute(
+      'href',
+      '/audit?entityType=booking&entityId=b-1',
+    );
+  });
+
+  it('xodim havolasi `actorId` bilan ketadi', async () => {
+    server.use(...baseHandlers());
+    renderApp(<AuditLink actorId="u-3" label="Xodim amallari" />);
+
+    expect(
+      await screen.findByRole('link', { name: /Xodim amallari/ }),
+    ).toHaveAttribute('href', '/audit?actorId=u-3');
+  });
+
+  it('audit ruxsati yo`q bo`lsa umuman chizilmaydi', async () => {
+    // Ko'rinib turgan, lekin bosilganda "ruxsat yo'q" chiqadigan havola
+    // eng chalg'ituvchi holat bo'lardi.
+    server.use(...baseHandlers(MENEJER));
+
+    // Zond: menejerda BOR ruxsat. U ekranga chiqqanda ruxsatlar
+    // yuklangani aniq bo'ladi va "havola yo'q" tekshiruvi ma'noga ega
+    // bo'ladi — aks holda test hali yuklanmagan holatni tekshirardi.
+    function Zond() {
+      const can = useCan();
+      return <>{can('booking.create') ? 'ruxsatlar yuklandi' : null}</>;
+    }
+
+    const { container } = renderApp(
+      <>
+        <AuditLink entityId="v-1" />
+        <Zond />
+      </>,
+    );
+
+    expect(await screen.findByText('ruxsatlar yuklandi')).toBeVisible();
+    expect(container.querySelector('a')).toBeNull();
   });
 });

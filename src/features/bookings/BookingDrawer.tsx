@@ -12,6 +12,7 @@ import {
 } from 'antd';
 import dayjs from 'dayjs';
 import { Link } from 'react-router';
+import { AuditLink } from '@/features/audit/AuditLink';
 import { errorMessage } from '@/shared/api/error-handler';
 import { formatMoney } from '@/shared/format/money';
 import { formatDateTime, formatTime } from '@/shared/format/time';
@@ -78,6 +79,9 @@ function Actions({ booking }: { booking: BookingCard }) {
             Bekor qilish
           </Button>
         )}
+        {/* Bekor qilingan bronda ham ko'rinadi: aynan o'shanda
+            "kim bekor qildi?" degan savol tug'iladi. */}
+        <AuditLink entityType="booking" entityId={booking.id} />
       </Space>
 
       <MoveBookingModal

@@ -20,6 +20,7 @@ import { displayPhone } from '@/shared/format/phone';
 import { formatDateTime } from '@/shared/format/time';
 import { formatMoney } from '@/shared/format/money';
 import { useVenueOptions } from '@/features/venues/hooks';
+import { AuditLink } from '@/features/audit/AuditLink';
 import type { MemberRole } from './api';
 import { useMember, useSetActive, useSetRole, useSetVenues } from './hooks';
 
@@ -164,6 +165,11 @@ function MemberCardBody({ userId }: { userId: string }) {
           Stadionlarni saqlash
         </Button>
       </div>
+
+      {/* Xodimning O'ZI qilgan amallari — `actorId` bo'yicha. Uning
+          ustidagi o'zgarishlar (rol, bloklash) alohida yozuv va ular
+          umumiy jurnalda ko'rinadi. */}
+      <AuditLink actorId={userId} label="Xodim amallari" />
 
       <Popconfirm
         title={data.isActive ? 'Faolsizlantirilsinmi?' : 'Faollashtirilsinmi?'}

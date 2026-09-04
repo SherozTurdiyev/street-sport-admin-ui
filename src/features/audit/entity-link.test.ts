@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { entityPath } from './entity-link';
+import { auditQuery, entityPath } from './entity-link';
 
 describe('entityPath', () => {
   it('stadion va uning bo`limlari stadion sahifasiga olib boradi', () => {
@@ -27,5 +27,24 @@ describe('entityPath', () => {
 
   it('identifikator yo`q bo`lsa havola ham yo`q', () => {
     expect(entityPath('venue', null)).toBeNull();
+  });
+});
+
+describe('auditQuery', () => {
+  it('xodim bo`yicha filtr', () => {
+    expect(auditQuery({ actorId: 'u-1' })).toBe('/audit?actorId=u-1');
+  });
+
+  it('stadion tarixida obyekt TURI yo`q', () => {
+    // Sozlama, ish vaqti va foto uch xil `entityType` bilan, lekin bir
+    // xil `entityId` bilan yoziladi — turi qo'shilsa uchtadan faqat
+    // bittasi ko'rinardi.
+    expect(auditQuery({ entityId: 'v-1' })).toBe('/audit?entityId=v-1');
+  });
+
+  it('bron tarixida turi ham beriladi', () => {
+    expect(auditQuery({ entityType: 'booking', entityId: 'b-1' })).toBe(
+      '/audit?entityType=booking&entityId=b-1',
+    );
   });
 });

@@ -3,6 +3,7 @@ import { Alert, App, Button, Space, Typography } from 'antd';
 import { Link } from 'react-router';
 import { assetUrl } from '@/shared/api/client';
 import { errorCode, errorMessage } from '@/shared/api/error-handler';
+import { AuditLink } from '@/features/audit/AuditLink';
 import { figma } from '@/shared/theme/tokens';
 import type { VenueDetail } from '../api';
 import { SPORT_TYPE_LABELS, VENUE_STATUS_VIEW } from '../enums';
@@ -92,6 +93,9 @@ export function VenueHeroActions({
       <Link to={`/venues/${venue.id}/edit`}>
         <Button>Tahrirlash</Button>
       </Link>
+      {/* Turi berilmaydi: sozlama, ish vaqti va foto uch xil
+          `entityType` bilan yoziladi (`auditQuery` izohiga qarang). */}
+      <AuditLink entityId={venue.id} />
       {venue.status === 'ARCHIVED' ? (
         <Button
           type="primary"
