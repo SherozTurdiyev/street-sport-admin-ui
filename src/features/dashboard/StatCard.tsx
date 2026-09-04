@@ -16,6 +16,7 @@ export function StatCard({
   tint,
   loading = false,
   hint,
+  footer,
 }: {
   label: string;
   value: ReactNode;
@@ -25,6 +26,11 @@ export function StatCard({
   loading?: boolean;
   /** Raqam to'liq emasligini aytadigan izoh (masalan, M8 kutilmoqda). */
   hint?: string;
+  /**
+   * Raqam OSTIDAGI kichik qator: o'sish foizi, havola. Raqamning o'ziga
+   * qo'shilsa, u `truncate` ichiga tushib kesilib qolardi.
+   */
+  footer?: ReactNode;
 }) {
   return (
     <div
@@ -79,6 +85,9 @@ export function StatCard({
           >
             {value}
           </Typography.Text>
+        )}
+        {!loading && footer !== undefined && (
+          <div style={{ fontSize: 12, marginTop: 2 }}>{footer}</div>
         )}
       </div>
     </div>

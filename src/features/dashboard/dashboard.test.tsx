@@ -39,11 +39,20 @@ const PANEL = {
 };
 
 let bronSorovlari: URL[] = [];
+let summarySorovlari: URL[] = [];
 
 function baseHandlers(me: object = DIRECTOR_ME) {
   return [
     ...authedHandlers(me),
     http.get(`${API}/bookings/today-panel`, () => HttpResponse.json(PANEL)),
+    http.get(`${API}/reports/summary`, ({ request }) => {
+      summarySorovlari.push(new URL(request.url));
+      return HttpResponse.json({
+        today: { revenue: '450000', previous: '300000', growthPercent: 50 },
+        week: { revenue: '900000', previous: '0', growthPercent: null },
+        month: { revenue: '2400000', previous: '0', growthPercent: null },
+      });
+    }),
     http.get(`${API}/bookings`, ({ request }) => {
       const url = new URL(request.url);
       bronSorovlari.push(url);
@@ -80,6 +89,7 @@ function baseHandlers(me: object = DIRECTOR_ME) {
 
 beforeEach(() => {
   bronSorovlari = [];
+  summarySorovlari = [];
 });
 
 describe('Boshqaruv paneli', () => {
@@ -129,6 +139,29 @@ describe('Boshqaruv paneli', () => {
     expect(await screen.findByText('7 soat')).toBeInTheDocument();
     expect(screen.queryByText("450 000 so'm")).not.toBeInTheDocument();
     expect(screen.queryByText('Bugungi tushum')).not.toBeInTheDocument();
+  });
+
+  it('direktor tushum kartochkasida o`sish foizini ko`radi', async () => {
+    server.use(...baseHandlers());
+    renderApp(<AppRouter />, { route: '/dashboard' });
+
+    expect(await screen.findByText("450 000 so'm")).toBeInTheDocument();
+    expect(screen.getByText(/50%/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Hisobotlar' })).toHaveAttribute(
+      'href',
+      '/reports',
+    );
+  });
+
+  it('hisobot ruxsati yo`q xodimda summary UMUMAN so`ralmaydi', async () => {
+    // `enabled: false` bo'lgan so'rovda `isPending` mangu `true`
+    // bo'lib qoladi — bu tekshiruv kartochka skelet bo'lib qotib
+    // qolmasligini ham isbotlaydi.
+    server.use(...baseHandlers(ADMIN_ME));
+    renderApp(<AppRouter />, { route: '/dashboard' });
+
+    await screen.findByText('7 soat');
+    expect(summarySorovlari).toHaveLength(0);
   });
 
   it('administrator uchun ham ochiq — alohida ruxsat talab qilmaydi', async () => {

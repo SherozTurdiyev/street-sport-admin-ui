@@ -19,6 +19,8 @@ import { useCan } from '@/features/auth/hooks';
 import { BOOKING_STATUS_VIEW, type Booking } from '@/features/bookings/api';
 import { useBookingCount, useTodayPanel } from '@/features/bookings/hooks';
 import { useVenueOptions } from '@/features/venues/hooks';
+import { useSummary } from '@/features/reports/hooks';
+import { Growth } from '@/features/reports/tabs/SummaryTab';
 import { StatCard } from './StatCard';
 
 /** "Yaqin bronlar" oynasi — bir hafta. */
@@ -87,6 +89,16 @@ export function OrgDashboard() {
   const bugun = useMemo(() => tashkentDayRange(), []);
   const yaqin = useMemo(() => nextDaysRange(UPCOMING_DAYS), []);
 
+  /*
+   * O'sish foizi FAQAT `report.profit.total` bor foydalanuvchida
+   * so'raladi. `enabled: false` bo'lgan so'rovda `isPending` mangu
+   * `true` bo'lib qoladi — shuning uchun yuklanish holati ham shu
+   * bayroq bilan tekshiriladi, aks holda menejer ekranida kartochka
+   * doim skelet bo'lib turardi.
+   */
+  const osishKorinadi = can('report.profit.total');
+  const summary = useSummary({}, osishKorinadi);
+
   const panel = useTodayPanel();
   const bugungi = useBookingCount(bugun);
   const kelayotgan = useBookingCount({ ...yaqin, status: 'CONFIRMED' });
@@ -134,9 +146,19 @@ export function OrgDashboard() {
             label="Bugungi tushum"
             icon={DollarOutlined}
             tint={figma.warning}
-            loading={panel.isPending}
-            value={formatMoney(panel.data?.todayRevenue)}
+            loading={panel.isPending || (osishKorinadi && summary.isPending)}
+            value={formatMoney(
+              summary.data?.today.revenue ?? panel.data?.todayRevenue,
+            )}
             hint="Bugun qabul qilingan pul — naqd va kartadagi to‘lovlar, qaytarilgani ayirilgan."
+            footer={
+              summary.data === undefined ? undefined : (
+                <div className="flex flex-wrap items-center gap-x-2">
+                  <Growth block={summary.data.today} />
+                  <Link to="/reports">Hisobotlar</Link>
+                </div>
+              )
+            }
           />
         )}
         <StatCard
