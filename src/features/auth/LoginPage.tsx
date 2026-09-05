@@ -4,7 +4,7 @@ import { Alert, Button, Checkbox, Form, Input, Modal, Typography } from 'antd';
 import { errorMessage } from '@/shared/api/error-handler';
 import { figma } from '@/shared/theme/tokens';
 import { PhoneInput } from '@/shared/ui/PhoneInput';
-import logoUrl from '@/assets/logo.svg';
+import logoUrl from '@/assets/logo.png';
 import { useAuth } from './hooks';
 
 type Values = { phone: string; password: string; remember: boolean };
@@ -54,7 +54,13 @@ function BrandColumn() {
           backdropFilter: 'blur(12px)',
         }}
       >
-        <img src={logoUrl} alt="" width={48} height={48} />
+        <img
+          src={logoUrl}
+          alt=""
+          width={64}
+          height={64}
+          style={{ borderRadius: 16 }}
+        />
       </div>
 
       <Typography.Title
@@ -161,17 +167,24 @@ export function LoginPage() {
           style={{ maxWidth: 440 }}
         >
           <div>
+            {/* Logotipning o'zi qora fonli kvadrat — ostiga binafsha
+                fon qo'yilsa nishon ikki qavat bo'lib ko'rinardi. */}
             <div
               className="mb-6 flex items-center justify-center"
               style={{
                 width: 80,
                 height: 80,
                 borderRadius: 20,
-                background: figma.primary,
                 boxShadow: `0 0 24px ${figma.primaryGlow}`,
               }}
             >
-              <img src={logoUrl} alt="StreetSport" width={44} height={44} />
+              <img
+                src={logoUrl}
+                alt="StreetSport"
+                width={80}
+                height={80}
+                style={{ borderRadius: 20 }}
+              />
             </div>
 
             <Typography.Title

@@ -6,7 +6,7 @@ import { useAuth, useCan, useHasOrg } from '@/features/auth/hooks';
 import { displayPhone } from '@/shared/format/phone';
 import { ROLE_LABELS } from '@/shared/api/types';
 import { figma } from '@/shared/theme/tokens';
-import logoUrl from '@/assets/logo.svg';
+import logoUrl from '@/assets/logo.png';
 import { allowedNav } from './nav';
 
 /** Ism va familiyaning bosh harflari — avatar rasmi API da yo'q. */
@@ -56,20 +56,20 @@ export function SiderContent({ onNavigate }: { onNavigate?: () => void }) {
           borderBottom: `1px solid ${figma.border}`,
         }}
       >
-        {/* Belgi Figma'dan eksport qilingan: tashqi kvadrat 40px,
-            ichki chizma 24px — ikkalasi ham aniq berilgan. */}
-        <div
-          className="flex shrink-0 items-center justify-center"
+        {/* Logotip Figma'dan (2023:11856 sarlavhasi): 40px dumaloq
+            nishon va yonida "StreetSport" yozuvi. Rasmning o'zi qora
+            fonli kvadrat, shuning uchun ostiga rang qo'yilmaydi —
+            dumaloq qirqim maketdagidek. */}
+        <img
+          src={logoUrl}
+          alt=""
+          width={40}
+          height={40}
           style={{
-            width: 40,
-            height: 40,
             borderRadius: figma.radiusPill,
-            background: figma.primary,
             boxShadow: `0 0 8px ${figma.primaryGlow}`,
           }}
-        >
-          <img src={logoUrl} alt="" width={24} height={24} />
-        </div>
+        />
         <Typography.Text strong style={{ fontSize: 20 }}>
           StreetSport
         </Typography.Text>
