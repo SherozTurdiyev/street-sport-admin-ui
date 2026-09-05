@@ -250,7 +250,23 @@ ko'rinadi (`audit.view`, TZ 4.3).
   yo'q (u havoladan keladi), belgisiz qolsa bitta bronning tarixi
   "barcha bronlar" deb o'qilardi.
 
+## Bildirishnomalar
+
+Yuqoridagi qo'ng'iroqcha — o'qilmaganlar soni bilan. Bosilganda oxirgi
+o'nta xabar ochiladi.
+
+- **Xabar bosilganda** o'qilgan deb belgilanadi va turiga qarab
+  tegishli sahifa ochiladi: smena xabari — smenalar, seriya eslatmasi —
+  seriya sahifasi. Belgilash natijasi kutilmaydi, o'tish darhol bo'ladi.
+- **Bir daqiqada bir qayta so'raladi.** Jonli ulanish (websocket) bitta
+  panel uchun ortiqcha; oyna faollashganda ham yangilanadi.
+- **Platforma xodimida tashkilot yo'q**, shuning uchun so'rov umuman
+  yuborilmaydi — aks holda server uni haqli ravishda rad etardi.
+- **Kassa farqi chegarasi** tashkilot sahifasida. U faqat
+  bildirishnomaga ta'sir qiladi: farqning o'zi smena hisobotida
+  baribir ko'rinadi.
+
 ## Hozircha yo'q
 
-Bildirishnomalar (M12) — qo'ng'iroqcha hali doim nolda, chunki
-backendda o'qish endpointi yo'q.
+Telegram orqali kunlik hisobot (F12.2) — bot va ulash oqimi keyingi
+bosqichda.
