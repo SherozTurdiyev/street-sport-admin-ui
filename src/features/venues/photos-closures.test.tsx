@@ -5,6 +5,7 @@ import userEvent from '@testing-library/user-event';
 import { server } from '@/test/msw';
 import { renderApp } from '@/test/render';
 import {
+  ADMIN_ME,
   API,
   DIRECTOR_ME,
   authedHandlers,
@@ -54,9 +55,9 @@ const YOPILISH = {
 let yuborilgan: { url: string; body: unknown }[] = [];
 let formData: FormData | null = null;
 
-function baseHandlers() {
+function baseHandlers(me: object = DIRECTOR_ME) {
   return [
-    ...authedHandlers(DIRECTOR_ME),
+    ...authedHandlers(me),
     http.get(`${API}/venues`, () =>
       HttpResponse.json({ items: [STADION], total: 1, page: 1, pageSize: 20 }),
     ),
@@ -207,5 +208,24 @@ describe('Vaqtinchalik yopilishlar', () => {
     expect(
       await yopilishlar.findByText(/avtomatik\s+tiklanmaydi/i),
     ).toBeInTheDocument();
+  });
+});
+
+describe('Adminlar bo`limining ko`rinishi', () => {
+  it('biriktirish ruxsati borga tab ko`rinadi', async () => {
+    server.use(...baseHandlers());
+    renderApp(<AppRouter />, { route: '/venues/v-1' });
+
+    expect(await screen.findByRole('tab', { name: 'Adminlar' })).toBeVisible();
+  });
+
+  it('ruxsat yo`q bo`lsa tab umuman chizilmaydi', async () => {
+    // Administratorda `member.venue.assign` yo'q: ro'yxatni ko'rsa ham
+    // o'zgartira olmasdi va tugma 403 qaytarardi.
+    server.use(...baseHandlers(ADMIN_ME));
+    renderApp(<AppRouter />, { route: '/venues/v-1' });
+
+    await screen.findByRole('tab', { name: 'Ish vaqti' });
+    expect(screen.queryByRole('tab', { name: 'Adminlar' })).toBeNull();
   });
 });

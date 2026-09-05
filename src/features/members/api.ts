@@ -26,6 +26,8 @@ export type MembersQuery = PageQuery & {
   role?: MemberRole;
   isActive?: boolean;
   search?: string;
+  /** Shu stadionga biriktirilgan xodimlar (stadion sahifasidagi bo'lim). */
+  venueId?: string;
 };
 
 /** `DIRECTOR` bu yerda yaratilmaydi — backend uni rad etadi. */

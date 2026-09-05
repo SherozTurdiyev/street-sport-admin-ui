@@ -74,6 +74,16 @@ export function useSetActive(userId: string) {
   );
 }
 
+/**
+ * Stadion tomonidan biriktirish: xodim jadval qatoridan keladi, ya'ni
+ * `userId` ni hook yaratilayotganda bilib bo'lmaydi.
+ */
+export function useAssignVenues() {
+  return useMemberAction((input: { userId: string; venueIds: string[] }) =>
+    membersApi.setVenues(input.userId, input.venueIds),
+  );
+}
+
 export function useSetVenues(userId: string) {
   return useMemberAction((venueIds: string[]) =>
     membersApi.setVenues(userId, venueIds),

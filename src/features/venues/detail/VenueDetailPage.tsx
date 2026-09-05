@@ -22,6 +22,7 @@ import {
   PieChartOutlined,
 } from '@ant-design/icons';
 import { ClosuresTab } from '../ClosuresTab';
+import { AdminsTab } from './AdminsTab';
 import { PhotosTab } from '../PhotosTab';
 import { WeeklyHoursForm } from '../WeeklyHoursForm';
 import { PriceRulesTab } from '../prices/PriceRulesTab';
@@ -40,7 +41,7 @@ import {
   activeBookings,
 } from '@/features/bookings/slots';
 
-const TABS = ['hours', 'prices', 'photos', 'closures'] as const;
+const TABS = ['hours', 'prices', 'photos', 'closures', 'admins'] as const;
 type Tab = (typeof TABS)[number];
 
 function isTab(value: string | null): value is Tab {
@@ -240,6 +241,20 @@ export function VenueDetailPage() {
               label: 'Yopilishlar',
               children: <ClosuresTab venueId={id} />,
             },
+            /*
+             * Adminlar bo'limi FAQAT biriktirish ruxsati borlarga
+             * (direktor va menejer). Administratorning o'zi bu ro'yxatni
+             * ko'rsa, o'zgartira olmasdi va tugma 403 qaytarardi.
+             */
+            ...(can('member.venue.assign')
+              ? [
+                  {
+                    key: 'admins',
+                    label: 'Adminlar',
+                    children: <AdminsTab venueId={id} />,
+                  },
+                ]
+              : []),
           ]}
         />
       </Card>
