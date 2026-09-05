@@ -11,6 +11,8 @@ import {
   venueDayHandlers,
 } from '@/test/handlers';
 import { AppRouter } from '@/app/router';
+import { PriceCalculator } from './PriceCalculator';
+import { PriceRulesTab } from './PriceRulesTab';
 
 const STADION = {
   id: 'v-1',
@@ -136,7 +138,7 @@ describe('Narx qoidalari', () => {
         return HttpResponse.json(KECHKI, { status: 201 });
       }),
     );
-    renderApp(<AppRouter />, { route: '/venues/v-1?tab=prices' });
+    renderApp(<PriceRulesTab venueId="v-1" />);
 
     const narx = within(await narxBolimi());
     await userEvent.click(narx.getByRole('button', { name: 'Yangi qoida' }));
@@ -163,7 +165,7 @@ describe('Narx qoidalari', () => {
         return HttpResponse.json({ ...KECHKI, pricePerHour: '300000' });
       }),
     );
-    renderApp(<AppRouter />, { route: '/venues/v-1?tab=prices' });
+    renderApp(<PriceRulesTab venueId="v-1" />);
 
     const narx = within(await narxBolimi());
     // Tahrirlash amallar ustunida — nomni bosishni topish shart emas.
@@ -203,9 +205,7 @@ describe('Narx qoidalari', () => {
       endsTime: null,
       weekdays: [1, 2, 3, 4, 5],
     });
-    // Bu testda eng ko'p qadam bor: sahifa, oyna, uch maydon va
-    // tozalash. To'liq yuklamada umumiy chegaraga tegib ketardi.
-  }, 30_000);
+  });
 
   it('prioritet to`qnashuvi xabarini forma ichida ko`rsatadi', async () => {
     const XABAR =
@@ -219,7 +219,7 @@ describe('Narx qoidalari', () => {
         ),
       ),
     );
-    renderApp(<AppRouter />, { route: '/venues/v-1?tab=prices' });
+    renderApp(<PriceRulesTab venueId="v-1" />);
 
     const narx = within(await narxBolimi());
     await userEvent.click(narx.getByRole('button', { name: 'Yangi qoida' }));
@@ -234,26 +234,55 @@ describe('Narx qoidalari', () => {
     expect(await within(oyna).findByText(XABAR)).toBeInTheDocument();
   });
 
+  /*
+   * Panjara bo'lim darajasida tekshiriladi: `AppRouter` orqali shu
+   * test 12 s ketardi — 168 katak ustidagi rol so'rovi butun sahifa
+   * daraxti bo'ylab hisoblanadi. Marshrut (`?tab=prices`) bo'limni
+   * ochishi esa yuqoridagi birinchi testda tekshiriladi.
+   */
   it('haftalik panjarada 168 katak va tarif nomi bo`ladi', async () => {
     server.use(...baseHandlers());
-    renderApp(<AppRouter />, { route: '/venues/v-1?tab=prices' });
+    renderApp(<PriceRulesTab venueId="v-1" />);
 
     const narx = within(await narxBolimi());
     const panjara = await narx.findByRole('table', {
       name: 'Haftalik narx jadvali',
     });
 
-    // 7 kun × 24 soat. Sarlavhalar `columnheader`/`rowheader`, shuning
-    // uchun `cell` lar aynan kataklar.
-    expect(within(panjara).getAllByRole('cell')).toHaveLength(168);
+    /*
+     * 7 kun × 24 soat. `getAllByRole('cell')` ayni natijani berardi,
+     * lekin u 168 katakning har biri uchun rolni HISOBLAB chiqadi va
+     * shu bitta tasdiq bir necha soniya oladi. Jadval haqiqiy
+     * `<table>`, ya'ni `tbody td` xuddi shu narsani ifodalaydi:
+     * sarlavhalar `th` bo'lgani uchun ro'yxatga tushmaydi.
+     */
+    expect(panjara.querySelectorAll('tbody td')).toHaveLength(168);
     expect(
       within(panjara).getAllByTitle(/Kechki · 260 000 so.?m/),
     ).not.toHaveLength(0);
+
+    // Kalkulyator shu bo'limda turishi — ulanish shu yerda tekshiriladi,
+    // uning O'ZINI tekshiruvchi test esa sahifasiz ishlaydi (pastda).
+    expect(narx.getByRole('button', { name: 'Hisoblash' })).toBeInTheDocument();
   });
 
+  /*
+   * Bu test ATAYLAB butun sahifani ko'tarmaydi.
+   *
+   * O'lchov: `AppRouter` orqali u ~7.9 s ketardi (chizish 2.8 s, har
+   * bir tugma bosilishi 2.8 s), chunki har bir hodisada stadion
+   * sahifasining hammasi — kunlik kalendar, qoidalar ro'yxati va 168
+   * katakli panjara — qayta chizilardi. 15 soniyalik chegaraga
+   * yaqin turgani uchun to'liq yugurishda yuklama ostida yiqilardi.
+   *
+   * Faqat kalkulyator bilan o'sha amallar ~0.85 s. Tekshiruvlar
+   * o'zgarmadi: jami, segmentlar va yuborilgan UTC vaqti — hammasi
+   * shu yerda. Kalkulyatorning bo'limga ULANGANI esa yuqoridagi
+   * sahifa testida tekshiriladi.
+   */
   it('kalkulyator segmentlarni va jamini ko`rsatadi', async () => {
     server.use(
-      ...baseHandlers(),
+      ...authedHandlers(DIRECTOR_ME),
       http.post(
         `${API}/venues/v-1/price-rules/calculate`,
         async ({ request }) => {
@@ -284,26 +313,23 @@ describe('Narx qoidalari', () => {
         },
       ),
     );
-    renderApp(<AppRouter />, { route: '/venues/v-1?tab=prices' });
+    renderApp(<PriceCalculator venueId="v-1" />);
 
-    const narx = within(await narxBolimi());
     await userEvent.type(
-      narx.getByLabelText('Boshlanishi'),
+      await screen.findByLabelText('Boshlanishi'),
       '2026-09-01 17:00{enter}',
     );
     await userEvent.type(
-      narx.getByLabelText('Tugashi'),
+      screen.getByLabelText('Tugashi'),
       '2026-09-01 19:00{enter}',
     );
-    await userEvent.click(narx.getByRole('button', { name: 'Hisoblash' }));
+    await userEvent.click(screen.getByRole('button', { name: 'Hisoblash' }));
 
     // Segmentlar ko'rinadi — "nega 410 000?" degan savol javob topadi.
-    expect(await narx.findByText("410 000 so'm")).toBeInTheDocument();
+    expect(await screen.findByText("410 000 so'm")).toBeInTheDocument();
 
-    // Bo'limda uchta jadval bor ("Bazaviy" ro'yxatda ham, panjara
-    // izohida ham uchraydi), shuning uchun aynan segmentlar tekshiriladi.
     const segmentlar = within(
-      await narx.findByRole('region', { name: 'Narx segmentlari' }),
+      await screen.findByRole('region', { name: 'Narx segmentlari' }),
     );
     expect(segmentlar.getByText('Bazaviy')).toBeInTheDocument();
     expect(segmentlar.getByText('Kechki')).toBeInTheDocument();
