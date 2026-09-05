@@ -71,6 +71,20 @@ export function authedHandlers(me: object = DIRECTOR_ME) {
       HttpResponse.json({ accessToken: 'token' }),
     ),
     http.get(`${API}/auth/me`, () => HttpResponse.json(me)),
+    /*
+     * Qo'ng'iroqcha layoutning bir qismi, ya'ni ilovani ko'targan HAR
+     * BIR test bu so'rovni yuboradi. Bo'sh javob shu yerda turadi;
+     * bildirishnomalar testi uni o'z ma'lumoti bilan almashtiradi.
+     */
+    http.get(`${API}/notifications`, () =>
+      HttpResponse.json({
+        items: [],
+        total: 0,
+        page: 1,
+        pageSize: 10,
+        unreadCount: 0,
+      }),
+    ),
   ];
 }
 
