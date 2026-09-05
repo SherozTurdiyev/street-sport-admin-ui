@@ -6,6 +6,7 @@ import { server } from '@/test/msw';
 import { renderApp } from '@/test/render';
 import { API, ADMIN_ME, DIRECTOR_ME, authedHandlers } from '@/test/handlers';
 import { AppRouter } from '@/app/router';
+import { SeriesFormModal } from './SeriesFormModal';
 
 const SERIYA = {
   id: 's-1',
@@ -180,11 +181,17 @@ describe('Seriya yaratish', () => {
     ];
   }
 
-  /** Formani to'ldirib oldindan ko'rishni bosadi. */
+  /*
+   * Forma ATAYLAB o'zi chiziladi, butun ilova emas.
+   *
+   * `AppRouter` orqali bu ikki test ~10 s ketardi (bronlar sahifasi,
+   * kalendar va layout har bir bosishda qayta chizilardi) va 15
+   * soniyalik chegaraga yaqin turib, to'liq yugurishda yiqilardi.
+   * Forma o'zi bilan o'sha qadamlar bir necha barobar tez. Oynaning
+   * bo'limga ULANGANI yuqoridagi ro'yxat testida tekshiriladi.
+   */
   async function korish(): Promise<HTMLElement> {
-    renderApp(<AppRouter />, { route: '/bookings?tab=series' });
-    await screen.findByRole('table');
-    await userEvent.click(screen.getByRole('button', { name: 'Yangi seriya' }));
+    renderApp(<SeriesFormModal open onClose={() => {}} />);
 
     const oynaEl = await screen.findByRole('dialog');
     const oyna = within(oynaEl);
@@ -218,6 +225,19 @@ describe('Seriya yaratish', () => {
     return oynaEl;
   }
 
+  /*
+   * Bu ikki testga ATAYLAB uzunroq muddat berilgan.
+   *
+   * O'lchandi: formani to'ldirish (stadion, hafta kunlari, vaqt, sana
+   * oralig'i, mijoz) qadamlarining har biri jsdom da 0.4–1.1 s oladi,
+   * ustiga ikkita server so'rovi (oldindan ko'rish va yaratish)
+   * qo'shiladi — jami ~8 s. Bu narx SSENARIYNING O'ZIDA, atrofdagi
+   * sahifada emas: sahifa allaqachon olib tashlangan (`korish` faqat
+   * oynani chizadi).
+   *
+   * Ya'ni muddatni uzaytirish sekinlikni yashirmaydi — u shu
+   * ssenariyning haqiqiy narxi.
+   */
   it('sanalar holati bilan ko`rsatiladi va band sana o`tkazib yuboriladi', async () => {
     server.use(...yaratishHandlers());
     const oynaEl = await korish();
@@ -240,7 +260,7 @@ describe('Seriya yaratish', () => {
         '1 ta sana band bo‘lgani uchun o‘tkazib yuborildi',
       ),
     ).toBeInTheDocument();
-  });
+  }, 30_000);
 
   it('«band bo`lsa yaratma» tanlanganda server xatosi ko`rinadi', async () => {
     server.use(
@@ -265,7 +285,7 @@ describe('Seriya yaratish', () => {
     expect(
       await oyna.findByText(/Band sanalar bor\. Band sanalar: 1 ta\./),
     ).toBeInTheDocument();
-  });
+  }, 30_000);
 });
 
 describe('Seriya sahifasi', () => {
