@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
-import { beforeEach, describe, expect, it } from 'vitest';
-import { screen } from '@testing-library/react';
+import { afterEach, beforeEach, describe, expect, it } from 'vitest';
+import { screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { server } from '@/test/msw';
 import { renderApp } from '@/test/render';
@@ -240,5 +240,69 @@ describe('Stadionlar', () => {
         body: { hours: [{ weekday: 1, opensAt: '18:00', closesAt: '02:00' }] },
       },
     ]);
+  });
+});
+
+describe('Stadionlar ro`yxati telefonda', () => {
+  const ISH_STOLI = window.innerWidth;
+
+  beforeEach(() => {
+    // antd `xs` brekpointi — `(max-width: 575px)`. Testdagi `matchMedia`
+    // yamog'i `innerWidth` ga qaraydi, ya'ni kenglikni o'zgartirish
+    // butun moslashuvchan qatlamni telefon rejimiga o'tkazadi.
+    window.innerWidth = 390;
+  });
+
+  afterEach(() => {
+    window.innerWidth = ISH_STOLI;
+  });
+
+  it('filtrlar sahifada emas, tugma ortida turadi', async () => {
+    server.use(...baseHandlers());
+    renderApp(<AppRouter />, { route: '/venues' });
+
+    await screen.findByRole('heading', { name: 'Chilonzor Arena' });
+    // Asosiy maqsad: ro'yxatgacha to'rt qator filtr turmasin.
+    expect(screen.queryByLabelText('Shahar')).toBeNull();
+    expect(
+      screen.getByRole('button', { name: /Filtrlar/ }),
+    ).toBeInTheDocument();
+  });
+
+  it('tugma bosilganda oyna ochiladi va filtr ishlaydi', async () => {
+    server.use(...baseHandlers());
+    renderApp(<AppRouter />, { route: '/venues' });
+
+    await screen.findByRole('heading', { name: 'Chilonzor Arena' });
+    await userEvent.click(screen.getByRole('button', { name: /Filtrlar/ }));
+
+    await userEvent.type(
+      await screen.findByLabelText('Shahar'),
+      'Toshkent{enter}',
+    );
+
+    expect(oxirgi().searchParams.get('city')).toBe('Toshkent');
+    // Oyna ochiq qoladi: odatda ketma-ket bir nechta shart tanlanadi.
+    expect(screen.getByLabelText('Shahar')).toBeVisible();
+  });
+
+  it('`Tozalash` filtrni ham, yozuvni ham o`chiradi', async () => {
+    server.use(...baseHandlers());
+    renderApp(<AppRouter />, { route: '/venues' });
+
+    await screen.findByRole('heading', { name: 'Chilonzor Arena' });
+    await userEvent.click(screen.getByRole('button', { name: /Filtrlar/ }));
+    await userEvent.type(
+      await screen.findByLabelText('Shahar'),
+      'Toshkent{enter}',
+    );
+    expect(oxirgi().searchParams.get('city')).toBe('Toshkent');
+
+    await userEvent.click(screen.getByRole('button', { name: 'Tozalash' }));
+
+    await waitFor(() => expect(oxirgi().searchParams.get('city')).toBeNull());
+    // Maydon ham bo'shashi SHART: yozuv qolsa, foydalanuvchi filtr
+    // hali ishlayapti deb o'ylardi.
+    expect(screen.getByLabelText('Shahar')).toHaveValue('');
   });
 });
