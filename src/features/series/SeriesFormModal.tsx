@@ -18,6 +18,7 @@ import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { errorDetails, errorMessage } from '@/shared/api/error-handler';
 import { formatMoney } from '@/shared/format/money';
 import { formatDateTime } from '@/shared/format/time';
+import { TIME_PICKER_PANEL } from '@/shared/ui/timePicker';
 import { PhoneInput } from '@/shared/ui/PhoneInput';
 import { WEEKDAYS } from '@/features/venues/enums';
 import { useVenueOptions } from '@/features/venues/hooks';
@@ -214,8 +215,8 @@ function SeriesForm({ onDone }: { onDone: () => void }) {
           <TimePicker
             className="w-full"
             format={TIME}
-            minuteStep={15}
             allowClear={false}
+            {...TIME_PICKER_PANEL}
           />
         </Form.Item>
 

@@ -7,7 +7,6 @@ import {
   Input,
   InputNumber,
   Modal,
-  Select,
   Switch,
   TimePicker,
   Typography,
@@ -16,6 +15,7 @@ import dayjs, { type Dayjs } from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { applyServerErrors, errorMessage } from '@/shared/api/error-handler';
 import { MoneyInput } from '@/shared/ui/MoneyInput';
+import { TIME_PICKER_PANEL } from '@/shared/ui/timePicker';
 import { WEEKDAYS } from '../enums';
 import type { PriceRule, PriceRuleInput } from './api';
 import { useCreatePriceRule, useUpdatePriceRule } from './hooks';
@@ -37,6 +37,49 @@ type Values = {
 };
 
 const FIELDS = ['name', 'pricePerHour', 'priority'] as const;
+
+/**
+ * Hafta kunlari — yettala kun ham ro'yxatda ko'rinadi.
+ *
+ * Ilgari bu ko'p tanlovli `Select` edi: tanlangan kunlar teg bo'lib
+ * maydonni to'ldirar, maydon esa o'sib ketardi — telefonda yetti teg
+ * uch qatorni egallardi va qaysi kun tanlanmagani umuman ko'rinmasdi.
+ * Bu yerda tanlov ish vaqti jadvali bilan bir xil ko'rinishda.
+ *
+ * `value`/`onChange` ni antd `Form.Item` beradi — komponent boshqariladi.
+ */
+function HaftaKunlari({
+  value = [],
+  onChange,
+}: {
+  value?: number[];
+  onChange?: (kunlar: number[]) => void;
+}) {
+  return (
+    <div className="flex flex-col gap-2">
+      {WEEKDAYS.map(({ value: kun, label }) => (
+        <div key={kun} className="flex items-center gap-3">
+          <Switch
+            aria-label={label}
+            checked={value.includes(kun)}
+            onChange={(yoqilgan) =>
+              onChange?.(
+                yoqilgan
+                  ? // Tartib O'SISH bo'yicha: server ham, audit
+                    // jurnali ham massivni shundayligicha
+                    // solishtiradi, aralash tartib esa "o'zgardi"
+                    // deb ko'rinardi.
+                    [...value, kun].sort((a, b) => a - b)
+                  : value.filter((v) => v !== kun),
+              )
+            }
+          />
+          <span>{label}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
 
 function RuleForm({
   venueId,
@@ -154,15 +197,15 @@ function RuleForm({
           label="Hafta kunlari"
           extra="Bo‘sh qoldirilsa — barcha kunlar"
         >
-          <Select
-            mode="multiple"
-            allowClear
-            options={WEEKDAYS.map((d) => ({ value: d.value, label: d.label }))}
-          />
+          <HaftaKunlari />
         </Form.Item>
 
         <Form.Item name="time" label="Vaqt oralig‘i">
-          <TimePicker.RangePicker format={TIME} minuteStep={15} />
+          <TimePicker.RangePicker
+            className="w-full"
+            format={TIME}
+            {...TIME_PICKER_PANEL}
+          />
         </Form.Item>
 
         <Form.Item

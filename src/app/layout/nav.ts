@@ -54,6 +54,15 @@ export const NAV: readonly NavItem[] = [
     requiresOrg: false,
   },
   {
+    path: '/venues',
+    // Ko'rish uchun alohida ruxsat yo'q — kirgan har bir xodim o'ziga
+    // ochiq stadionlarni ko'radi (BR-08 backendda cheklaydi).
+    permission: null,
+    label: 'Stadionlar',
+    icon: EnvironmentOutlined,
+    requiresOrg: true,
+  },
+  {
     // Kalendar boshqaruv panelidan keyin: administratorning kunlik ishi
     // shu yerda boshlanadi.
     path: '/bookings',
@@ -120,15 +129,7 @@ export const NAV: readonly NavItem[] = [
     icon: TeamOutlined,
     requiresOrg: true,
   },
-  {
-    path: '/venues',
-    // Ko'rish uchun alohida ruxsat yo'q — kirgan har bir xodim o'ziga
-    // ochiq stadionlarni ko'radi (BR-08 backendda cheklaydi).
-    permission: null,
-    label: 'Stadionlar',
-    icon: EnvironmentOutlined,
-    requiresOrg: true,
-  },
+
   {
     // Platforma bo'limi: tashkilotga a'zolik TALAB QILINMAYDI —
     // `SUPER_ADMIN` da `orgId` yo'q.

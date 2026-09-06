@@ -54,6 +54,7 @@ export function CustomersPage() {
 
   return (
     <Card
+      className="sahifa-kartochka"
       title="Mijozlar"
       extra={
         can('customer.manage') && (

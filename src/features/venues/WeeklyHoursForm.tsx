@@ -11,6 +11,7 @@ import {
 import dayjs from 'dayjs';
 import customParseFormat from 'dayjs/plugin/customParseFormat';
 import { errorMessage } from '@/shared/api/error-handler';
+import { TIME_PICKER_PANEL } from '@/shared/ui/timePicker';
 import type { VenueHours } from './api';
 import { WEEKDAYS } from './enums';
 import { useSetVenueHours, useVenueHours } from './hooks';
@@ -111,22 +112,22 @@ export function WeeklyHoursForm({ venueId }: { venueId: string }) {
                 <TimePicker
                   aria-label={`${label} ochilish`}
                   format={FORMAT}
-                  minuteStep={15}
                   allowClear={false}
                   value={dayjs(day.opensAt, FORMAT)}
                   onChange={(v) =>
                     v && patch(value, { opensAt: v.format(FORMAT) })
                   }
+                  {...TIME_PICKER_PANEL}
                 />
                 <TimePicker
                   aria-label={`${label} yopilish`}
                   format={FORMAT}
-                  minuteStep={15}
                   allowClear={false}
                   value={dayjs(day.closesAt, FORMAT)}
                   onChange={(v) =>
                     v && patch(value, { closesAt: v.format(FORMAT) })
                   }
+                  {...TIME_PICKER_PANEL}
                 />
               </>
             ) : (

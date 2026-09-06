@@ -9,6 +9,7 @@ import {
 } from '@/shared/api/error-handler';
 import { formatMoney } from '@/shared/format/money';
 import { TASHKENT } from '@/shared/format/time';
+import { TIME_PICKER_PANEL } from '@/shared/ui/timePicker';
 import { useVenueOptions } from '@/features/venues/hooks';
 import type { BookingCard, MoveBookingInput } from './api';
 import { useMoveBooking } from './hooks';
@@ -134,7 +135,7 @@ export function MoveBookingModal({
               className="w-full"
               allowClear={false}
               format={TIME}
-              minuteStep={15}
+              {...TIME_PICKER_PANEL}
             />
           </Form.Item>
           <Form.Item name="hours" label="Davomiyligi">

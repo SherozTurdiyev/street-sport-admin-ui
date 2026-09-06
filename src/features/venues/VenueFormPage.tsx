@@ -92,7 +92,10 @@ function VenueForm({ venue }: { venue: Venue | null }) {
   }
 
   return (
-    <Card title={venue ? 'Stadionni tahrirlash' : 'Yangi stadion'}>
+    <Card
+      className="sahifa-kartochka"
+      title={venue ? 'Stadionni tahrirlash' : 'Yangi stadion'}
+    >
       {umumiyXato === null ? null : (
         <Alert type="error" showIcon message={umumiyXato} className="!mb-4" />
       )}

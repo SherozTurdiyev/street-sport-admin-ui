@@ -1,6 +1,6 @@
 import { http, HttpResponse } from 'msw';
 import { beforeEach, describe, expect, it } from 'vitest';
-import { fireEvent, screen, within } from '@testing-library/react';
+import { fireEvent, screen, waitFor, within } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { server } from '@/test/msw';
 import { renderApp } from '@/test/render';
@@ -155,6 +155,82 @@ describe('Narx qoidalari', () => {
       // Satr, son EMAS: 260000 emas, '260000'.
       pricePerHour: '260000',
     });
+  });
+
+  it('hafta kunlari kalitlar bilan tanlanadi va tartib bilan ketadi', async () => {
+    server.use(
+      ...baseHandlers(),
+      http.post(`${API}/venues/v-1/price-rules`, async ({ request }) => {
+        yuborilgan.push({ url: request.url, body: await request.json() });
+        return HttpResponse.json(KECHKI, { status: 201 });
+      }),
+    );
+    renderApp(<PriceRulesTab venueId="v-1" />);
+
+    const narx = within(await narxBolimi());
+    await userEvent.click(narx.getByRole('button', { name: 'Yangi qoida' }));
+
+    await screen.findByLabelText('Soatiga narx');
+    const oyna = within(await oxirgiOyna());
+    await userEvent.type(oyna.getByLabelText('Soatiga narx'), '260000');
+
+    // Yettala kun ham ro'yxatda: tanlanmagani ham ko'rinib turishi
+    // kerak. Ilgari bu ko'p tanlovli ro'yxat edi va yopiq holatda
+    // qaysi kunlar borligi umuman bilinmasdi.
+    expect(oyna.getAllByRole('switch')).toHaveLength(
+      // Yetti kun + "Bazaviy qoida" kaliti.
+      8,
+    );
+
+    // ATAYLAB teskari tartibda bosiladi.
+    await userEvent.click(oyna.getByRole('switch', { name: 'Juma' }));
+    await userEvent.click(oyna.getByRole('switch', { name: 'Dushanba' }));
+    await userEvent.click(oyna.getByRole('switch', { name: 'Yakshanba' }));
+    // Fikrdan qaytish ham ishlashi kerak.
+    await userEvent.click(oyna.getByRole('switch', { name: 'Yakshanba' }));
+
+    await userEvent.click(oyna.getByRole('button', { name: 'Saqlash' }));
+
+    await screen.findByText(/qoida qo.?shildi/i);
+    // O'SISH tartibida: server ham, audit jurnali ham massivni
+    // shundayligicha solishtiradi va aralash tartib "o'zgardi" deb
+    // ko'rinardi.
+    expect(yuborilgan[0]?.body).toMatchObject({ weekdays: [1, 5] });
+  });
+
+  it('vaqt oralig`i to`liq qator va 00/15/30/45/59 daqiqalarni ko`rsatadi', async () => {
+    server.use(...baseHandlers());
+    renderApp(<PriceRulesTab venueId="v-1" />);
+
+    const narx = within(await narxBolimi());
+    await userEvent.click(narx.getByRole('button', { name: 'Yangi qoida' }));
+
+    const oyna = await oxirgiOyna();
+    const vaqtPicker = oyna.querySelector('.ant-picker');
+    if (!vaqtPicker) throw new Error('Vaqt tanlagich topilmadi');
+    expect(vaqtPicker).toHaveClass('w-full');
+
+    const input = vaqtPicker.querySelector('input');
+    if (!input) throw new Error('Vaqt maydoni topilmadi');
+    await userEvent.click(input);
+
+    await waitFor(() => {
+      expect(
+        document.querySelector(
+          '.ant-picker-time-panel-column[data-type="minute"]',
+        ),
+      ).toBeTruthy();
+    });
+
+    const daqiqalar = document.querySelector(
+      '.ant-picker-time-panel-column[data-type="minute"]',
+    );
+    if (!daqiqalar) throw new Error('Daqiqa ustuni ochilmadi');
+    const qiymatlar = [...daqiqalar.querySelectorAll('[data-value]')].map(
+      (el) => Number(el.getAttribute('data-value')),
+    );
+    expect(qiymatlar).toEqual([0, 15, 30, 45, 59]);
+    expect(document.querySelector('.ss-vaqt-popup')).toBeTruthy();
   });
 
   it('qoidani tahrirlaydi va vaqt oralig`ini tozalay oladi', async () => {

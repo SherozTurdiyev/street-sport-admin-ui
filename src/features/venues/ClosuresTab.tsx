@@ -15,6 +15,7 @@ import {
 import type { Dayjs } from 'dayjs';
 import { errorCode, errorMessage } from '@/shared/api/error-handler';
 import { formatDateTime, tashkentToIso } from '@/shared/format/time';
+import { SHOW_TIME } from '@/shared/ui/timePicker';
 import {
   CANCEL_REASON_LABELS,
   type CancelReason,
@@ -95,9 +96,9 @@ export function ClosuresTab({ venueId }: { venueId: string }) {
         >
           <DatePicker.RangePicker
             placeholder={['Boshlanishi', 'Tugashi']}
-            showTime={{ format: 'HH:mm' }}
+            showTime={SHOW_TIME}
             format={PICKER_FORMAT}
-            minuteStep={15}
+            className="w-full"
           />
         </Form.Item>
 

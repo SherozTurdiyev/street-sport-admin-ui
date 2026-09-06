@@ -56,7 +56,7 @@ export function PlatformVenuesPage() {
   const items = data?.items ?? [];
 
   return (
-    <Card title="Stadionlar">
+    <Card className="sahifa-kartochka" title="Stadionlar">
       <Typography.Paragraph type="secondary">
         Barcha tashkilotlarning stadionlari. Yozuvlar faqat o‘qish uchun —
         o‘zgartirishni tashkilotning o‘z xodimlari kiritadi.

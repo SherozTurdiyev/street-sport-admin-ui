@@ -142,6 +142,7 @@ export function VenuesPage() {
 
   return (
     <Card
+      className="sahifa-kartochka"
       title="Stadionlar"
       extra={
         <Link to="/venues/new">

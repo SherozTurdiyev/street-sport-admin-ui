@@ -62,7 +62,7 @@ export function BookingsPage() {
   }
 
   return (
-    <Card title="Bronlar">
+    <Card className="sahifa-kartochka" title="Bronlar">
       <Tabs
         activeKey={tab}
         onChange={(key) => patchParams({ tab: key })}

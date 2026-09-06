@@ -84,6 +84,7 @@ export function MembersPage() {
 
   return (
     <Card
+      className="sahifa-kartochka"
       title="Xodimlar"
       extra={
         <Button type="primary" onClick={() => setFormOpen(true)}>

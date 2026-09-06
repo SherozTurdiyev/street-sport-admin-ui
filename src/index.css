@@ -92,3 +92,64 @@ body {
     width: 100%;
   }
 }
+
+/*
+ * Vaqt paneli antd da tor ustunlar (soat + daqiqa) bilan chiziladi.
+ * Trigger allaqachon `stretch: minWidth`, lekin ichki panel `width: auto`
+ * bo'lib qoladi va chapga yopishgan kichkina oyna ko'rinadi.
+ *
+ * Sinflar JUFT: antd uslublari keyin keladi va bir xil spetsifiklikda
+ * yutadi. `!important` ham shu sababli — token kengligi hash-klass
+ * bilan yutadi.
+ */
+.ss-vaqt-popup.ss-vaqt-popup .ant-picker-range-wrapper,
+.ss-vaqt-popup.ss-vaqt-popup .ant-picker-panel-container,
+.ss-vaqt-popup.ss-vaqt-popup .ant-picker-panel-layout,
+.ss-vaqt-popup.ss-vaqt-popup .ant-picker-panel,
+.ss-vaqt-popup.ss-vaqt-popup .ant-picker-time-panel,
+.ss-vaqt-popup.ss-vaqt-popup .ant-picker-content {
+  width: 100% !important;
+}
+
+.ss-vaqt-popup.ss-vaqt-popup .ant-picker-time-panel {
+  min-width: 100% !important;
+}
+
+.ss-vaqt-popup.ss-vaqt-popup .ant-picker-time-panel-column {
+  flex: 1 1 0 !important;
+  width: auto !important;
+}
+
+.ss-vaqt-popup.ss-vaqt-popup .ant-picker-time-panel-cell-inner {
+  width: auto !important;
+  padding-inline: 8px !important;
+}
+
+/*
+ * Sahifa kartochkasi (`sahifa-kartochka`) telefonda ramkasiz.
+ *
+ * Ish stolida ramka mazmunni fondan ajratadi. Telefonda esa u foyda
+ * bermaydi — ekran kengligining o'zi sahifa chegarasi — lekin uning
+ * cheti tashqi joylashuv chetiga QO'SHILADI: 390px dan 80px yo'qolar,
+ * ichkaridagi kartochkalar va maydonlar esa shuncha siqilardi.
+ *
+ * Sarlavha ostidagi chiziq QOLADI: sahifa nomi bilan mazmunni ajratib
+ * turadigan yagona belgi shu.
+ *
+ * Sinf UCH marta takrorlangan: antd uslublari sahifaga bu fayldan
+ * KEYIN joylashadi va past yoki teng spetsifiklikda ular yutadi.
+ * `> ` esa SHART — usiz ichkaridagi stadion kartochkalari ham
+ * chetsiz qolib, matn ekran qirrasiga yopishib ketardi.
+ */
+@media (max-width: 575px) {
+  .ant-card.sahifa-kartochka.sahifa-kartochka {
+    background: transparent;
+    border: 0;
+    box-shadow: none;
+  }
+
+  .ant-card.sahifa-kartochka.sahifa-kartochka > .ant-card-head,
+  .ant-card.sahifa-kartochka.sahifa-kartochka > .ant-card-body {
+    padding-inline: 0;
+  }
+}

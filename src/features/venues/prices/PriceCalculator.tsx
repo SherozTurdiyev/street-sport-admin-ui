@@ -12,6 +12,7 @@ import type { Dayjs } from 'dayjs';
 import { errorMessage } from '@/shared/api/error-handler';
 import { formatMoney } from '@/shared/format/money';
 import { formatDateTime, tashkentToIso } from '@/shared/format/time';
+import { SHOW_TIME } from '@/shared/ui/timePicker';
 import type { PriceSegment } from './api';
 import { useCalculatePrice } from './hooks';
 
@@ -47,17 +48,15 @@ export function PriceCalculator({ venueId }: { venueId: string }) {
       <Space wrap>
         <DatePicker
           aria-label="Boshlanishi"
-          showTime={{ format: 'HH:mm' }}
+          showTime={SHOW_TIME}
           format={PICKER_FORMAT}
-          minuteStep={15}
           value={from}
           onChange={setFrom}
         />
         <DatePicker
           aria-label="Tugashi"
-          showTime={{ format: 'HH:mm' }}
+          showTime={SHOW_TIME}
           format={PICKER_FORMAT}
-          minuteStep={15}
           value={to}
           onChange={setTo}
         />
