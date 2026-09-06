@@ -134,14 +134,17 @@ export function PlatformDashboard() {
               },
               {
                 title: 'Stadion',
+                responsive: ['sm'],
                 render: (_, row) => row.stats.venueCount,
               },
               {
                 title: 'Xodim',
+                responsive: ['sm'],
                 render: (_, row) => row.stats.memberCount,
               },
               {
                 title: 'Qo‘shilgan',
+                responsive: ['md'],
                 dataIndex: 'createdAt',
                 render: (value: string) => formatDate(value),
               },

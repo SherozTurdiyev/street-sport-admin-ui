@@ -46,7 +46,7 @@ export function AuditFilters({
 
   return (
     <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
-      <Space wrap size="middle">
+      <Space wrap size="middle" className="filtr-qatori">
         <DatePicker.RangePicker
           aria-label="Sana oralig‘i"
           format={DATE}

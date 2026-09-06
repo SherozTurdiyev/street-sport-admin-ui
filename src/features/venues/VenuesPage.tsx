@@ -45,7 +45,7 @@ export function VenuesPage() {
         </Link>
       }
     >
-      <Space className="mb-6" wrap>
+      <Space className="filtr-qatori mb-6" wrap>
         <Input.Search
           aria-label="Qidiruv"
           placeholder="Nomi bo‘yicha"

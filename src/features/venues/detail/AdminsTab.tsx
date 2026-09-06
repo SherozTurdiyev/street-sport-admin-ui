@@ -125,6 +125,7 @@ export function AdminsTab({ venueId }: { venueId: string }) {
           },
           {
             title: 'Holat',
+            responsive: ['sm'],
             dataIndex: 'isActive',
             render: (faol: boolean) =>
               faol ? <Tag color="success">Faol</Tag> : <Tag>Faolsiz</Tag>,

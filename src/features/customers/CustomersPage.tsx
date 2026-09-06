@@ -38,12 +38,14 @@ export function CustomersPage() {
     },
     {
       title: 'Teglar',
+      responsive: ['md'],
       dataIndex: 'tags',
       render: (tags: string[]) =>
         tags.length === 0 ? '—' : tags.map((t) => <Tag key={t}>{t}</Tag>),
     },
     {
       title: 'Holat',
+      responsive: ['sm'],
       dataIndex: 'isBlacklisted',
       render: (value: boolean) =>
         value ? <Tag color="error">Qora ro‘yxat</Tag> : <Tag>Oddiy</Tag>,
@@ -61,7 +63,7 @@ export function CustomersPage() {
         )
       }
     >
-      <Space className="mb-6" wrap>
+      <Space className="filtr-qatori mb-6" wrap>
         <Input.Search
           aria-label="Qidiruv"
           placeholder="Ism yoki telefon"

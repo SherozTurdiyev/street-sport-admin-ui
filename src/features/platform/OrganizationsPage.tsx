@@ -70,6 +70,7 @@ function buildColumns(): ColumnsType<PlatformOrganization> {
     },
     {
       title: 'Aloqa',
+      responsive: ['md'],
       dataIndex: 'phone',
       render: (value: string | null) => (
         <span style={CELL}>
@@ -94,6 +95,7 @@ function buildColumns(): ColumnsType<PlatformOrganization> {
     },
     {
       title: 'Hajmi',
+      responsive: ['sm'],
       render: (_, row: PlatformOrganization) => (
         <span style={CELL}>
           {row.stats.venueCount} stadion · {row.stats.memberCount} xodim
@@ -102,6 +104,7 @@ function buildColumns(): ColumnsType<PlatformOrganization> {
     },
     {
       title: 'Obuna',
+      responsive: ['md'],
       dataIndex: 'subscriptionEndsAt',
       render: (value: string | null) => (
         <span style={CELL}>{value ? formatDate(value) : 'Muddatsiz'}</span>
@@ -173,7 +176,7 @@ export function OrganizationsPage() {
           </Button>
         }
       >
-        <Space className="mb-4" wrap>
+        <Space className="filtr-qatori mb-4" wrap>
           <Input.Search
             aria-label="Qidiruv"
             placeholder="Nom yoki telefon"

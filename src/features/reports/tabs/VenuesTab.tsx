@@ -57,6 +57,7 @@ export function VenuesTab({ range }: { range: ReportRange }) {
           },
           {
             title: 'Ulush',
+            responsive: ['sm'],
             dataIndex: 'sharePercent',
             width: 200,
             render: (percent: number) => (

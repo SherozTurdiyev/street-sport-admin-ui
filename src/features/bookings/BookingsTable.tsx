@@ -49,7 +49,7 @@ export function BookingsTable({
       render: (_, row) =>
         `${formatDateTime(row.startsAt)} – ${formatTime(row.endsAt)}`,
     },
-    { title: 'Stadion', render: (_, row) => row.venue.name },
+    { title: 'Stadion', responsive: ['md'], render: (_, row) => row.venue.name },
     {
       title: 'Mijoz',
       render: (_, row) =>
@@ -57,6 +57,7 @@ export function BookingsTable({
     },
     {
       title: 'Telefon',
+      responsive: ['lg'],
       render: (_, row) => displayPhone(row.customer?.phone),
     },
     {
@@ -68,6 +69,7 @@ export function BookingsTable({
       // Qarz ustuni ATAYLAB narx yonida: operator "kim to'lamagan?"
       // degan savolga ro'yxatning o'zidan javob topsin.
       title: 'Qarz',
+      responsive: ['sm'],
       dataIndex: 'debt',
       render: (value: string) =>
         value === '0' ? (
@@ -91,7 +93,7 @@ export function BookingsTable({
 
   return (
     <>
-      <Space className="mb-6" wrap>
+      <Space className="filtr-qatori mb-6" wrap>
         <Input.Search
           aria-label="Qidiruv"
           placeholder="Mijoz ismi yoki telefoni"

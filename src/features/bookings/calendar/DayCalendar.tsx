@@ -49,35 +49,57 @@ export function DayCalendar({
 
   const height = (axis.end - axis.start) * PX_PER_MIN;
 
+  /**
+   * Stadion nomi ustun ichida turadi, ya'ni katakchalar sarlavha
+   * balandligicha pastga suriladi. Vaqt o'qida ham AYNAN shunday
+   * sarlavha bo'lishi shart — aks holda "09:00" yozuvi 08:00 katakka
+   * to'g'ri kelib qoladi. Shu sababli o'q ustuni ko'rinmas, lekin
+   * bir xil sarlavha bilan boshlanadi.
+   */
+  const sarlavha = (matn: string, korinmas = false) => (
+    <Typography.Text
+      strong
+      className="mb-2 block truncate"
+      style={{ fontSize: 13, ...(korinmas ? { visibility: 'hidden' } : {}) }}
+      aria-hidden={korinmas || undefined}
+    >
+      {matn}
+    </Typography.Text>
+  );
+
   return (
     <div className="overflow-x-auto">
       <div className="flex min-w-max gap-2">
-        {/* Vaqt o'qi — chapda, ustunlar bilan bir xil balandlikda. */}
-        <div className="relative w-14 shrink-0" style={{ height }}>
-          {hourTicks(axis).map((m) => (
-            <span
-              key={m}
-              className="absolute right-2"
-              style={{
-                top: (m - axis.start) * PX_PER_MIN - 8,
-                color: figma.textMuted,
-                fontSize: 11,
-              }}
-            >
-              {label(m)}
-            </span>
-          ))}
+        {/*
+         * Vaqt o'qi yopishib turadi: telefonda stadionlar yon tomonga
+         * aylantiriladi va o'q siljib ketsa, katak qaysi soatga
+         * tegishli ekani ko'rinmay qolardi.
+         */}
+        <div
+          className="sticky left-0 z-10 w-12 shrink-0 sm:w-14"
+          style={{ background: figma.bgCard }}
+        >
+          {sarlavha('\u00a0', true)}
+          <div className="relative" style={{ height }}>
+            {hourTicks(axis).map((m) => (
+              <span
+                key={m}
+                className="absolute right-2"
+                style={{
+                  top: (m - axis.start) * PX_PER_MIN - 8,
+                  color: figma.textMuted,
+                  fontSize: 11,
+                }}
+              >
+                {label(m)}
+              </span>
+            ))}
+          </div>
         </div>
 
         {data.venues.map((venue) => (
-          <div key={venue.venueId} className="min-w-40 flex-1">
-            <Typography.Text
-              strong
-              className="mb-2 block truncate"
-              style={{ fontSize: 13 }}
-            >
-              {venue.name}
-            </Typography.Text>
+          <div key={venue.venueId} className="w-44 shrink-0 sm:w-auto sm:flex-1 sm:min-w-40">
+            {sarlavha(venue.name)}
             <div className="relative" style={{ height }}>
               <VenueColumn
                 venue={venue}

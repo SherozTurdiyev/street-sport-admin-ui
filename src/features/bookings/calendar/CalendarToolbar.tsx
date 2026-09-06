@@ -21,7 +21,7 @@ export function CalendarToolbar({
   const bugun = tashkentToday();
 
   return (
-    <Space wrap className="mb-6">
+    <Space wrap className="filtr-qatori mb-6">
       <Button
         aria-label="Oldingi kun"
         icon={<LeftOutlined aria-hidden />}

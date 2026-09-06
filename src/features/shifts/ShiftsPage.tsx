@@ -58,7 +58,7 @@ export function ShiftsPage() {
       <CurrentShiftCard />
 
       <Card title="Smenalar tarixi">
-        <Space className="mb-4" wrap>
+        <Space className="filtr-qatori mb-4" wrap>
           <Select
             aria-label="Stadion bo'yicha filtr"
             style={{ minWidth: 180 }}
@@ -119,23 +119,27 @@ export function ShiftsPage() {
             },
             {
               title: 'Ochilgan',
+              responsive: ['md'],
               dataIndex: 'openedAt',
               render: (value: string) => formatDateTime(value),
             },
             {
               title: 'Yopilgan',
+              responsive: ['lg'],
               dataIndex: 'closedAt',
               render: (value: string | null) =>
                 value === null ? '—' : formatDateTime(value),
             },
             {
               title: 'Sanalgan',
+              responsive: ['md'],
               dataIndex: 'declaredCash',
               render: (value: string | null) =>
                 value === null ? '—' : formatMoney(value),
             },
             {
               title: 'Tizim',
+              responsive: ['lg'],
               dataIndex: 'systemCash',
               render: (value: string | null) =>
                 value === null ? '—' : formatMoney(value),

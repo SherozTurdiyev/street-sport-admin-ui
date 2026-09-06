@@ -143,6 +143,7 @@ function History({ bookings }: { bookings: Booking[] }) {
         },
         {
           title: 'Stadion',
+          responsive: ['md'],
           dataIndex: 'venueId',
           render: (value: string) => nomlar.get(value) ?? '—',
         },

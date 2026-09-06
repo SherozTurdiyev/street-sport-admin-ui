@@ -88,6 +88,7 @@ export function PriceRulesTab({ venueId }: { venueId: string }) {
           },
           {
             title: 'Kunlar',
+            responsive: ['md'],
             dataIndex: 'weekdays',
             render: (value: number[]) =>
               value.length === 0
@@ -96,6 +97,7 @@ export function PriceRulesTab({ venueId }: { venueId: string }) {
           },
           {
             title: 'Vaqt',
+            responsive: ['sm'],
             render: (_, row: PriceRule) =>
               row.startsTime && row.endsTime
                 ? `${row.startsTime}–${row.endsTime}`
@@ -108,12 +110,13 @@ export function PriceRulesTab({ venueId }: { venueId: string }) {
           },
           {
             title: 'Mavsum',
+            responsive: ['lg'],
             render: (_, row: PriceRule) =>
               row.validFrom && row.validTo
                 ? `${formatDate(row.validFrom)} – ${formatDate(row.validTo)}`
                 : 'Muddatsiz',
           },
-          { title: 'Prioritet', dataIndex: 'priority' },
+          { title: 'Prioritet', responsive: ['md'], dataIndex: 'priority' },
           {
             title: '',
             // Tahrirlash amallar ustunida TURISHI SHART: nomni bosish

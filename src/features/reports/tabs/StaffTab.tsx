@@ -48,6 +48,7 @@ export function StaffTab({ range }: { range: ReportRange }) {
         { title: 'Yaratgan', dataIndex: 'bookingsCreated', align: 'right' },
         {
           title: 'Bekor qilgan',
+          responsive: ['md'],
           dataIndex: 'bookingsCancelled',
           align: 'right',
         },
@@ -59,13 +60,15 @@ export function StaffTab({ range }: { range: ReportRange }) {
         },
         {
           title: 'Qaytargan',
+          responsive: ['lg'],
           dataIndex: 'refundsIssued',
           align: 'right',
           render: (value: string) => formatMoney(value),
         },
-        { title: 'Smena', dataIndex: 'shiftsClosed', align: 'right' },
+        { title: 'Smena', responsive: ['lg'], dataIndex: 'shiftsClosed', align: 'right' },
         {
           title: 'Kassa farqi',
+          responsive: ['md'],
           dataIndex: 'cashDifference',
           align: 'right',
           render: (value: string) => <Farq value={value} />,

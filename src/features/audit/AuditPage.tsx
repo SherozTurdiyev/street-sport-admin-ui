@@ -137,6 +137,7 @@ export function AuditPage() {
             { title: 'Amal', dataIndex: 'actionLabel' },
             {
               title: 'Obyekt',
+              responsive: ['md'],
               dataIndex: 'entityLabel',
               render: (label: string, row) => {
                 const path = entityPath(row.entityType, row.entityId);
@@ -151,6 +152,7 @@ export function AuditPage() {
             },
             {
               title: 'IP',
+              responsive: ['lg'],
               dataIndex: 'ip',
               render: (ip: string | null) => (
                 <Typography.Text style={{ color: figma.textMuted }}>

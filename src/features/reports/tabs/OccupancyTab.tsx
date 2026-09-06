@@ -64,12 +64,14 @@ export function OccupancyTab({ range }: { range: ReportRange }) {
             { title: 'Stadion', dataIndex: 'venueName' },
             {
               title: 'Ochiq',
+              responsive: ['sm'],
               dataIndex: 'openHours',
               align: 'right',
               render: (v: number) => `${v} soat`,
             },
             {
               title: 'Band',
+              responsive: ['sm'],
               dataIndex: 'bookedHours',
               align: 'right',
               render: (v: number) => `${v} soat`,

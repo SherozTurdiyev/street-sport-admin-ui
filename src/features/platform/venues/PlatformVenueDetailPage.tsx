@@ -83,6 +83,7 @@ function PriceRules({ rules }: { rules: PriceRule[] }) {
         },
         {
           title: 'Kunlar',
+          responsive: ['md'],
           dataIndex: 'weekdays',
           render: (value: number[]) =>
             value.length === 0
@@ -91,6 +92,7 @@ function PriceRules({ rules }: { rules: PriceRule[] }) {
         },
         {
           title: 'Vaqt',
+          responsive: ['sm'],
           render: (_, row: PriceRule) =>
             row.startsTime && row.endsTime
               ? `${row.startsTime}–${row.endsTime}`
@@ -103,12 +105,13 @@ function PriceRules({ rules }: { rules: PriceRule[] }) {
         },
         {
           title: 'Mavsum',
+          responsive: ['lg'],
           render: (_, row: PriceRule) =>
             row.validFrom && row.validTo
               ? `${formatDate(row.validFrom)} – ${formatDate(row.validTo)}`
               : 'Muddatsiz',
         },
-        { title: 'Prioritet', dataIndex: 'priority' },
+        { title: 'Prioritet', responsive: ['md'], dataIndex: 'priority' },
       ]}
     />
   );

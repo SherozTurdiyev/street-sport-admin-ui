@@ -62,7 +62,7 @@ export function PlatformVenuesPage() {
         o‘zgartirishni tashkilotning o‘z xodimlari kiritadi.
       </Typography.Paragraph>
 
-      <Space className="mb-6" wrap>
+      <Space className="filtr-qatori mb-6" wrap>
         <Input.Search
           aria-label="Qidiruv"
           placeholder="Nomi bo‘yicha"

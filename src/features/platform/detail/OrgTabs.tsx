@@ -33,6 +33,7 @@ export function OrgMembersTab({ id }: { id: string }) {
         },
         {
           title: 'Oxirgi kirish',
+          responsive: ['md'],
           dataIndex: 'lastLoginAt',
           render: (value: string | null) => formatDateTime(value),
         },

@@ -39,9 +39,10 @@ export function SeriesTab() {
         <Link to={`/bookings/series/${row.id}`}>{row.customer.fullName}</Link>
       ),
     },
-    { title: 'Stadion', render: (_, row) => row.venue.name },
+    { title: 'Stadion', responsive: ['md'], render: (_, row) => row.venue.name },
     {
       title: 'Kunlar',
+      responsive: ['sm'],
       dataIndex: 'weekdays',
       render: (value: number[]) =>
         value.length === 0
@@ -56,6 +57,7 @@ export function SeriesTab() {
     },
     {
       title: 'Soatiga',
+      responsive: ['md'],
       dataIndex: 'pricePerHour',
       render: (value: string) => formatMoney(value),
     },
@@ -63,7 +65,7 @@ export function SeriesTab() {
 
   return (
     <>
-      <Space className="mb-6" wrap>
+      <Space className="filtr-qatori mb-6" wrap>
         <Select
           aria-label="Stadion bo'yicha filtr"
           className="w-52"

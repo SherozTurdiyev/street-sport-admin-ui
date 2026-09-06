@@ -17,12 +17,24 @@ configure({ asyncUtilTimeout: 5000 });
 
 /**
  * jsdom `matchMedia` ni amalga oshirmaydi, antd ning moslashuvchan
- * panjarasi esa unga tayanadi. Bu brauzerda mavjud bo'lgan narsaning
- * o'rnini bosuvchi eng kichik yamoq — hech qanday xatti-harakat
- * o'zgarmaydi, chunki testlarda ekran o'lchami tekshirilmaydi.
+ * panjarasi esa unga tayanadi.
+ *
+ * Yamoq so'rovga HAQIQIY javob beradi: `(min-width: 768px)` kabi
+ * shartlar `window.innerWidth` (jsdom da 1024) bilan solishtiriladi.
+ * Ilgari hamma so'rov `false` edi va bu jimgina xato berardi — antd
+ * `responsive: ['md']` qo'yilgan ustunni yashirar, test esa uni
+ * yo'q deb hisoblardi. Endi testlar ish stoli kengligida ishlaydi.
  */
+function mediaMatches(query: string): boolean {
+  const min = /\(min-width:\s*(\d+)px\)/.exec(query);
+  if (min) return window.innerWidth >= Number(min[1]);
+  const max = /\(max-width:\s*(\d+)px\)/.exec(query);
+  if (max) return window.innerWidth <= Number(max[1]);
+  return false;
+}
+
 window.matchMedia ??= ((query: string) => ({
-  matches: false,
+  matches: mediaMatches(query),
   media: query,
   onchange: null,
   addListener: () => {},

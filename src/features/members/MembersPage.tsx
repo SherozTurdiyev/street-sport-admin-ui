@@ -40,6 +40,7 @@ function buildColumns(onOpen: (userId: string) => void): ColumnsType<Member> {
     },
     {
       title: 'Telefon',
+      responsive: ['sm'],
       dataIndex: 'phone',
       render: (value: string) => displayPhone(value),
     },
@@ -56,6 +57,7 @@ function buildColumns(onOpen: (userId: string) => void): ColumnsType<Member> {
     },
     {
       title: 'Oxirgi kirish',
+      responsive: ['md'],
       dataIndex: 'lastLoginAt',
       render: (value: string | null) => formatDateTime(value),
     },
@@ -89,7 +91,7 @@ export function MembersPage() {
         </Button>
       }
     >
-      <Space className="mb-4" wrap>
+      <Space className="filtr-qatori mb-4" wrap>
         <Input.Search
           aria-label="Qidiruv"
           placeholder="Ism yoki telefon"

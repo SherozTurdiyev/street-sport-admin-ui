@@ -98,16 +98,19 @@ export function PriceCalculator({ venueId }: { venueId: string }) {
                 },
                 {
                   title: 'Tugashi',
+                  responsive: ['md'],
                   dataIndex: 'to',
                   render: (v: string) => formatDateTime(v),
                 },
                 {
                   title: 'Daqiqa',
+                  responsive: ['sm'],
                   dataIndex: 'minutes',
                 },
                 { title: 'Tarif', dataIndex: 'ruleName' },
                 {
                   title: 'Soatiga',
+                  responsive: ['md'],
                   dataIndex: 'pricePerHour',
                   render: (v: string) => formatMoney(v),
                 },

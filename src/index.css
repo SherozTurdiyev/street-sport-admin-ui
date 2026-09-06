@@ -27,3 +27,68 @@ body {
   background: #130726;
   color-scheme: dark;
 }
+
+/*
+ * Tor ekranda kartochka sarlavhasi va uning o'ng tomonidagi boshqaruv
+ * bitta qatorga sig'maydi — antd sarlavhani qisqartiradi va "Joriy s…"
+ * bo'lib qoladi. Shu kenglikda ular ustma-ust tushadi.
+ */
+@media (max-width: 575px) {
+  .ant-card .ant-card-head-wrapper {
+    flex-wrap: wrap;
+    row-gap: 8px;
+  }
+
+  /*
+   * Ikkalasiga ham to'liq qator: faqat `extra` ga 100% berilsa,
+   * sarlavha qisqarish huquqidan foydalanib nol kenglikka tushardi
+   * va butunlay ko'rinmay qolardi.
+   *
+   * Tanlagich ATAYLAB ikki sinfli: antd uslublari sahifaga bu
+   * fayldan KEYIN joylashadi, ya'ni bir xil spetsifiklikda ular
+   * yutadi va qoida umuman ishlamaydi.
+   */
+  .ant-card .ant-card-head-title,
+  .ant-card .ant-card-extra {
+    flex: 1 1 100%;
+    white-space: normal;
+    overflow: visible;
+    margin-inline-start: 0;
+  }
+}
+
+/*
+ * Filtr qatori (`filtr-qatori`) — telefonda har bir boshqaruv o'z
+ * qatorida va to'liq kenglikda turadi. Aks holda antd `Space` ichidagi
+ * turli kenglikdagi tanlagichlar tishli, tartibsiz ustun hosil qiladi
+ * va bosish maydoni kichkina bo'lib qoladi.
+ */
+@media (max-width: 575px) {
+  .ant-space.filtr-qatori {
+    display: flex;
+    width: 100%;
+  }
+
+  /*
+   * Faqat FORMA boshqaruvlari cho'ziladi. Hamma element cho'zilsa,
+   * kalendar sarlavhasidagi uchta kichkina tugma ("<", "Bugun", ">")
+   * uch qavat bo'lib ketardi.
+   */
+  .ant-space.filtr-qatori > .ant-space-item:has(> .ant-select),
+  .ant-space.filtr-qatori > .ant-space-item:has(> .ant-picker),
+  .ant-space.filtr-qatori > .ant-space-item:has(> .ant-input),
+  .ant-space.filtr-qatori > .ant-space-item:has(> .ant-input-affix-wrapper),
+  .ant-space.filtr-qatori > .ant-space-item:has(> .ant-input-group-wrapper),
+  .ant-space.filtr-qatori > .ant-space-item:has(> .ant-input-search) {
+    width: 100%;
+  }
+
+  .ant-space.filtr-qatori > .ant-space-item > .ant-select,
+  .ant-space.filtr-qatori > .ant-space-item > .ant-picker,
+  .ant-space.filtr-qatori > .ant-space-item > .ant-input,
+  .ant-space.filtr-qatori > .ant-space-item > .ant-input-affix-wrapper,
+  .ant-space.filtr-qatori > .ant-space-item > .ant-input-group-wrapper,
+  .ant-space.filtr-qatori > .ant-space-item > .ant-input-search {
+    width: 100%;
+  }
+}

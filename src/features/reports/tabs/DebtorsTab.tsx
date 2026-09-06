@@ -109,6 +109,7 @@ export function DebtorsTab({ venueIds }: { venueIds?: string[] }) {
           },
           {
             title: 'Telefon',
+            responsive: ['md'],
             dataIndex: 'phone',
             render: (phone: string | null) => displayPhone(phone),
           },
@@ -122,9 +123,10 @@ export function DebtorsTab({ venueIds }: { venueIds?: string[] }) {
               </Typography.Text>
             ),
           },
-          { title: 'Bronlar', dataIndex: 'bookingCount', align: 'right' },
+          { title: 'Bronlar', responsive: ['md'], dataIndex: 'bookingCount', align: 'right' },
           {
             title: 'Eng eski qarz',
+            responsive: ['sm'],
             dataIndex: 'oldestDebtDays',
             align: 'right',
             render: (days: number) => (

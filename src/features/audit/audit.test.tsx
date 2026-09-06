@@ -137,7 +137,9 @@ describe('Audit jurnali sahifasi', () => {
     expect(jadval.getByText('04.09.2026 14:12')).toBeVisible();
     // Yon menyuda ham shu ism turadi — tekshiruv jadval ichida.
     expect(jadval.getByText('Anvar Direktorov')).toBeVisible();
-    expect(jadval.getByText('84.54.10.7')).toBeVisible();
+    // `responsive` ustun antd da birinchi renderda yashirin turadi va
+    // brekpoint aniqlangach paydo bo'ladi — shuning uchun kutiladi.
+    expect(await jadval.findByText('84.54.10.7')).toBeVisible();
   });
 
   it('tizim yozgan amalda xodim o`rnida `Tizim` turadi', async () => {

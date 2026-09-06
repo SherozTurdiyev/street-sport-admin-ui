@@ -378,7 +378,9 @@ describe('Xodimlar tabi', () => {
 
     const jadval = within(await screen.findByRole('table'));
     expect(jadval.getByText('Anvar Direktorov')).toBeInTheDocument();
-    expect(jadval.getByText("-30 000 so'm")).toBeInTheDocument();
+    // "Kassa farqi" — `responsive` ustun: antd uni brekpoint
+    // aniqlangandan keyin chizadi, shuning uchun kutiladi.
+    expect(await jadval.findByText("-30 000 so'm")).toBeInTheDocument();
   });
 });
 
