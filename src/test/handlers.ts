@@ -85,6 +85,15 @@ export function authedHandlers(me: object = DIRECTOR_ME) {
         unreadCount: 0,
       }),
     ),
+    /*
+     * Menyudagi "Murojaatlar" belgisi — qo'ng'iroqcha bilan bir xil
+     * holat: u layoutning bir qismi va platforma xodimi sifatida
+     * ilovani ko'targan HAR BIR test bu so'rovni yuboradi. Murojaatlar
+     * testi uni o'z ma'lumoti bilan almashtiradi.
+     */
+    http.get(`${API}/platform/demo-requests`, () =>
+      HttpResponse.json({ items: [], total: 0, page: 1, pageSize: 1 }),
+    ),
   ];
 }
 

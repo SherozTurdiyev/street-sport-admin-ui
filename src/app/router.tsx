@@ -101,6 +101,11 @@ const OrganizationsPage = lazy(() =>
     default: m.OrganizationsPage,
   })),
 );
+const DemoRequestsPage = lazy(() =>
+  import('@/features/platform/demo-requests/DemoRequestsPage').then((m) => ({
+    default: m.DemoRequestsPage,
+  })),
+);
 const PlatformVenuesPage = lazy(() =>
   import('@/features/platform/venues/PlatformVenuesPage').then((m) => ({
     default: m.PlatformVenuesPage,
@@ -155,6 +160,10 @@ export function AppRouter() {
                 element={<OrganizationDetailPage />}
               />
               <Route path="/platform/venues" element={<PlatformVenuesPage />} />
+              <Route
+                path="/platform/demo-requests"
+                element={<DemoRequestsPage />}
+              />
               <Route
                 path="/platform/venues/:id"
                 element={<PlatformVenueDetailPage />}

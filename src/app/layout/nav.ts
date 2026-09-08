@@ -6,6 +6,7 @@ import {
   ContactsOutlined,
   DashboardOutlined,
   EnvironmentOutlined,
+  InboxOutlined,
   ShopOutlined,
   TeamOutlined,
   WalletOutlined,
@@ -137,6 +138,15 @@ export const NAV: readonly NavItem[] = [
     permission: 'platform.org.manage',
     label: 'Tashkilotlar',
     icon: BankOutlined,
+    requiresOrg: false,
+  },
+  {
+    // Landing formasidan kelgan demo so'rovlari. Bu StreetSport ning
+    // O'Z sotuv ma'lumoti, mijoz tashkilotining ishi emas.
+    path: '/platform/demo-requests',
+    permission: 'platform.org.manage',
+    label: 'Murojaatlar',
+    icon: InboxOutlined,
     requiresOrg: false,
   },
   {

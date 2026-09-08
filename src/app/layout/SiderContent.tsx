@@ -1,13 +1,18 @@
 import { createElement } from 'react';
 import { LogoutOutlined } from '@ant-design/icons';
-import { Avatar, Button, Menu, Tooltip, Typography } from 'antd';
+import { Avatar, Badge, Button, Menu, Tooltip, Typography } from 'antd';
 import { Link, useLocation } from 'react-router';
 import { useAuth, useCan, useHasOrg } from '@/features/auth/hooks';
 import { displayPhone } from '@/shared/format/phone';
 import { ROLE_LABELS } from '@/shared/api/types';
 import { figma } from '@/shared/theme/tokens';
 import logoUrl from '@/assets/logo.png';
+import { useNewDemoRequestCount } from '@/features/platform/demo-requests/hooks';
 import { allowedNav } from './nav';
+
+/** Belgi qo'yiladigan yagona bo'lim — boshqalarida hisoblanadigan
+ *  "ishlanmagan" tushunchasi yo'q. */
+const BELGILI_YOL = '/platform/demo-requests';
 
 /** Ism va familiyaning bosh harflari — avatar rasmi API da yo'q. */
 function initials(fullName: string): string {
@@ -31,15 +36,33 @@ export function SiderContent({ onNavigate }: { onNavigate?: () => void }) {
   const location = useLocation();
 
   const nav = allowedNav(can, hasOrg);
-  const items = nav.map((item) => ({
-    key: item.path,
-    icon: createElement(item.icon, { 'aria-hidden': true }),
-    label: (
-      <Link to={item.path} onClick={onNavigate}>
-        {item.label}
-      </Link>
-    ),
-  }));
+  // Ruxsati yo'q foydalanuvchida so'rov umuman yuborilmaydi (hook
+  // ichida tekshiriladi) va son 0 bo'lib qoladi.
+  const yangiMurojaat = useNewDemoRequestCount();
+
+  const items = nav.map((item) => {
+    const belgi = item.path === BELGILI_YOL ? yangiMurojaat : 0;
+    return {
+      key: item.path,
+      icon: createElement(item.icon, { 'aria-hidden': true }),
+      label: (
+        <Link to={item.path} onClick={onNavigate}>
+          {item.label}
+          {belgi > 0 && (
+            /* Rang brend binafshasi: qizil qo'ng'iroqchaning ogohlantirish
+               ma'nosini takrorlab, ikkalasini ham kuchsizlantirardi. */
+            <Badge
+              count={belgi}
+              size="small"
+              color={figma.primaryBright}
+              title={`${belgi} ta yangi murojaat`}
+              className="ml-2"
+            />
+          )}
+        </Link>
+      ),
+    };
+  });
 
   // Ichki sahifalarda ham bo'lim yoritilib turishi uchun boshlanishi
   // bo'yicha topiladi: `/members/abc` da ham "Xodimlar" tanlangan.
