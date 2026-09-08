@@ -114,3 +114,9 @@ export function useUnblockOrganization(id: string) {
   // `void` kirish: `mutateAsync()` argumentsiz chaqiriladi.
   return usePlatformAction<void, unknown>(() => platformApi.unblock(id));
 }
+
+export function useResetDirectorPassword(orgId: string) {
+  return usePlatformAction((userId: string) =>
+    platformApi.resetDirectorPassword(orgId, userId),
+  );
+}

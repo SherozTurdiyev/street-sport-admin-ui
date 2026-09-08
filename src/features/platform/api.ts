@@ -163,6 +163,18 @@ export const platformApi = {
   unblock: (id: string) =>
     api.post<PlatformOrganization>(`${ROOT}/${id}/unblock`).then((r) => r.data),
 
+  /**
+   * Direktor parolini tiklash. Javobdagi parol BIR MARTA keladi va
+   * hech qayerda saqlanmaydi — yo'qotilsa amalni qaytadan bajarish
+   * kerak.
+   */
+  resetDirectorPassword: (orgId: string, userId: string) =>
+    api
+      .post<{ temporaryPassword: string }>(
+        `${ROOT}/${orgId}/directors/${userId}/reset-password`,
+      )
+      .then((r) => r.data),
+
   members: (id: string, query: PageQuery) =>
     api
       .get<Paginated<OrganizationMember>>(`${ROOT}/${id}/members`, {

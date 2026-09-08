@@ -3,6 +3,7 @@ import { Alert, App, Button, Popconfirm, Tag, Typography } from 'antd';
 import dayjs from 'dayjs';
 import { errorMessage } from '@/shared/api/error-handler';
 import { displayPhone } from '@/shared/format/phone';
+import { DirectorPasswordButton } from './DirectorPasswordButton';
 import { figma } from '@/shared/theme/tokens';
 import type { PlatformOrganizationDetail } from '../api';
 import { BlockModal } from '../BlockModal';
@@ -118,11 +119,15 @@ export function OrganizationHero({ org }: { org: PlatformOrganizationDetail }) {
             </Typography.Text>
           ) : (
             org.directors.map((d) => (
-              <div key={d.userId}>
-                <Typography.Text strong>{d.fullName}</Typography.Text>{' '}
+              <div
+                key={d.userId}
+                className="flex flex-wrap items-center gap-x-2 gap-y-1"
+              >
+                <Typography.Text strong>{d.fullName}</Typography.Text>
                 <span style={{ color: figma.textMuted }}>
                   {displayPhone(d.phone)}
                 </span>
+                <DirectorPasswordButton orgId={org.id} director={d} />
               </div>
             ))
           )}
