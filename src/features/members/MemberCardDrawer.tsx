@@ -152,8 +152,14 @@ function MemberCardBody({ userId }: { userId: string }) {
             label: v.name,
           }))}
         />
+      </div>
+
+      {/* Uchala amal bitta qatorda. `flex-wrap` — tor ekranda tugmalar
+          qatorga sig'masa o'zi pastga tushadi, gorizontal aylantirish
+          paydo bo'lmaydi. `audit.view` yo'q xodimga o'rtadagi tugma
+          umuman chizilmaydi va bo'shliq ham qolmaydi. */}
+      <div className="flex flex-wrap items-center gap-2">
         <Button
-          className="mt-3"
           loading={setVenues.isPending}
           onClick={() =>
             void bajar(
@@ -164,33 +170,37 @@ function MemberCardBody({ userId }: { userId: string }) {
         >
           Stadionlarni saqlash
         </Button>
+
+        {/* Xodimning O'ZI qilgan amallari — `actorId` bo'yicha. Uning
+            ustidagi o'zgarishlar (rol, bloklash) alohida yozuv va ular
+            umumiy jurnalda ko'rinadi. */}
+        <AuditLink actorId={userId} label="Xodim amallari" />
+
+        <Popconfirm
+          title={
+            data.isActive ? 'Faolsizlantirilsinmi?' : 'Faollashtirilsinmi?'
+          }
+          description={
+            data.isActive
+              ? 'Xodimning barcha sessiyalari darhol yopiladi.'
+              : undefined
+          }
+          okText="Ha"
+          cancelText="Yo‘q"
+          onConfirm={() =>
+            void bajar(
+              () => setActive.mutateAsync(!data.isActive),
+              data.isActive
+                ? 'Xodim faolsizlantirildi'
+                : 'Xodim faollashtirildi',
+            )
+          }
+        >
+          <Button danger={data.isActive} loading={setActive.isPending}>
+            {data.isActive ? 'Faolsizlantirish' : 'Faollashtirish'}
+          </Button>
+        </Popconfirm>
       </div>
-
-      {/* Xodimning O'ZI qilgan amallari — `actorId` bo'yicha. Uning
-          ustidagi o'zgarishlar (rol, bloklash) alohida yozuv va ular
-          umumiy jurnalda ko'rinadi. */}
-      <AuditLink actorId={userId} label="Xodim amallari" />
-
-      <Popconfirm
-        title={data.isActive ? 'Faolsizlantirilsinmi?' : 'Faollashtirilsinmi?'}
-        description={
-          data.isActive
-            ? 'Xodimning barcha sessiyalari darhol yopiladi.'
-            : undefined
-        }
-        okText="Ha"
-        cancelText="Yo‘q"
-        onConfirm={() =>
-          void bajar(
-            () => setActive.mutateAsync(!data.isActive),
-            data.isActive ? 'Xodim faolsizlantirildi' : 'Xodim faollashtirildi',
-          )
-        }
-      >
-        <Button danger={data.isActive} loading={setActive.isPending} block>
-          {data.isActive ? 'Faolsizlantirish' : 'Faollashtirish'}
-        </Button>
-      </Popconfirm>
     </Space>
   );
 }
