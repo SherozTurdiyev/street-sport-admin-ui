@@ -153,3 +153,36 @@ body {
     padding-inline: 0;
   }
 }
+
+/*
+ * iOS Safari 16px dan KICHIK maydonga fokus tushganda sahifani
+ * majburan yaqinlashtiradi va fokus ketganda ORQAGA QAYTMAYDI:
+ * interfeys kattalashgan holda qolib, ekran chapga-o'ngga
+ * sirg'anadigan bo'lib qoladi. Kirish va "tashkilot qo'shish"
+ * sahifalarida aynan shu sezilgan.
+ *
+ * Yechim — maydon shriftini 16px ga ko'tarish. Viewport metasiga
+ * `user-scalable=no` yozish EMAS: iOS 10 dan beri Safari uni
+ * ataylab e'tiborsiz qoldiradi, Android da esa u haqiqatan
+ * ishlaydi va foydalanuvchidan matnni kattalashtirish imkonini
+ * tortib oladi.
+ *
+ * Faqat telefon kengligida — ish stolida 14px dizayn bo'yicha
+ * qoladi.
+ */
+@media (max-width: 575px) {
+  /*
+   * `!important` SHART va bu o'lchab tekshirildi: antd uslublari
+   * sahifaga shu fayldan KEYIN joylashadi, shuning uchun `!important`
+   * siz qoida umuman ishlamadi — maydonlar 14px da qoldi.
+   */
+  input,
+  textarea,
+  .ant-input,
+  .ant-input-number-input,
+  .ant-select-input,
+  .ant-select-selection-search-input,
+  .ant-picker-input > input {
+    font-size: 16px !important;
+  }
+}

@@ -147,7 +147,12 @@ export function LoginPage() {
     <div className="grid min-h-screen lg:grid-cols-[624fr_816fr]">
       <BrandColumn />
 
-      <div className="relative flex items-center justify-center p-6">
+      {/*
+        `overflow-hidden` — ostidagi bezak dog'i 400px, telefon ekrani
+        esa 390px. Usiz u ikki chekkadan 5px dan chiqib turadi va
+        sahifa gorizontal sirg'anadigan bo'lib qoladi (o'lchandi).
+      */}
+      <div className="relative flex items-center justify-center overflow-hidden p-6">
         {/* Maketdagi binafsha xiralashgan dog' — o'ng ustun foni. */}
         <div
           aria-hidden
