@@ -186,3 +186,33 @@ body {
     font-size: 16px !important;
   }
 }
+
+/*
+ * Sana oralig'i tanlagichi telefonda.
+ *
+ * antd `RangePicker` ikkita 288px lik oy panelini yonma-yon chizadi —
+ * popup 576px bo'lib qoladi va 390px li ekranda chap chekkasi -202px
+ * ga chiqib ketadi (o'lchandi). Foydalanuvchi kesilgan kalendarni
+ * ko'radi.
+ *
+ * Telefonda ikkinchi panel yashiriladi. antd odatda chap panelning
+ * "keyingi" tugmalarini berkitadi (chunki o'ng panel o'sha vazifani
+ * bajaradi) — bitta panel qolganda ular qaytariladi, aks holda
+ * keyingi oyga o'tib bo'lmasdi.
+ *
+ * Oraliq tanlash buzilmaydi: boshlanish sanasi tanlanadi, "›" bilan
+ * keyingi oyga o'tiladi, tugash sanasi tanlanadi. Brauzerda uchta
+ * qadam bilan tekshirildi.
+ *
+ * `TimePicker.RangePicker` ga TEGMAYDI: uning popupida
+ * `.ant-picker-panels` umuman yo'q (tekshirildi).
+ */
+@media (max-width: 575px) {
+  .ant-picker-dropdown .ant-picker-panels > *:nth-child(2) {
+    display: none !important;
+  }
+
+  .ant-picker-dropdown .ant-picker-panels .ant-picker-header > button {
+    visibility: visible !important;
+  }
+}
