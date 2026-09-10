@@ -39,7 +39,11 @@ export function SeriesTab() {
         <Link to={`/bookings/series/${row.id}`}>{row.customer.fullName}</Link>
       ),
     },
-    { title: 'Stadion', responsive: ['md'], render: (_, row) => row.venue.name },
+    {
+      title: 'Stadion',
+      responsive: ['md'],
+      render: (_, row) => row.venue.name,
+    },
     {
       title: 'Kunlar',
       responsive: ['sm'],
