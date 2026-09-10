@@ -79,8 +79,9 @@ function OccurrenceTable({ preview }: { preview: SeriesPreview }) {
 /**
  * Ikki qadam: avval OLDINDAN KO'RISH, keyin yaratish.
  *
- * Oldindan ko'rishsiz yo'l yo'q: 12 haftalik seriya 24 tagacha bron
- * degani va ularning qaysi biri band ekanini avval ko'rish kerak.
+ * Oldindan ko'rishsiz yo'l yo'q: uzun seriya o'nlab, ba'zan yuzlab
+ * bron degani va ularning qaysi biri band ekanini avval ko'rish
+ * kerak. Muddat cheklanmagani uchun bu qadam yanada muhim.
  */
 function SeriesForm({ onDone }: { onDone: () => void }) {
   const { message } = App.useApp();
@@ -229,7 +230,7 @@ function SeriesForm({ onDone }: { onDone: () => void }) {
         <Form.Item
           name="range"
           label="Davri"
-          extra="Eng ko‘pi 12 hafta (BR-10)"
+          extra="Muddat cheklanmaydi"
           rules={[{ required: true, message: 'Davrni tanlang' }]}
         >
           <DatePicker.RangePicker className="w-full" format={DATE} />

@@ -7,7 +7,7 @@ import type { Booking, CancelReason } from '@/features/bookings/api';
  * degan yozuv. U ko'plab ALOHIDA bron yaratadi va har biri mustaqil
  * yashaydi: bittasini bekor qilish qolganiga tegmaydi.
  *
- * Chegara: 12 haftadan uzun bo'lmaydi (BR-10).
+ * Muddat cheklanmaydi — BR-10 (12 hafta) 10.09.2026 da bekor qilindi.
  */
 export type Series = {
   id: string;

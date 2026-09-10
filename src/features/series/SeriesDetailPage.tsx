@@ -11,6 +11,7 @@ import {
   Button,
   Card,
   Form,
+  InputNumber,
   Modal,
   Select,
   Skeleton,
@@ -74,7 +75,8 @@ function ExtendModal({
         <Alert className="!mb-4" type="error" showIcon message={xato} />
       )}
       <Typography.Paragraph type="secondary">
-        Seriya jami 12 haftadan oshmasligi kerak (BR-10).
+        Uzaytirish muddati cheklanmaydi. Uzun muddat ko‘p bron yaratadi — band
+        sanalar bilan nima qilishni quyida tanlang.
       </Typography.Paragraph>
       <Form
         form={form}
@@ -90,13 +92,13 @@ function ExtendModal({
             .catch((e: unknown) => setXato(errorMessage(e)))
         }
       >
+        {/*
+          Ilgari bu 12 variantli `Select` edi — chegara bilan birga
+          o'sha ro'yxat ham ma'nosiz bo'lib qoldi. Backend yagona
+          shartni qo'yadi: `weeks >= 1`.
+        */}
         <Form.Item name="weeks" label="Necha hafta">
-          <Select
-            options={Array.from({ length: 12 }, (_, i) => ({
-              value: i + 1,
-              label: `${i + 1} hafta`,
-            }))}
-          />
+          <InputNumber className="w-full" min={1} precision={0} />
         </Form.Item>
         <Form.Item name="onConflict" label="Band sana bo‘lsa">
           <Select
