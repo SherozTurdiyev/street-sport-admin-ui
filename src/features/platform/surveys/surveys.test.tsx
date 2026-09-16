@@ -215,7 +215,10 @@ describe('So‘rovnoma formasi', () => {
           },
         ],
       });
-  });
+    // antd `TextArea` ga harfma-harf yozish sekin: alohida ~14 s
+    // (o'lchangan). 15 s chegarada yuklama ozgina oshsa uziladi va
+    // tugamagan `user.type` keyingi testni ham qotiradi.
+  }, 30_000);
 
   it('tanlov savolida bo‘sh variant bo‘lsa yubormaydi', async () => {
     let yuborildi = false;
@@ -236,7 +239,10 @@ describe('So‘rovnoma formasi', () => {
       (await screen.findAllByText('Variant matnini kiriting')).length,
     ).toBeGreaterThan(0);
     expect(yuborildi).toBe(false);
-  });
+    // antd `TextArea` ga harfma-harf yozish sekin: alohida ~14 s
+    // (o'lchangan). 15 s chegarada yuklama ozgina oshsa uziladi va
+    // tugamagan `user.type` keyingi testni ham qotiradi.
+  }, 30_000);
 
   it('↑ tugmasi savollar tartibini almashtiradi', async () => {
     let tana: { questions: { text: string }[] } | null = null;
@@ -304,5 +310,113 @@ describe('So‘rovnoma formasi', () => {
         'So‘rovnomaga javoblar kelgan: faqat matnni tuzatish mumkin.',
       ),
     ).toBeInTheDocument();
+  });
+});
+
+const STATS = {
+  responseCount: 3,
+  questions: [
+    {
+      questionId: 'q-1',
+      type: 'SINGLE_CHOICE',
+      text: 'Nechta maydon?',
+      answered: 3,
+      options: [
+        { optionId: 'o-1', text: '1', count: 2 },
+        { optionId: 'o-2', text: '2+', count: 1 },
+      ],
+    },
+    {
+      questionId: 'q-3',
+      type: 'RATING',
+      text: 'Baho',
+      answered: 3,
+      average: '4.33',
+      distribution: [0, 0, 0, 2, 1],
+    },
+    {
+      questionId: 'q-2',
+      type: 'TEXT',
+      text: 'Taklif',
+      answered: 1,
+      latest: [{ text: 'Narxi qulay', createdAt: '2026-09-16T11:00:00.000Z' }],
+    },
+  ],
+};
+
+function kartochka(el: HTMLElement): HTMLElement {
+  const card = el.closest<HTMLElement>('.ant-card');
+  if (!card) throw new Error('kartochka topilmadi');
+  return card;
+}
+
+describe('So‘rovnoma natijalari', () => {
+  beforeEach(() => {
+    server.use(
+      http.get(`${ROOT}/s-1`, () =>
+        HttpResponse.json({
+          ...DETAIL,
+          collectContact: true,
+          responseCount: 3,
+          locked: true,
+        }),
+      ),
+      http.get(`${ROOT}/s-1/stats`, () => HttpResponse.json(STATS)),
+      http.get(`${ROOT}/s-1/responses`, () =>
+        HttpResponse.json({
+          items: [
+            {
+              id: 'r-1',
+              fullName: 'Alisher Karimov',
+              phone: '+998939542111',
+              createdAt: '2026-09-16T11:00:00.000Z',
+              answers: [
+                {
+                  questionId: 'q-1',
+                  optionIds: ['o-2'],
+                  text: null,
+                  rating: null,
+                },
+                {
+                  questionId: 'q-2',
+                  optionIds: [],
+                  text: 'Narxi qulay',
+                  rating: null,
+                },
+              ],
+            },
+          ],
+          total: 1,
+          page: 1,
+          pageSize: 20,
+        }),
+      ),
+      ...authedHandlers(SUPER_ADMIN_ME),
+      ...platformDashboardHandlers(),
+    );
+  });
+
+  it('statistika: foiz, o‘rtacha baho va matn javoblar', async () => {
+    renderApp(<AppRouter />, { route: '/platform/surveys/s-1' });
+
+    // "4 ★" qatori ham 2/3 = 67% — shuning uchun savol kartochkasi ichida.
+    const tanlov = kartochka(await screen.findByText('1. Nechta maydon?'));
+    expect(within(tanlov).getByText('2 ta · 67%')).toBeInTheDocument();
+    expect(within(tanlov).getByText('1 ta · 33%')).toBeInTheDocument();
+    // `average` backend yozganidek — qayta formatlanmaydi.
+    expect(screen.getByText('4.33')).toBeInTheDocument();
+    expect(screen.getByText('Narxi qulay')).toBeInTheDocument();
+  });
+
+  it('javoblar: qator bosilganda drawer savol → javobni ko‘rsatadi', async () => {
+    const user = userEvent.setup();
+    renderApp(<AppRouter />, { route: '/platform/surveys/s-1?tab=responses' });
+
+    await user.click(await screen.findByText('Alisher Karimov'));
+    const drawer = await screen.findByRole('dialog');
+    expect(within(drawer).getByText('Nechta maydon?')).toBeInTheDocument();
+    expect(within(drawer).getByText('2+')).toBeInTheDocument();
+    expect(within(drawer).getByText('Taklif')).toBeInTheDocument();
+    expect(within(drawer).getByText('Narxi qulay')).toBeInTheDocument();
   });
 });
