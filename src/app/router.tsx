@@ -116,6 +116,11 @@ const SurveyFormPage = lazy(() =>
     default: m.SurveyFormPage,
   })),
 );
+const SurveyResultsPage = lazy(() =>
+  import('@/features/platform/surveys/SurveyResultsPage').then((m) => ({
+    default: m.SurveyResultsPage,
+  })),
+);
 const PlatformVenuesPage = lazy(() =>
   import('@/features/platform/venues/PlatformVenuesPage').then((m) => ({
     default: m.PlatformVenuesPage,
@@ -182,6 +187,10 @@ export function AppRouter() {
               <Route
                 path="/platform/surveys/:id/edit"
                 element={<SurveyFormPage />}
+              />
+              <Route
+                path="/platform/surveys/:id"
+                element={<SurveyResultsPage />}
               />
               <Route
                 path="/platform/venues/:id"
