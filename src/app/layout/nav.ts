@@ -2,6 +2,7 @@ import {
   BankOutlined,
   BarChartOutlined,
   FileSearchOutlined,
+  FormOutlined,
   CalendarOutlined,
   ContactsOutlined,
   DashboardOutlined,
@@ -147,6 +148,14 @@ export const NAV: readonly NavItem[] = [
     permission: 'platform.org.manage',
     label: 'Murojaatlar',
     icon: InboxOutlined,
+    requiresOrg: false,
+  },
+  {
+    // Landing saytidagi so'rovnoma — tuzish, faollashtirish, natijalar.
+    path: '/platform/surveys',
+    permission: 'platform.org.manage',
+    label: 'So‘rovnomalar',
+    icon: FormOutlined,
     requiresOrg: false,
   },
   {
