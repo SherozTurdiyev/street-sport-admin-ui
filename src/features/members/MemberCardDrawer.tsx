@@ -23,6 +23,7 @@ import { useVenueOptions } from '@/features/venues/hooks';
 import { AuditLink } from '@/features/audit/AuditLink';
 import type { MemberRole } from './api';
 import { useMember, useSetActive, useSetRole, useSetVenues } from './hooks';
+import { MemberPasswordButton } from './MemberPasswordButton';
 
 const ROLE_OPTIONS: { value: MemberRole; label: string }[] = [
   { value: 'DIRECTOR', label: ROLE_LABELS.DIRECTOR },
@@ -175,6 +176,8 @@ function MemberCardBody({ userId }: { userId: string }) {
             ustidagi o'zgarishlar (rol, bloklash) alohida yozuv va ular
             umumiy jurnalda ko'rinadi. */}
         <AuditLink actorId={userId} label="Xodim amallari" />
+
+        <MemberPasswordButton member={data} />
 
         <Popconfirm
           title={

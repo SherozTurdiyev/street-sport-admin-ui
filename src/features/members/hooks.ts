@@ -89,3 +89,7 @@ export function useSetVenues(userId: string) {
     membersApi.setVenues(userId, venueIds),
   );
 }
+
+export function useResetMemberPassword(userId: string) {
+  return useMemberAction(() => membersApi.resetPassword(userId));
+}

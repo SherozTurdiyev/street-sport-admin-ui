@@ -100,4 +100,11 @@ export const membersApi = {
         { venueIds },
       )
       .then((r) => r.data),
+
+  resetPassword: (userId: string) =>
+    api
+      .post<{ temporaryPassword: string }>(
+        `/members/${userId}/reset-password`,
+      )
+      .then((r) => r.data),
 };
