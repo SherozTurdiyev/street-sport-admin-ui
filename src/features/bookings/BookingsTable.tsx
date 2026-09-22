@@ -49,7 +49,11 @@ export function BookingsTable({
       render: (_, row) =>
         `${formatDateTime(row.startsAt)} – ${formatTime(row.endsAt)}`,
     },
-    { title: 'Stadion', responsive: ['md'], render: (_, row) => row.venue.name },
+    {
+      title: 'Stadion',
+      responsive: ['md'],
+      render: (_, row) => row.venue.name,
+    },
     {
       title: 'Mijoz',
       render: (_, row) =>

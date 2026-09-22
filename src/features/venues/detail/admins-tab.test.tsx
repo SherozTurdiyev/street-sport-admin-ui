@@ -117,8 +117,7 @@ describe('Stadion adminlari', () => {
     server.use(
       ...baseHandlers({
         code: 'MEMBER_VENUE_REQUIRED',
-        message:
-          "Administratorga kamida bitta stadion biriktirilishi shart.",
+        message: 'Administratorga kamida bitta stadion biriktirilishi shart.',
       }),
     );
     renderApp(<AdminsTab venueId="v-1" />);

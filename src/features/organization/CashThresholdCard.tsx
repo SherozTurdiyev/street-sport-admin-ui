@@ -41,9 +41,9 @@ export function CashThresholdCard({ value }: { value: string }) {
         {xato !== null && <Alert type="error" showIcon message={xato} />}
 
         <Typography.Text type="secondary">
-          Shu summadan oshgan farq direktorga bildirishnoma yuboradi.
-          Nol — har qanday farq. Farqning o‘zi baribir saqlanadi va
-          smena hisobotida ko‘rinadi.
+          Shu summadan oshgan farq direktorga bildirishnoma yuboradi. Nol — har
+          qanday farq. Farqning o‘zi baribir saqlanadi va smena hisobotida
+          ko‘rinadi.
         </Typography.Text>
 
         {tahrirlash ? (

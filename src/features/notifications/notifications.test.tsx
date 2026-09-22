@@ -93,9 +93,7 @@ describe('Bildirishnomalar qo`ng`irog`i', () => {
     await userEvent.click(await qongiroq());
 
     expect(await screen.findByText('Kassada farq chiqdi')).toBeVisible();
-    expect(
-      screen.getByText('Doimiy mijoz jadvali tugayapti'),
-    ).toBeVisible();
+    expect(screen.getByText('Doimiy mijoz jadvali tugayapti')).toBeVisible();
   });
 
   it('xabar bosilganda o`qilgan deb belgilanadi va sahifa ochiladi', async () => {

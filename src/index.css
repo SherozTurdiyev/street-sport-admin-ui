@@ -19,13 +19,13 @@ body,
 }
 
 /*
- * Fon ATAYLAB shu yerda ham: antd mavzusi React ishga tushgandan keyin
- * qo'llanadi. Usiz sahifa yuklanayotganda oq ekran chaqnab o'tadi.
- * Qiymat `shared/theme/tokens.ts` dagi `bg` bilan bir xil.
+ * Fon CSS o'zgaruvchisidan keladi. Boshlang'ich qiymatni `index.html`
+ * dagi skript React'dan OLDIN qo'yadi — usiz sahifa yuklanayotganda
+ * boshqa rang chaqnab o'tardi. `color-scheme` ham o'sha yerda va
+ * keyin `features/theme/mavzu.ts` da yangilanadi.
  */
 body {
-  background: #130726;
-  color-scheme: dark;
+  background: var(--rang-bg);
 }
 
 /*

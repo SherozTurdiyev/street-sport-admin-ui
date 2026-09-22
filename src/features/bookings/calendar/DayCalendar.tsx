@@ -98,7 +98,10 @@ export function DayCalendar({
         </div>
 
         {data.venues.map((venue) => (
-          <div key={venue.venueId} className="w-44 shrink-0 sm:w-auto sm:flex-1 sm:min-w-40">
+          <div
+            key={venue.venueId}
+            className="w-44 shrink-0 sm:w-auto sm:flex-1 sm:min-w-40"
+          >
             {sarlavha(venue.name)}
             <div className="relative" style={{ height }}>
               <VenueColumn

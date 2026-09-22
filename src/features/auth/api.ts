@@ -1,5 +1,6 @@
 import { api } from '@/shared/api/client';
 import type { Role } from '@/shared/api/types';
+import type { MavzuTanlovi } from '@/features/theme/mavzu';
 
 export type Me = {
   userId: string;
@@ -8,6 +9,8 @@ export type Me = {
   fullName: string;
   phone: string;
   mustChangePassword: boolean;
+  /** Adminka rejimi. Server qiymati localStorage'dan ustun. */
+  uiTheme: MavzuTanlovi;
   permissions: string[];
 };
 
@@ -32,8 +35,11 @@ export const authApi = {
   me: () => api.get<Me>('/auth/me').then((r) => r.data),
 
   /** Javob `GET /auth/me` bilan aynan bir xil — qayta so'rash kerak emas. */
-  updateProfile: (input: { fullName?: string; phone?: string }) =>
-    api.patch<Me>('/auth/me', input).then((r) => r.data),
+  updateProfile: (input: {
+    fullName?: string;
+    phone?: string;
+    uiTheme?: MavzuTanlovi;
+  }) => api.patch<Me>('/auth/me', input).then((r) => r.data),
 
   logout: () => api.post('/auth/logout').then(() => undefined),
 

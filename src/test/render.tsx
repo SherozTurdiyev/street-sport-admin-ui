@@ -6,6 +6,7 @@ import uzUZ from 'antd/locale/uz_UZ';
 import { MemoryRouter } from 'react-router';
 import { AuthProvider } from '@/features/auth/AuthProvider';
 import { antdTheme } from '@/shared/theme/antd-theme';
+import { MavzuProvider } from '@/features/theme/MavzuProvider';
 
 /**
  * Har bir test o'z `QueryClient` iga ega: kesh testlar orasida oqib
@@ -30,13 +31,18 @@ export function renderApp(
   function Wrapper({ children }: { children: ReactNode }) {
     return (
       <QueryClientProvider client={createTestClient()}>
-        <ConfigProvider locale={uzUZ} theme={antdTheme}>
-          <AntApp>
-            <MemoryRouter initialEntries={[route]}>
-              <AuthProvider>{children}</AuthProvider>
-            </MemoryRouter>
-          </AntApp>
-        </ConfigProvider>
+        {/* Testlarda rejim qat'iy `dark`: mavjud testlar ko'rinishga
+            emas, xulq-atvorga qaraydi. Mavzu testlari o'z tekshiruvini
+            `data-theme` orqali qiladi. */}
+        <MavzuProvider>
+          <ConfigProvider locale={uzUZ} theme={antdTheme('dark')}>
+            <AntApp>
+              <MemoryRouter initialEntries={[route]}>
+                <AuthProvider>{children}</AuthProvider>
+              </MemoryRouter>
+            </AntApp>
+          </ConfigProvider>
+        </MavzuProvider>
       </QueryClientProvider>
     );
   }

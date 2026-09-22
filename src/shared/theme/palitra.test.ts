@@ -1,5 +1,7 @@
-import { readFileSync } from 'node:fs';
 import { describe, expect, it } from 'vitest';
+// `?raw` — Vite'ning o'z usuli. `node:fs` ishlatib bo'lmaydi: adminka
+// tsconfig'ida Node tiplari yo'q (`types: ["vite/client"]`).
+import indexHtml from '../../../index.html?raw';
 import { KONTRAST_JUFTLARI, PALITRA, RANG_KALITLARI, varNomi } from './palitra';
 
 /** WCAG 2.1 nisbiy yorqinlik. */
@@ -54,8 +56,7 @@ describe('palitra', () => {
      * olish uchun) va qiymatlarni qo'lda saqlaydi. Palitra o'zgarib,
      * u yerda eski rang qolsa, yuklanishda boshqa rang chaqnardi.
      */
-    const html = readFileSync('index.html', 'utf8');
-    expect(html).toContain(PALITRA.dark.bg);
-    expect(html).toContain(PALITRA.light.bg);
+    expect(indexHtml).toContain(PALITRA.dark.bg);
+    expect(indexHtml).toContain(PALITRA.light.bg);
   });
 });

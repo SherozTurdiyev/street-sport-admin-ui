@@ -69,7 +69,11 @@ export function AdminsTab({ venueId }: { venueId: string }) {
 
   if (biriktirilgan.error !== null) {
     return (
-      <Alert type="error" showIcon message={errorMessage(biriktirilgan.error)} />
+      <Alert
+        type="error"
+        showIcon
+        message={errorMessage(biriktirilgan.error)}
+      />
     );
   }
 
@@ -112,9 +116,7 @@ export function AdminsTab({ venueId }: { venueId: string }) {
         pagination={false}
         scroll={{ x: 'max-content' }}
         locale={{
-          emptyText: (
-            <Empty description="Bu stadionga admin biriktirilmagan" />
-          ),
+          emptyText: <Empty description="Bu stadionga admin biriktirilmagan" />,
         }}
         columns={[
           { title: 'Ism', dataIndex: 'fullName' },

@@ -65,7 +65,12 @@ export function StaffTab({ range }: { range: ReportRange }) {
           align: 'right',
           render: (value: string) => formatMoney(value),
         },
-        { title: 'Smena', responsive: ['lg'], dataIndex: 'shiftsClosed', align: 'right' },
+        {
+          title: 'Smena',
+          responsive: ['lg'],
+          dataIndex: 'shiftsClosed',
+          align: 'right',
+        },
         {
           title: 'Kassa farqi',
           responsive: ['md'],

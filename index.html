@@ -17,6 +17,37 @@
       rel="stylesheet"
     />
     <title>StreetSport — boshqaruv paneli</title>
+    <!--
+      Rejim React'dan OLDIN qo'llanadi: usiz yorug' rejimdagi
+      foydalanuvchi har yuklanishda qorong'i chaqnashni ko'rardi.
+      Bu yerda faqat ikkita fon rangi takrorlanadi; ular
+      `src/shared/theme/palitra.ts` bilan bir xilligini
+      `palitra.test.ts` tekshiradi.
+    -->
+    <script>
+      (function () {
+        var tanlov = 'DARK';
+        try {
+          var x = localStorage.getItem('ss-mavzu');
+          if (x === 'LIGHT' || x === 'SYSTEM' || x === 'DARK') tanlov = x;
+        } catch (e) {}
+        var rejim =
+          tanlov === 'SYSTEM'
+            ? window.matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light'
+            : tanlov === 'LIGHT'
+              ? 'light'
+              : 'dark';
+        var el = document.documentElement;
+        el.dataset.theme = rejim;
+        el.style.colorScheme = rejim;
+        el.style.setProperty(
+          '--rang-bg',
+          rejim === 'dark' ? '#130726' : '#f4f2f8',
+        );
+      })();
+    </script>
   </head>
   <body>
     <div id="root"></div>

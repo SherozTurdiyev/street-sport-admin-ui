@@ -209,7 +209,9 @@ describe('Audit jurnali sahifasi', () => {
     server.use(...baseHandlers());
     renderApp(<AppRouter />, { route: '/audit' });
 
-    await userEvent.click(await screen.findByRole('combobox', { name: 'Xodim' }));
+    await userEvent.click(
+      await screen.findByRole('combobox', { name: 'Xodim' }),
+    );
 
     expect(
       await screen.findByRole('option', { name: 'Davron Adminov' }),

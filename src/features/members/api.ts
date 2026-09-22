@@ -103,8 +103,6 @@ export const membersApi = {
 
   resetPassword: (userId: string) =>
     api
-      .post<{ temporaryPassword: string }>(
-        `/members/${userId}/reset-password`,
-      )
+      .post<{ temporaryPassword: string }>(`/members/${userId}/reset-password`)
       .then((r) => r.data),
 };

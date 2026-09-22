@@ -1,51 +1,25 @@
+import { RANG_KALITLARI, varNomi, type RangKaliti } from './palitra';
+
 /**
- * Figma'dan olingan qiymatlar — YAGONA manba.
+ * Komponentlar uchun YAGONA manba. Ranglar endi aniq qiymat emas, CSS
+ * o'zgaruvchisi: joriy rejimni `<html>` belgilaydi (`features/theme/mavzu.ts`).
  *
- * Fayl: StreetSport (k8OXDrj1dxTlVP3yhjoeFW). Figma'da o'zgaruvchi
- * (design token) e'lon qilinmagan, shuning uchun qiymatlar tugunlardan
- * ko'chirildi va renderdan piksel bo'yicha tasdiqlandi.
+ * Shuning uchun `figma.textMuted` yozilgan 39 ta faylning birortasiga
+ * tegilmadi — ular baribir to'g'ri rangni oladi va rejim almashganda
+ * React qayta chizmasdan yangilanadi.
  *
- * Bu yerdagi ranglar komponentlarda TO'G'RIDAN-TO'G'RI ishlatilmaydi:
- * ular antd mavzusiga uzatiladi (`antd-theme.ts`) va komponentlar rangni
- * antd dan oladi. Aks holda dizayn o'zgarganda o'nlab faylni qidirish
- * kerak bo'lardi.
+ * Haqiqiy qiymatlar `palitra.ts` da; antd mavzusi ularni o'sha yerdan
+ * oladi, chunki algoritmga hex kerak.
+ *
+ * O'lchamlar va shrift Figma'dan (StreetSport, k8OXDrj1dxTlVP3yhjoeFW)
+ * va rejimga bog'liq emas.
  */
+const rang = Object.fromEntries(
+  RANG_KALITLARI.map((kalit) => [kalit, `var(${varNomi(kalit)})`]),
+) as Record<RangKaliti, string>;
+
 export const figma = {
-  /** Brend binafshasi: tugmalar, faol menyu, urg'u. */
-  primary: '#5a00db',
-  /** Faol menyu elementi va belgi fonlari uchun shaffof variantlar. */
-  primarySoft: 'rgba(90, 0, 219, 0.2)',
-  primarySoftBorder: 'rgba(90, 0, 219, 0.3)',
-  primaryGlow: 'rgba(90, 0, 219, 0.5)',
-  /**
-   * Brend binafshasining YORUG' varianti — faqat MATN uchun.
-   *
-   * Figma'da stadion kartochkasidagi narx `#5a00db` bilan yozilgan, lekin
-   * u quyuq karta foni (`#1b0c36`) ustida taxminan 2:1 kontrast beradi va
-   * o'qilmaydi. Rang tonini saqlab yorug'ligi ko'tarildi (HSL 265deg,
-   * 100%, 43% -> 65%) — kartochkadagi eng muhim qiymat ko'rinib turishi
-   * kerak. Fon va chegara uchun `primary` o'zgarishsiz qoladi.
-   */
-  primaryBright: '#974cff',
-
-  /** Asosiy maydon foni. */
-  bg: '#130726',
-  /** Yon panel va sarlavha — asosiy maydondan quyuqroq. */
-  bgSider: '#110524',
-  bgHeader: '#0e041d',
-  /** Karta va jadval foni. Figma'da 60% shaffoflik + blur. */
-  bgCard: '#1b0c36',
-  /** Kiritish maydonlari. */
-  bgInput: '#2c1c48',
-
-  border: '#2d1a53',
-
-  text: '#ffffff',
-  textMuted: '#a18fc3',
-
-  success: '#00e676',
-  warning: '#fdc700',
-  danger: '#fb2c36',
+  ...rang,
 
   /** Karta va oynalar. */
   radiusCard: 20,

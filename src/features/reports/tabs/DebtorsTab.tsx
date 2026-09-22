@@ -123,7 +123,12 @@ export function DebtorsTab({ venueIds }: { venueIds?: string[] }) {
               </Typography.Text>
             ),
           },
-          { title: 'Bronlar', responsive: ['md'], dataIndex: 'bookingCount', align: 'right' },
+          {
+            title: 'Bronlar',
+            responsive: ['md'],
+            dataIndex: 'bookingCount',
+            align: 'right',
+          },
           {
             title: 'Eng eski qarz',
             responsive: ['sm'],

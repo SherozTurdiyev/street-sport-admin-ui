@@ -1,5 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { DISABLED_MINUTES, TIME_MINUTES, pickerDisabledTime } from './timePicker';
+import {
+  DISABLED_MINUTES,
+  TIME_MINUTES,
+  pickerDisabledTime,
+} from './timePicker';
 
 describe('timePicker daqiqalari', () => {
   it('00, 15, 30, 45 va 59 ni qoldiradi', () => {
