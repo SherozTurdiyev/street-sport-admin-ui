@@ -26,30 +26,30 @@ import {
  * qoidaga ko'ra ogohlantirish va neytral rangdan qurildi — aks holda
  * arxivlangan stadion ham "faol" kabi ko'rinardi.
  */
-const STATUS_PILL: Record<
-  VenueStatus,
-  { bg: string; border: string; color: string }
-> = {
-  ACTIVE: {
-    bg: 'rgba(0, 230, 118, 0.2)',
-    border: 'rgba(0, 230, 118, 0.3)',
-    color: figma.success,
-  },
-  TEMPORARILY_CLOSED: {
-    bg: 'rgba(253, 199, 0, 0.2)',
-    border: 'rgba(253, 199, 0, 0.3)',
-    color: figma.warning,
-  },
-  ARCHIVED: {
-    bg: 'rgba(161, 143, 195, 0.2)',
-    border: 'rgba(161, 143, 195, 0.3)',
-    color: figma.textMuted,
-  },
+const STATUS_PILL: Record<VenueStatus, { color: string }> = {
+  ACTIVE: { color: figma.success },
+  TEMPORARILY_CLOSED: { color: figma.warning },
+  ARCHIVED: { color: figma.textMuted },
 };
+
+/*
+ * Belgi FOTO ustida turadi, ya'ni uning o'qilishi suratga bog'liq —
+ * yarim shaffof rangli fon quyuq suratda ham, yorug'ida ham xavfli.
+ * Shuning uchun fon karta rangidan olinadi (ikkala rejimda mos), holat
+ * rangi esa matn va chegarada qoladi.
+ */
+function pillStyle(status: VenueStatus) {
+  const { color } = STATUS_PILL[status];
+  return {
+    background: figma.bgCardSoft,
+    border: `1px solid color-mix(in srgb, ${color} 45%, transparent)`,
+    color,
+  };
+}
 
 function PhotoArea({ venue }: { venue: VenueListRow }) {
   const primary = venue.photos.find((p) => p.isPrimary) ?? venue.photos[0];
-  const pill = STATUS_PILL[venue.status];
+  const pill = pillStyle(venue.status);
 
   return (
     <div className="relative h-[180px] w-full shrink-0 overflow-hidden">
@@ -87,9 +87,7 @@ function PhotoArea({ venue }: { venue: VenueListRow }) {
       <span
         className="absolute left-4 top-4 rounded-full px-3 py-[5px] text-xs font-bold"
         style={{
-          background: pill.bg,
-          border: `1px solid ${pill.border}`,
-          color: pill.color,
+          ...pill,
           backdropFilter: 'blur(6px)',
         }}
       >
