@@ -9,6 +9,7 @@ export const DIRECTOR_ME = {
   fullName: 'Anvar Direktorov',
   phone: '+998901110001',
   mustChangePassword: false,
+  uiTheme: 'DARK' as const,
   // Backenddagi DIRECTOR qatoridan: bron va mijoz ruxsatlari ham bor —
   // ular bo'lmasa interfeys tugmalarni yashirib qo'yardi.
   permissions: [
@@ -59,6 +60,7 @@ export const SUPER_ADMIN_ME = {
   fullName: 'Platforma Egasi',
   phone: '+998901110000',
   mustChangePassword: false,
+  uiTheme: 'DARK' as const,
   // Backend `/auth/me` da aynan shu ruxsatni qaytaradi — platforma
   // ruxsatlari alohida fazoda va tashkilot rollariga berilmaydi.
   permissions: ['platform.org.manage'],

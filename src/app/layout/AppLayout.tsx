@@ -6,6 +6,7 @@ import { figma } from '@/shared/theme/tokens';
 import { SubscriptionBanner } from '@/app/SubscriptionBanner';
 import { Breadcrumbs } from './Breadcrumbs';
 import { NotificationsBell } from './NotificationsBell';
+import { MavzuTugma } from '@/features/theme/MavzuTugma';
 import { SiderContent } from './SiderContent';
 
 const { Header, Sider, Content } = Layout;
@@ -83,6 +84,7 @@ export function AppLayout() {
           <div className="min-w-0 flex-1 overflow-hidden">
             <Breadcrumbs />
           </div>
+          <MavzuTugma />
           <NotificationsBell />
         </Header>
         <SubscriptionBanner />

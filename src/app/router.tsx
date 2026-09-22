@@ -1,6 +1,7 @@
 import { lazy, Suspense } from 'react';
 import { Navigate, Outlet, Route, Routes } from 'react-router';
 import { useHasOrg } from '@/features/auth/hooks';
+import { MavzuSinxron } from '@/features/theme/MavzuSinxron';
 import { FullPageSpin } from '@/shared/ui/FullPageSpin';
 import { NoSectionsPage } from '@/shared/ui/NoSectionsPage';
 import { RedirectIfAuthed } from './guards/RedirectIfAuthed';
@@ -150,6 +151,9 @@ function RequireOrg() {
 export function AppRouter() {
   return (
     <Suspense fallback={<FullPageSpin />}>
+      {/* Marshrutlar ichida, chunki u `AuthProvider` ga tayanadi va
+          shu joyda ilova ham, testlar ham uni bir xil ko'radi. */}
+      <MavzuSinxron />
       <Routes>
         <Route element={<RedirectIfAuthed />}>
           <Route path="/login" element={<LoginPage />} />

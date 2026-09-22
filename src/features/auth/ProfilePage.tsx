@@ -16,6 +16,7 @@ import { figma } from '@/shared/theme/tokens';
 import { authApi } from './api';
 import { ProfileForm } from './ProfileForm';
 import { ChangePasswordForm } from './ChangePasswordForm';
+import { MavzuTanlov } from '@/features/theme/MavzuTanlov';
 import { useAuth } from './hooks';
 
 function initials(fullName: string): string {
@@ -67,6 +68,10 @@ export function ProfilePage() {
       <div className="grid gap-6 lg:grid-cols-2">
         <Card title="Shaxsiy ma'lumotlar">
           <ProfileForm />
+        </Card>
+
+        <Card title="Ko‘rinish">
+          <MavzuTanlov />
         </Card>
 
         <Card title="Xavfsizlik">
