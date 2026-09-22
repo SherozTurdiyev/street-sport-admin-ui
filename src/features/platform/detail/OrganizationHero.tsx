@@ -57,7 +57,7 @@ export function OrganizationHero({ org }: { org: PlatformOrganizationDetail }) {
     <div
       className="flex flex-col gap-6 p-6 lg:flex-row lg:items-center"
       style={{
-        background: 'rgba(27, 12, 54, 0.6)',
+        background: figma.bgCardSoft,
         border: `1px solid ${figma.border}`,
         borderRadius: figma.radiusCard,
       }}

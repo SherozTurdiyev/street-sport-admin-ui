@@ -140,7 +140,7 @@ export function VenueHero({
     <div
       className="flex flex-wrap items-center gap-4 p-4 sm:gap-6 sm:p-6"
       style={{
-        background: 'rgba(27, 12, 54, 0.6)',
+        background: figma.bgCardSoft,
         border: `1px solid ${figma.border}`,
         borderRadius: figma.radiusCard,
       }}

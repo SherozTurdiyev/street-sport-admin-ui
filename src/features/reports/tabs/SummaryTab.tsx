@@ -49,7 +49,7 @@ function DavrCard({ label, block }: { label: string; block: RevenueBlock }) {
     <div
       className="flex flex-col gap-2 p-4 sm:p-5"
       style={{
-        background: 'rgba(27, 12, 54, 0.6)',
+        background: figma.bgCardSoft,
         border: `1px solid ${figma.border}`,
         borderRadius: figma.radiusCard,
       }}

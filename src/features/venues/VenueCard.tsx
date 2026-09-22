@@ -79,7 +79,7 @@ function PhotoArea({ venue }: { venue: VenueListRow }) {
       <div
         className="pointer-events-none absolute inset-0"
         style={{
-          background: `linear-gradient(to top, ${figma.bgCard}, rgba(27, 12, 54, 0) 50%)`,
+          background: `linear-gradient(to top, ${figma.bgCard}, transparent 50%)`,
           opacity: 0.9,
         }}
       />
@@ -161,7 +161,7 @@ export function VenueCard({
     <div
       className="flex h-full flex-col overflow-hidden"
       style={{
-        background: 'rgba(27, 12, 54, 0.6)',
+        background: figma.bgCardSoft,
         border: `1px solid ${figma.border}`,
         borderRadius: 24,
         backdropFilter: 'blur(12px)',

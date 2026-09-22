@@ -19,7 +19,7 @@ export function OrganizationCard({ org }: { org: PlatformOrganization }) {
     <div
       className="flex flex-col gap-3 p-5"
       style={{
-        background: 'rgba(27, 12, 54, 0.6)',
+        background: figma.bgCardSoft,
         border: `1px solid ${figma.border}`,
         borderRadius: figma.radiusCard,
         color: figma.text,

@@ -58,7 +58,7 @@ function Hero({ customer }: { customer: CustomerCard }) {
     <div
       className="flex flex-wrap items-center gap-6 p-6"
       style={{
-        background: 'rgba(27, 12, 54, 0.6)',
+        background: figma.bgCardSoft,
         border: `1px solid ${figma.border}`,
         borderRadius: figma.radiusCard,
       }}

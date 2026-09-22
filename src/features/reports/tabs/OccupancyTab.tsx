@@ -12,7 +12,7 @@ function Raqam({ label, value }: { label: string; value: string }) {
     <div
       className="flex flex-col gap-1 p-4"
       style={{
-        background: 'rgba(27, 12, 54, 0.6)',
+        background: figma.bgCardSoft,
         border: `1px solid ${figma.border}`,
         borderRadius: figma.radiusCard,
       }}

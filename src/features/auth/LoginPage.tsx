@@ -38,7 +38,7 @@ function BrandColumn() {
         // Maketda bu yerda stadion fotosi turadi. Fotoning o'zi bizda
         // yo'q, shuning uchun uning o'rnini ayni rangdagi gradient
         // egallaydi — bo'sh joy qoldirishdan afzal.
-        background: `radial-gradient(120% 100% at 20% 0%, ${figma.bgCard} 0%, ${figma.bgSider} 45%, #0b0219 100%)`,
+        background: `radial-gradient(120% 100% at 20% 0%, ${figma.bgCard} 0%, ${figma.bgSider} 45%, ${figma.bgDeep} 100%)`,
         borderInlineEnd: `1px solid ${figma.border}`,
       }}
     >
@@ -91,7 +91,7 @@ function BrandColumn() {
       <div
         className="flex w-fit items-center gap-3 px-5 py-4"
         style={{
-          background: 'rgba(27, 12, 54, 0.6)',
+          background: figma.bgCardSoft,
           border: `1px solid ${figma.border}`,
           borderRadius: figma.radiusPill,
           backdropFilter: 'blur(12px)',
