@@ -15,6 +15,7 @@ export function StatCard({
   icon: Icon,
   tint,
   loading = false,
+  compact = false,
   hint,
   footer,
 }: {
@@ -24,6 +25,11 @@ export function StatCard({
   /** Belgi foni va rangi uchun asos. */
   tint: string;
   loading?: boolean;
+  /**
+   * Tor ustunda turadigan kartochka: belgi va ichki bo'shliq kichrayadi.
+   * Beshta kartochka bir qatorga sig'ishi kerak bo'lganda yoqiladi.
+   */
+  compact?: boolean;
   /** Raqam to'liq emasligini aytadigan izoh (masalan, M8 kutilmoqda). */
   hint?: string;
   /**
@@ -34,30 +40,38 @@ export function StatCard({
 }) {
   return (
     <div
-      className="flex items-center gap-3 p-4 sm:gap-4 sm:p-5"
+      className={
+        compact
+          ? 'flex items-center gap-3 p-4'
+          : 'flex items-center gap-3 p-4 sm:gap-4 sm:p-5'
+      }
       style={{
         background: figma.bgCardSoft,
         border: `1px solid ${figma.border}`,
         borderRadius: figma.radiusCard,
+        // Raqam kartochkaning O'Z kengligiga qarab kichrayadi. Ekran
+        // kengligi (`vw`) bu yerda yaramaydi: besh ustunli qatorda
+        // kartochka tor bo'ladi-yu, ekran keng bo'lib qolaveradi.
+        ...(compact ? { containerType: 'inline-size' } : {}),
       }}
     >
       <div
         className="flex shrink-0 items-center justify-center"
         style={{
-          width: 48,
-          height: 48,
-          borderRadius: 16,
+          width: compact ? 40 : 48,
+          height: compact ? 40 : 48,
+          borderRadius: compact ? 13 : 16,
           // Rang shaffoflik bilan beriladi: qattiq to'ldirish quyuq
           // fonda juda ko'zga tashlanardi va raqamni bosib ketardi.
           background: `color-mix(in srgb, ${tint} 20%, transparent)`,
           color: tint,
-          fontSize: 20,
+          fontSize: compact ? 17 : 20,
         }}
       >
         <Icon aria-hidden />
       </div>
 
-      <div className="min-w-0">
+      <div className="min-w-0 flex-1">
         <div
           className="flex items-center gap-1"
           style={{
@@ -81,7 +95,12 @@ export function StatCard({
             className="block truncate"
             // Raqam ekranga qarab kichrayadi: telefonda 24px da uzun
             // summa ("1 250 000 so'm") kartochkadan chiqib ketardi.
-            style={{ fontSize: 'clamp(18px, 4.5vw, 24px)', lineHeight: 1.35 }}
+            style={{
+              fontSize: compact
+                ? 'clamp(14px, calc(14cqw - 10px), 22px)'
+                : 'clamp(18px, 4.5vw, 24px)',
+              lineHeight: 1.35,
+            }}
           >
             {value}
           </Typography.Text>

@@ -2,7 +2,6 @@ import { useState } from 'react';
 import {
   CalendarOutlined,
   CheckCircleOutlined,
-  ClockCircleOutlined,
   CloseCircleOutlined,
   DollarOutlined,
   WalletOutlined,
@@ -179,20 +178,26 @@ export function CustomerDetailPage() {
     <div className="flex flex-col gap-4 sm:gap-6">
       <Hero customer={data} />
 
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,220px),1fr))] gap-4 sm:gap-6">
+      {/* Beshta ko'rsatkich DESKTOPDA bir qatorda turadi. Chegara
+          1440px: undan torroq oynada kartochka 200px dan kichrayadi va
+          uzun summa sig'may kesiladi — o'shanda o'ralgani yaxshi. */}
+      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,220px),1fr))] gap-4 sm:gap-6 min-[1440px]:grid-cols-5 min-[1440px]:gap-4">
         <StatCard
+          compact
           label="Jami bronlar"
           icon={CalendarOutlined}
           tint={figma.primaryBright}
           value={data.stats.totalBookings}
         />
         <StatCard
+          compact
           label="Yakunlangan"
           icon={CheckCircleOutlined}
           tint={figma.success}
           value={data.stats.completedCount}
         />
         <StatCard
+          compact
           label="Bekor qilingan"
           icon={CloseCircleOutlined}
           tint={figma.warning}
@@ -200,28 +205,20 @@ export function CustomerDetailPage() {
           hint={`Kelmagan: ${data.stats.noShowCount}`}
         />
         <StatCard
+          compact
           label="Jami to‘lagan"
           icon={DollarOutlined}
           tint={figma.success}
           value={formatMoney(data.stats.totalPaid)}
         />
         <StatCard
+          compact
           label="Joriy qarz"
           icon={WalletOutlined}
           // Qarzi bor mijoz ko'zga tashlanishi kerak, nol esa yo'q.
           tint={data.stats.currentDebt === '0' ? figma.textMuted : figma.danger}
           value={formatMoney(data.stats.currentDebt)}
           hint="Bekor qilingan bronlar hisobga olinmaydi."
-        />
-        <StatCard
-          label="Oxirgi tashrif"
-          icon={ClockCircleOutlined}
-          tint={figma.textMuted}
-          value={
-            data.stats.lastVisitAt === null
-              ? '—'
-              : formatDateTime(data.stats.lastVisitAt)
-          }
         />
       </div>
 
