@@ -1,4 +1,9 @@
-import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import {
+  useMutation,
+  useQuery,
+  useQueryClient,
+  type QueryClient,
+} from '@tanstack/react-query';
 import { bookingKeys } from '@/features/bookings/hooks';
 import { customerKeys } from '@/features/customers/hooks';
 import { shiftKeys } from '@/features/shifts/hooks';
@@ -27,6 +32,15 @@ export function usePayments(bookingId: string | null) {
  * Ularning hammasi bekor qilinadi — aks holda ekranda eski son
  * qolib ketardi.
  */
+function yangila(queryClient: QueryClient, bookingId: string): void {
+  void queryClient.invalidateQueries({
+    queryKey: paymentKeys.ofBooking(bookingId),
+  });
+  void queryClient.invalidateQueries({ queryKey: bookingKeys.all });
+  void queryClient.invalidateQueries({ queryKey: customerKeys.all });
+  void queryClient.invalidateQueries({ queryKey: shiftKeys.all });
+}
+
 function usePaymentAction<TInput>(
   bookingId: string,
   mutationFn: (input: TInput) => Promise<unknown>,
@@ -34,14 +48,25 @@ function usePaymentAction<TInput>(
   const queryClient = useQueryClient();
   return useMutation({
     mutationFn,
-    onSuccess: () => {
-      void queryClient.invalidateQueries({
-        queryKey: paymentKeys.ofBooking(bookingId),
-      });
-      void queryClient.invalidateQueries({ queryKey: bookingKeys.all });
-      void queryClient.invalidateQueries({ queryKey: customerKeys.all });
-      void queryClient.invalidateQueries({ queryKey: shiftKeys.all });
-    },
+    onSuccess: () => yangila(queryClient, bookingId),
+  });
+}
+
+/**
+ * Bron YARATILGANDAN keyin darhol to'lov. `useAcceptPayment` dan farqi
+ * — `bookingId` oldindan ma'lum emas va chaqiruv paytida keladi.
+ */
+export function useAcceptPaymentFor() {
+  const queryClient = useQueryClient();
+  return useMutation({
+    mutationFn: ({
+      bookingId,
+      input,
+    }: {
+      bookingId: string;
+      input: CreatePaymentInput;
+    }) => paymentsApi.accept(bookingId, input),
+    onSuccess: (_natija, { bookingId }) => yangila(queryClient, bookingId),
   });
 }
 

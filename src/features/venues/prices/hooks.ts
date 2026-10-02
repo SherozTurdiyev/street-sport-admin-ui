@@ -57,6 +57,26 @@ export function useDeletePriceRule(venueId: string) {
   );
 }
 
+/**
+ * Bitta oraliqning narxi. Mutatsiyadan farqi — chaqiruv o'zi
+ * yangilanadi: oraliq o'zgarsa (masalan bron oynasida davomiylik),
+ * yangi narx `useEffect` siz keladi.
+ */
+export function useSlotPrice(
+  venueId: string,
+  startsAt: string,
+  endsAt: string,
+) {
+  return useQuery({
+    queryKey: ['prices', 'calculate', venueId, startsAt, endsAt],
+    queryFn: () => pricesApi.calculate(venueId, startsAt, endsAt),
+    // Narx qoidalari kamdan-kam o'zgaradi; oyna ochilib-yopilganda
+    // bir xil oraliq uchun qayta so'rov yubormaydi.
+    staleTime: 60_000,
+    retry: false,
+  });
+}
+
 /** Kalkulyator hech narsani o'zgartirmaydi — shuning uchun mutatsiya. */
 export function useCalculatePrice(venueId: string) {
   return useMutation({

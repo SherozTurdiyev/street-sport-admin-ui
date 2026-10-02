@@ -163,6 +163,15 @@ describe('Tez bron', () => {
         yuborilgan.push({ url: 'create', body });
         return HttpResponse.json({ ...BRON, warnings: [] }, { status: 201 });
       }),
+      // Oyna narxni SERVERDAN so'raydi — frontend uni o'zi hisoblamaydi.
+      http.post(
+        `${API}/venues/v-1/price-rules/calculate`,
+        async ({ request }) => {
+          const body = await request.json();
+          yuborilgan.push({ url: 'calculate', body });
+          return HttpResponse.json({ totalPrice: '200000', segments: [] });
+        },
+      ),
       ...baseHandlers(),
     ];
   }
@@ -250,6 +259,150 @@ describe('Tez bron', () => {
 
     expect(await screen.findByText('Bron yaratildi')).toBeInTheDocument();
     expect(await screen.findByText('Mijoz qora ro‘yxatda')).toBeInTheDocument();
+  });
+  it('narx serverdan keladi va chegirmadan keyingi summa ko`rsatiladi', async () => {
+    server.use(...bronHandlers());
+    const oyna = within(await oynaniOch());
+
+    expect(await oyna.findByText(/200 000 so/)).toBeInTheDocument();
+    // So'rov aynan tanlangan katak oralig'i uchun ketadi.
+    expect(yuborilgan.find((y) => y.url === 'calculate')?.body).toMatchObject({
+      startsAt: '2026-09-01T05:00:00.000Z',
+      endsAt: '2026-09-01T06:00:00.000Z',
+    });
+
+    await userEvent.click(oyna.getByLabelText('Chegirma berish'));
+    await userEvent.type(await oyna.findByLabelText('Chegirma'), '50000');
+    expect(await oyna.findByText(/150 000 so/)).toBeInTheDocument();
+  });
+
+  it('to`lov summasi qarzdan oshsa yuborilmaydi', async () => {
+    server.use(...bronHandlers());
+    const oyna = within(await oynaniOch());
+    await oyna.findByText(/200 000 so/);
+
+    await userEvent.type(oyna.getByLabelText('To‘lov'), '250000');
+    await userEvent.click(oyna.getByRole('button', { name: 'Yaratish' }));
+
+    expect(
+      await oyna.findByText('Summa qarzdan ko‘p bo‘lishi mumkin emas'),
+    ).toBeInTheDocument();
+    expect(yuborilgan.some((y) => y.url === 'create')).toBe(false);
+  });
+
+  it('to`lov bilan bron: avval bron, keyin to`lov yoziladi', async () => {
+    server.use(
+      http.post(`${API}/bookings/b-1/payments`, async ({ request }) => {
+        yuborilgan.push({ url: 'payment', body: await request.json() });
+        return HttpResponse.json({ id: 'p-1' }, { status: 201 });
+      }),
+      ...bronHandlers(),
+    );
+    const oyna = within(await oynaniOch());
+    await oyna.findByText(/200 000 so/);
+
+    await userEvent.type(oyna.getByLabelText('To‘lov'), '120000');
+    await userEvent.click(oyna.getByRole('button', { name: 'Yaratish' }));
+
+    await screen.findByText('Bron yaratildi va to‘lov yozildi');
+    const ketma = yuborilgan.filter(
+      (y) => y.url === 'create' || y.url === 'payment',
+    );
+    expect(ketma.map((y) => y.url)).toEqual(['create', 'payment']);
+    expect(ketma[1]?.body).toEqual({ amount: '120000', method: 'CASH' });
+  });
+
+  it('to`lov yiqilsa bron qoladi va sabab ko`rsatiladi', async () => {
+    server.use(
+      http.post(`${API}/bookings/b-1/payments`, () =>
+        HttpResponse.json(
+          { code: 'SHIFT_REQUIRED', message: 'Avval smenani oching.' },
+          { status: 409 },
+        ),
+      ),
+      ...bronHandlers(),
+    );
+    const oyna = within(await oynaniOch());
+    await oyna.findByText(/200 000 so/);
+
+    await userEvent.type(oyna.getByLabelText('To‘lov'), '120000');
+    await userEvent.click(oyna.getByRole('button', { name: 'Yaratish' }));
+
+    // Bron O'CHIRILMAYDI: vaqt band qilingan va operator hammasini
+    // qaytadan kiritishi kerak bo'lardi.
+    expect(
+      await screen.findByText(/Bron yaratildi, lekin to‘lov yozilmadi/),
+    ).toBeInTheDocument();
+    expect(yuborilgan.some((y) => y.url === 'create')).toBe(true);
+  });
+
+  it('`payment.accept` ruxsati yo`q xodimda to`lov maydoni ko`rinmaydi', async () => {
+    const ruxsatsiz = {
+      ...DIRECTOR_ME,
+      permissions: DIRECTOR_ME.permissions.filter(
+        (p) => p !== 'payment.accept',
+      ),
+    };
+    // Tartib MUHIM: MSW birinchi mos handler'ni ishlatadi, `bronHandlers`
+    // ichida esa direktor allaqachon e'lon qilingan.
+    server.use(...authedHandlers(ruxsatsiz), ...bronHandlers());
+    const oyna = within(await oynaniOch());
+    await oyna.findByLabelText('Mijoz telefoni');
+
+    // Narx yozuvi to'lov maydonining ichida — blok bilan birga
+    // ko'rinmaydi.
+    expect(oyna.queryByLabelText('To‘lov')).toBeNull();
+    expect(oyna.queryByText(/200 000 so/)).toBeNull();
+  });
+  it('chegirma maydoni belgilanmaguncha ko`rinmaydi', async () => {
+    server.use(...bronHandlers());
+    const oyna = within(await oynaniOch());
+    await oyna.findByLabelText('Mijoz telefoni');
+
+    expect(oyna.queryByLabelText('Chegirma')).toBeNull();
+
+    await userEvent.click(oyna.getByLabelText('Chegirma berish'));
+    expect(await oyna.findByLabelText('Chegirma')).toBeInTheDocument();
+  });
+
+  it('belgi olib tashlansa chegirma yuborilmaydi', async () => {
+    server.use(...bronHandlers());
+    const oyna = within(await oynaniOch());
+    await oyna.findByLabelText('Mijoz telefoni');
+
+    const belgi = oyna.getByLabelText('Chegirma berish');
+    await userEvent.click(belgi);
+    await userEvent.type(await oyna.findByLabelText('Chegirma'), '50000');
+    // Ko'rinmaydigan chegirma jimgina qo'llanib ketmasligi kerak —
+    // bu pul masalasi.
+    await userEvent.click(belgi);
+    expect(oyna.queryByLabelText('Chegirma')).toBeNull();
+
+    await userEvent.click(oyna.getByRole('button', { name: 'Yaratish' }));
+
+    await screen.findByText('Bron yaratildi');
+    const tana = yuborilgan.find((y) => y.url === 'create')?.body as Record<
+      string,
+      unknown
+    >;
+    expect(tana.discount).toBeUndefined();
+  });
+
+  it('chegirma qarzni kamaytiradi va to`lov chegarasiga ta`sir qiladi', async () => {
+    server.use(...bronHandlers());
+    const oyna = within(await oynaniOch());
+    await oyna.findByText(/200 000 so/);
+
+    await userEvent.click(oyna.getByLabelText('Chegirma berish'));
+    await userEvent.type(await oyna.findByLabelText('Chegirma'), '120000');
+    await userEvent.type(oyna.getByLabelText('To‘lov'), '100000');
+    await userEvent.click(oyna.getByRole('button', { name: 'Yaratish' }));
+
+    // 200 000 − 120 000 = 80 000, ya'ni 100 000 ko'p.
+    expect(
+      await oyna.findByText('Summa qarzdan ko‘p bo‘lishi mumkin emas'),
+    ).toBeInTheDocument();
+    expect(yuborilgan.some((y) => y.url === 'create')).toBe(false);
   });
 });
 
