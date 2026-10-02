@@ -271,7 +271,8 @@ describe('Tez bron', () => {
       endsAt: '2026-09-01T06:00:00.000Z',
     });
 
-    await userEvent.type(oyna.getByLabelText('Chegirma'), '50000');
+    await userEvent.click(oyna.getByLabelText('Chegirma berish'));
+    await userEvent.type(await oyna.findByLabelText('Chegirma'), '50000');
     expect(await oyna.findByText(/150 000 so/)).toBeInTheDocument();
   });
 
@@ -352,6 +353,56 @@ describe('Tez bron', () => {
     // ko'rinmaydi.
     expect(oyna.queryByLabelText('To‘lov')).toBeNull();
     expect(oyna.queryByText(/200 000 so/)).toBeNull();
+  });
+  it('chegirma maydoni belgilanmaguncha ko`rinmaydi', async () => {
+    server.use(...bronHandlers());
+    const oyna = within(await oynaniOch());
+    await oyna.findByLabelText('Mijoz telefoni');
+
+    expect(oyna.queryByLabelText('Chegirma')).toBeNull();
+
+    await userEvent.click(oyna.getByLabelText('Chegirma berish'));
+    expect(await oyna.findByLabelText('Chegirma')).toBeInTheDocument();
+  });
+
+  it('belgi olib tashlansa chegirma yuborilmaydi', async () => {
+    server.use(...bronHandlers());
+    const oyna = within(await oynaniOch());
+    await oyna.findByLabelText('Mijoz telefoni');
+
+    const belgi = oyna.getByLabelText('Chegirma berish');
+    await userEvent.click(belgi);
+    await userEvent.type(await oyna.findByLabelText('Chegirma'), '50000');
+    // Ko'rinmaydigan chegirma jimgina qo'llanib ketmasligi kerak —
+    // bu pul masalasi.
+    await userEvent.click(belgi);
+    expect(oyna.queryByLabelText('Chegirma')).toBeNull();
+
+    await userEvent.click(oyna.getByRole('button', { name: 'Yaratish' }));
+
+    await screen.findByText('Bron yaratildi');
+    const tana = yuborilgan.find((y) => y.url === 'create')?.body as Record<
+      string,
+      unknown
+    >;
+    expect(tana.discount).toBeUndefined();
+  });
+
+  it('chegirma qarzni kamaytiradi va to`lov chegarasiga ta`sir qiladi', async () => {
+    server.use(...bronHandlers());
+    const oyna = within(await oynaniOch());
+    await oyna.findByText(/200 000 so/);
+
+    await userEvent.click(oyna.getByLabelText('Chegirma berish'));
+    await userEvent.type(await oyna.findByLabelText('Chegirma'), '120000');
+    await userEvent.type(oyna.getByLabelText('To‘lov'), '100000');
+    await userEvent.click(oyna.getByRole('button', { name: 'Yaratish' }));
+
+    // 200 000 − 120 000 = 80 000, ya'ni 100 000 ko'p.
+    expect(
+      await oyna.findByText('Summa qarzdan ko‘p bo‘lishi mumkin emas'),
+    ).toBeInTheDocument();
+    expect(yuborilgan.some((y) => y.url === 'create')).toBe(false);
   });
 });
 

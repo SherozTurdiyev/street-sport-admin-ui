@@ -1,5 +1,14 @@
 import { useState } from 'react';
-import { Alert, App, Descriptions, Form, Input, Modal, Select } from 'antd';
+import {
+  Alert,
+  App,
+  Checkbox,
+  Descriptions,
+  Form,
+  Input,
+  Modal,
+  Select,
+} from 'antd';
 import dayjs from 'dayjs';
 import { errorMessage } from '@/shared/api/error-handler';
 import { formatMoney } from '@/shared/format/money';
@@ -23,6 +32,7 @@ type Values = {
   multiplier: number;
   phone?: string;
   fullName?: string;
+  chegirmaBor?: boolean;
   discount?: string;
   note?: string;
   payment?: string;
@@ -70,7 +80,12 @@ function Form_({
   const step = venue.slotMinutes;
 
   const multiplier = Form.useWatch('multiplier', form) ?? 1;
-  const chegirma = Form.useWatch('discount', form);
+  const chegirmaBor = Form.useWatch('chegirmaBor', form) ?? false;
+  const kiritilganChegirma = Form.useWatch('discount', form);
+  // Belgilanmagan bo'lsa chegirma YO'Q: maydonda eski qiymat qolib
+  // ketgan bo'lsa ham hisobga olinmaydi. (`useWatch` shart ichida
+  // chaqirilmaydi — hook tartibi buzilardi.)
+  const chegirma = chegirmaBor ? kiritilganChegirma : undefined;
   const tolov = Form.useWatch('payment', form);
   const endsAt = dayjs(slot.startsAt)
     .add(step * multiplier, 'minute')
@@ -123,7 +138,7 @@ function Form_({
         endsAt: dayjs(slot.startsAt)
           .add(step * values.multiplier, 'minute')
           .toISOString(),
-        discount: values.discount || undefined,
+        discount: (values.chegirmaBor && values.discount) || undefined,
         note: values.note?.trim() || undefined,
       });
 
@@ -221,10 +236,6 @@ function Form_({
           </Form.Item>
         )}
 
-        <Form.Item name="discount" label="Chegirma">
-          <MoneyInput />
-        </Form.Item>
-
         <Form.Item name="note" label="Izoh">
           <Input />
         </Form.Item>
@@ -269,6 +280,31 @@ function Form_({
             )}
           </>
         )}
+
+        <Form.Item name="chegirmaBor" valuePropName="checked" className="!mb-2">
+          <Checkbox
+            onChange={() => {
+              // Belgi olib tashlanganda qiymat TOZALANADI — ko'rinmaydigan
+              // chegirma jimgina qo'llanib ketmasligi kerak.
+              form.setFieldValue('discount', undefined);
+              // To'lov chegarasi chegirmaga bog'liq: eski xato qolib
+              // ketmasligi uchun maydon qayta tekshiriladi.
+              void form.validateFields(['payment']).catch(() => undefined);
+            }}
+          >
+            Chegirma berish
+          </Checkbox>
+        </Form.Item>
+
+        {chegirmaBor && (
+          <Form.Item name="discount" label="Chegirma">
+            <MoneyInput
+              onChange={() => {
+                void form.validateFields(['payment']).catch(() => undefined);
+              }}
+            />
+          </Form.Item>
+        )}
       </Form>
     </>
   );
@@ -288,6 +324,9 @@ export function BookingFormModal({
       okText="Yaratish"
       cancelText="Bekor qilish"
       onCancel={onClose}
+      // Oynada endi narx, to'lov va chegirma ham bor — standart 520px
+      // da maydonlar siqilib qolardi. Telefonda ekran kengligiga tushadi.
+      width="min(640px, 94vw)"
       okButtonProps={{ htmlType: 'submit', form: 'booking-form' }}
       destroyOnHidden
     >
