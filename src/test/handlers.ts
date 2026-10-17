@@ -23,6 +23,10 @@ export const DIRECTOR_ME = {
     'booking.result.set',
     'booking.series.create',
     'booking.series.cancel',
+    // BR-04 — backenddagi DIRECTOR qatorida bor. Bu yerda tushib
+    // qolgani uchun chegirma maydonining ruxsatsiz ochiqligi
+    // testlarda ko'rinmagan edi.
+    'discount.grant',
     'customer.manage',
     'customer.blacklist',
     // TZ 4.3 da tushum hisoboti faqat direktorda — boshqaruv paneli

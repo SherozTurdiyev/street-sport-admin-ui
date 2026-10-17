@@ -354,6 +354,22 @@ describe('Tez bron', () => {
     expect(oyna.queryByLabelText('To‘lov')).toBeNull();
     expect(oyna.queryByText(/200 000 so/)).toBeNull();
   });
+  it('`discount.grant` ruxsati yo`q xodimda chegirma belgisi ko`rinmaydi', async () => {
+    const ruxsatsiz = {
+      ...DIRECTOR_ME,
+      permissions: DIRECTOR_ME.permissions.filter(
+        (p) => p !== 'discount.grant',
+      ),
+    };
+    // Tartib MUHIM: MSW birinchi mos handler'ni ishlatadi.
+    server.use(...authedHandlers(ruxsatsiz), ...bronHandlers());
+    const oyna = within(await oynaniOch());
+    await oyna.findByLabelText('Mijoz telefoni');
+
+    expect(oyna.queryByLabelText('Chegirma berish')).toBeNull();
+    expect(oyna.queryByLabelText('Chegirma')).toBeNull();
+  });
+
   it('chegirma maydoni belgilanmaguncha ko`rinmaydi', async () => {
     server.use(...bronHandlers());
     const oyna = within(await oynaniOch());

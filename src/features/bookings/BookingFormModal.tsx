@@ -80,7 +80,11 @@ function Form_({
   const step = venue.slotMinutes;
 
   const multiplier = Form.useWatch('multiplier', form) ?? 1;
-  const chegirmaBor = Form.useWatch('chegirmaBor', form) ?? false;
+  // BR-04 — chegirma ruxsat talab qiladi. Backend ham tekshiradi;
+  // bu yerda maydon umuman ko'rsatilmaydi.
+  const chegirmaMumkin = can('discount.grant');
+  const belgilandi = Form.useWatch('chegirmaBor', form) ?? false;
+  const chegirmaBor = chegirmaMumkin && belgilandi;
   const kiritilganChegirma = Form.useWatch('discount', form);
   // Belgilanmagan bo'lsa chegirma YO'Q: maydonda eski qiymat qolib
   // ketgan bo'lsa ham hisobga olinmaydi. (`useWatch` shart ichida
@@ -138,7 +142,7 @@ function Form_({
         endsAt: dayjs(slot.startsAt)
           .add(step * values.multiplier, 'minute')
           .toISOString(),
-        discount: (values.chegirmaBor && values.discount) || undefined,
+        discount: (chegirmaBor && values.discount) || undefined,
         note: values.note?.trim() || undefined,
       });
 
@@ -281,29 +285,40 @@ function Form_({
           </>
         )}
 
-        <Form.Item name="chegirmaBor" valuePropName="checked" className="!mb-2">
-          <Checkbox
-            onChange={() => {
-              // Belgi olib tashlanganda qiymat TOZALANADI — ko'rinmaydigan
-              // chegirma jimgina qo'llanib ketmasligi kerak.
-              form.setFieldValue('discount', undefined);
-              // To'lov chegarasi chegirmaga bog'liq: eski xato qolib
-              // ketmasligi uchun maydon qayta tekshiriladi.
-              void form.validateFields(['payment']).catch(() => undefined);
-            }}
-          >
-            Chegirma berish
-          </Checkbox>
-        </Form.Item>
+        {chegirmaMumkin && (
+          <>
+            <Form.Item
+              name="chegirmaBor"
+              valuePropName="checked"
+              className="!mb-2"
+            >
+              <Checkbox
+                onChange={() => {
+                  // Belgi olib tashlanganda qiymat TOZALANADI —
+                  // ko'rinmaydigan chegirma jimgina qo'llanib ketmasligi
+                  // kerak.
+                  form.setFieldValue('discount', undefined);
+                  // To'lov chegarasi chegirmaga bog'liq: eski xato qolib
+                  // ketmasligi uchun maydon qayta tekshiriladi.
+                  void form.validateFields(['payment']).catch(() => undefined);
+                }}
+              >
+                Chegirma berish
+              </Checkbox>
+            </Form.Item>
 
-        {chegirmaBor && (
-          <Form.Item name="discount" label="Chegirma">
-            <MoneyInput
-              onChange={() => {
-                void form.validateFields(['payment']).catch(() => undefined);
-              }}
-            />
-          </Form.Item>
+            {chegirmaBor && (
+              <Form.Item name="discount" label="Chegirma">
+                <MoneyInput
+                  onChange={() => {
+                    void form
+                      .validateFields(['payment'])
+                      .catch(() => undefined);
+                  }}
+                />
+              </Form.Item>
+            )}
+          </>
         )}
       </Form>
     </>
