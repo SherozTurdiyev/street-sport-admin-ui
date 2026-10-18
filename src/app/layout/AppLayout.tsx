@@ -7,6 +7,7 @@ import { SubscriptionBanner } from '@/app/SubscriptionBanner';
 import { Breadcrumbs } from './Breadcrumbs';
 import { NotificationsBell } from './NotificationsBell';
 import { MavzuTugma } from '@/features/theme/MavzuTugma';
+import { VoiceAssistant } from '@/features/voice/VoiceAssistant';
 import { SiderContent } from './SiderContent';
 
 const { Header, Sider, Content } = Layout;
@@ -91,6 +92,9 @@ export function AppLayout() {
         <Content className="p-4 sm:p-6 lg:p-8">
           <Outlet />
         </Content>
+        {/* Yordamchi LAYOUTDA: u sahifadan sahifaga o'tganda ham
+            o'sha joyda turishi kerak. */}
+        <VoiceAssistant />
       </Layout>
     </Layout>
   );
