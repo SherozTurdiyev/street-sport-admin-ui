@@ -236,6 +236,38 @@ describe('Ovozli yordamchi', () => {
     expect(await screen.findByText(/Ovoz tanilmadi/)).toBeInTheDocument();
   });
 
+  it('xato chiqqanda QAYTA YOZISH tugmasi bo`ladi', async () => {
+    /*
+     * Jim yozuvda `VOICE_NO_SPEECH` keladi. Ilgari oynada faqat
+     * xabar turardi va chiqish yo'li yo'q edi: matn ham, taklif ham
+     * yo'q, demak tugmalar bloki umuman chizilmasdi.
+     */
+    server.use(
+      http.post(`${API}/voice/transcribe`, () =>
+        HttpResponse.json(
+          { code: 'VOICE_NO_SPEECH', message: 'Ovoz tanilmadi.' },
+          { status: 422 },
+        ),
+      ),
+    );
+    await och();
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Ovoz bilan bron qilish' }),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: /to‘xtatish va tanish/i }),
+    );
+
+    await screen.findByText(/Ovoz tanilmadi/);
+    const qayta = screen.getByRole('button', { name: 'Qaytadan aytish' });
+
+    // Tugma ishlashi ham kerak: bosilgach yozuv qaytadan boshlanadi.
+    await userEvent.click(qayta);
+    expect(
+      await screen.findByRole('button', { name: /to‘xtatish va tanish/i }),
+    ).toBeInTheDocument();
+  });
+
   it('mikrofonga ruxsat berilmasa tushunarli xabar chiqadi', async () => {
     mikrofonniUla(false);
     await och();

@@ -307,7 +307,23 @@ export function VoiceAssistant() {
             )}
 
             {xato !== null && (
-              <Alert className="w-full" type="error" showIcon message={xato} />
+              <div className="w-full">
+                <Alert type="error" showIcon message={xato} />
+                {/* Xatodan keyin CHIQISH YO'LI bo'lishi kerak. Matn
+                    tanilmagan bo'lsa yuqoridagi tugmalar bloki
+                    chizilmaydi, ya'ni oyna boshi berk ko'chaga
+                    aylanardi. */}
+                {matn === null && yozuv.holat === 'tayyor' && !ishlanmoqda && (
+                  <Button
+                    block
+                    type="primary"
+                    className="!mt-3"
+                    onClick={() => void och(niyat)}
+                  >
+                    Qaytadan aytish
+                  </Button>
+                )}
+              </div>
             )}
           </div>
         )}
