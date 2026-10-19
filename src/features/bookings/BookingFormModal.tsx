@@ -49,6 +49,20 @@ function ayir(jami: string, chegirma: string | undefined): bigint {
 export type SelectedSlot = { venue: CalendarVenue; slot: Slot };
 
 /**
+ * Oldindan to'ldirilgan qiymatlar — ovozli yordamchi uchun.
+ *
+ * Ataylab faqat UCHTA maydon: telefon, davomiylik va to'lov summasi.
+ * Chegirma bu yerda YO'Q — uni operator ongli ravishda belgilashi
+ * kerak, ovoz orqali jimgina qo'llanib ketmasligi uchun.
+ */
+export type Boshlangich = {
+  phone?: string;
+  multiplier?: number;
+  payment?: string;
+  paymentMethod?: 'CASH' | 'CARD' | 'TRANSFER';
+};
+
+/**
  * Tez bron: stadion va vaqt katakdan keladi, foydalanuvchi faqat
  * mijozni ko'rsatadi.
  *
@@ -60,9 +74,11 @@ export type SelectedSlot = { venue: CalendarVenue; slot: Slot };
  */
 function Form_({
   selected,
+  boshlangich,
   onDone,
 }: {
   selected: SelectedSlot;
+  boshlangich?: Boshlangich;
   onDone: () => void;
 }) {
   const { message } = App.useApp();
@@ -200,7 +216,7 @@ function Form_({
         form={form}
         layout="vertical"
         id="booking-form"
-        initialValues={{ multiplier: 1 }}
+        initialValues={{ multiplier: 1, ...boshlangich }}
         onFinish={onFinish}
       >
         <Form.Item name="multiplier" label="Davomiyligi">
@@ -327,15 +343,19 @@ function Form_({
 
 export function BookingFormModal({
   selected,
+  boshlangich,
+  title = 'Yangi bron',
   onClose,
 }: {
   selected: SelectedSlot | null;
+  boshlangich?: Boshlangich;
+  title?: string;
   onClose: () => void;
 }) {
   return (
     <Modal
       open={selected !== null}
-      title="Yangi bron"
+      title={title}
       okText="Yaratish"
       cancelText="Bekor qilish"
       onCancel={onClose}
@@ -345,7 +365,13 @@ export function BookingFormModal({
       okButtonProps={{ htmlType: 'submit', form: 'booking-form' }}
       destroyOnHidden
     >
-      {selected !== null && <Form_ selected={selected} onDone={onClose} />}
+      {selected !== null && (
+        <Form_
+          selected={selected}
+          boshlangich={boshlangich}
+          onDone={onClose}
+        />
+      )}
     </Modal>
   );
 }

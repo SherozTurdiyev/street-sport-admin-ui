@@ -6,6 +6,7 @@ import { server } from '@/test/msw';
 import { renderApp } from '@/test/render';
 import { API, DIRECTOR_ME, authedHandlers } from '@/test/handlers';
 import { VoiceAssistant } from './VoiceAssistant';
+import type { BuyruqTaklifi } from './api';
 
 /*
  * `wavGaOtkaz` `AudioContext` ga tayanadi, jsdom da esa u yo'q.
@@ -52,6 +53,29 @@ function mikrofonniUla(bersinmi = true): void {
 
 const sttHandler = (text: string) =>
   http.post(`${API}/voice/transcribe`, () => HttpResponse.json({ text }));
+
+const TAKLIF: BuyruqTaklifi = {
+  matn: 'ertaga kechki to`qqizda kam nou',
+  venueId: 'v-1',
+  venueName: 'Kam Nou',
+  slotMinutes: 60,
+  startsAt: '2026-10-20T16:00:00.000Z',
+  endsAt: '2026-10-20T17:00:00.000Z',
+  phone: '939542111',
+  amount: null,
+  method: null,
+};
+
+/** Yuborilgan tanani ham ushlaydi — niyat nomi moslanishi muhim. */
+function commandHandler(
+  javob: Partial<BuyruqTaklifi> = {},
+  yozib?: (tana: Record<string, unknown>) => void,
+) {
+  return http.post(`${API}/voice/command`, async ({ request }) => {
+    yozib?.((await request.json()) as Record<string, unknown>);
+    return HttpResponse.json({ ...TAKLIF, ...javob });
+  });
+}
 
 const RUXSATSIZ = {
   ...DIRECTOR_ME,
@@ -114,7 +138,7 @@ describe('Ovozli yordamchi', () => {
   });
 
   it('yozib to`xtatilgach tanilgan matn ko`rsatiladi', async () => {
-    server.use(sttHandler('ertaga soat yettida bron qil'));
+    server.use(sttHandler('ertaga soat yettida bron qil'), commandHandler());
     await och();
     await userEvent.click(
       await screen.findByRole('button', { name: 'Ovoz bilan bron qilish' }),
@@ -127,6 +151,69 @@ describe('Ovozli yordamchi', () => {
     expect(
       await screen.findByText('ertaga soat yettida bron qil'),
     ).toBeInTheDocument();
+  });
+
+  it('niyatni backend kutgan nom bilan yuboradi', async () => {
+    // `BOOKING` -> `BRON`: nomuvofiqlik bo'lsa so'rov 400 bilan
+    // qaytardi va butun oqim ishlamasdi.
+    const tanalar: Record<string, unknown>[] = [];
+    server.use(
+      sttHandler('ertaga kechki to`qqizda kam nou'),
+      commandHandler({}, (t) => tanalar.push(t)),
+    );
+    await och();
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Ovoz bilan bron qilish' }),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: /to‘xtatish va tanish/i }),
+    );
+
+    await screen.findByText('Kam Nou');
+    expect(tanalar[0]?.['niyat']).toBe('BRON');
+  });
+
+  it('tushunilgan maydonlar ko`rsatiladi va oyna ochiladi', async () => {
+    server.use(
+      sttHandler('ertaga kechki to`qqizda kam nou'),
+      commandHandler(),
+    );
+    await och();
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Ovoz bilan bron qilish' }),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: /to‘xtatish va tanish/i }),
+    );
+
+    // Operator JIMGINA to'ldirilgan formani emas, nima tushunilganini
+    // ko'rishi kerak.
+    expect(await screen.findByText('Kam Nou')).toBeInTheDocument();
+    expect(screen.getByText('+998 (93) 954-21-11')).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Oynani ochish' }),
+    ).toBeEnabled();
+  });
+
+  it('stadion aniqlanmasa oyna ochilmaydi', async () => {
+    server.use(
+      sttHandler('nimadir'),
+      commandHandler({ venueId: null, venueName: null, slotMinutes: null }),
+    );
+    await och();
+    await userEvent.click(
+      await screen.findByRole('button', { name: 'Ovoz bilan bron qilish' }),
+    );
+    await userEvent.click(
+      await screen.findByRole('button', { name: /to‘xtatish va tanish/i }),
+    );
+
+    expect(
+      await screen.findByText(/Stadion yoki vaqt aniqlanmadi/),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole('button', { name: 'Oynani ochish' }),
+    ).toBeDisabled();
   });
 
   it('bo`sh nutqda backend xatosi ko`rsatiladi', async () => {

@@ -1,14 +1,30 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useMemo, useState } from 'react';
+import dayjs from 'dayjs';
 import {
   AudioOutlined,
   CalendarOutlined,
   WalletOutlined,
 } from '@ant-design/icons';
-import { Alert, Button, FloatButton, Modal, Spin, Typography } from 'antd';
+import {
+  Alert,
+  Button,
+  Descriptions,
+  FloatButton,
+  Modal,
+  Spin,
+  Typography,
+} from 'antd';
+import { formatDateTime } from '@/shared/format/time';
+import { displayPhone } from '@/shared/format/phone';
 import { errorMessage } from '@/shared/api/error-handler';
 import { useCan } from '@/features/auth/hooks';
 import { figma } from '@/shared/theme/tokens';
-import { voiceApi, type Niyat } from './api';
+import {
+  BookingFormModal,
+  type Boshlangich,
+  type SelectedSlot,
+} from '@/features/bookings/BookingFormModal';
+import { voiceApi, type BuyruqTaklifi, type Niyat } from './api';
 import { useRecorder } from './useRecorder';
 import { wavGaOtkaz } from './wav';
 
@@ -42,14 +58,64 @@ export function VoiceAssistant() {
 
   const [niyat, setNiyat] = useState<Niyat | null>(null);
   const [matn, setMatn] = useState<string | null>(null);
+  const [taklif, setTaklif] = useState<BuyruqTaklifi | null>(null);
   const [xato, setXato] = useState<string | null>(null);
   const [ishlanmoqda, setIshlanmoqda] = useState(false);
+  const [formOchiq, setFormOchiq] = useState(false);
   const yozuv = useRecorder();
+
+  /*
+   * Taklifdan bron oynasi uchun tanlov. Stadion yoki vaqt
+   * aniqlanmagan bo'lsa `null` — oyna ochilmaydi va operator
+   * kalendardan o'zi tanlaydi. Taxmin qilinmaydi.
+   */
+  const tanlov = useMemo<SelectedSlot | null>(() => {
+    if (!taklif?.venueId || !taklif.startsAt || !taklif.slotMinutes) {
+      return null;
+    }
+    return {
+      venue: {
+        venueId: taklif.venueId,
+        name: taklif.venueName ?? '',
+        slotMinutes: taklif.slotMinutes,
+        status: 'ACTIVE',
+        // Oyna bu uchtasini ishlatmaydi — panjara emas, bitta slot.
+        hours: [],
+        closures: [],
+        bookings: [],
+      },
+      slot: {
+        label: '',
+        startsAt: taklif.startsAt,
+        endsAt: taklif.endsAt ?? taklif.startsAt,
+        status: 'FREE',
+        booking: null,
+      },
+    };
+  }, [taklif]);
+
+  const boshlangich = useMemo<Boshlangich>(() => {
+    if (taklif === null) return {};
+    const daqiqa =
+      taklif.startsAt !== null && taklif.endsAt !== null
+        ? dayjs(taklif.endsAt).diff(taklif.startsAt, 'minute')
+        : 0;
+    const qadam = taklif.slotMinutes ?? 0;
+    return {
+      ...(taklif.phone !== null ? { phone: taklif.phone } : {}),
+      ...(qadam > 0 && daqiqa > 0
+        ? { multiplier: Math.max(1, Math.round(daqiqa / qadam)) }
+        : {}),
+      ...(taklif.amount !== null ? { payment: taklif.amount } : {}),
+      ...(taklif.method !== null ? { paymentMethod: taklif.method } : {}),
+    };
+  }, [taklif]);
 
   const och = useCallback(
     async (tanlangan: Niyat) => {
       setNiyat(tanlangan);
       setMatn(null);
+      setTaklif(null);
       setXato(null);
       try {
         await yozuv.boshla();
@@ -68,11 +134,13 @@ export function VoiceAssistant() {
     yozuv.bekor();
     setNiyat(null);
     setMatn(null);
+    setTaklif(null);
     setXato(null);
     setIshlanmoqda(false);
+    setFormOchiq(false);
   }, [yozuv]);
 
-  const toxtatVaYubor = useCallback(async () => {
+  const toxtatVaYubor = useCallback(async (tanlangan: Niyat) => {
     setIshlanmoqda(true);
     setXato(null);
     try {
@@ -80,6 +148,9 @@ export function VoiceAssistant() {
       const wav = await wavGaOtkaz(xomAudio);
       const natija = await voiceApi.transcribe(wav);
       setMatn(natija.text);
+      // Matn DARHOL ko'rsatiladi, tushunish esa davom etadi: operator
+      // nima eshitilganini kutmasdan ko'radi.
+      setTaklif(await voiceApi.command(natija.text, tanlangan));
     } catch (e) {
       setXato(errorMessage(e));
     } finally {
@@ -117,8 +188,10 @@ export function VoiceAssistant() {
         )}
       </FloatButton.Group>
 
+      {/* Bron oynasi ochilganda ovoz oynasi berkiladi — ikkitasi
+          ustma-ust turib qolmasligi kerak. */}
       <Modal
-        open={niyat !== null}
+        open={niyat !== null && !formOchiq}
         title={niyat === null ? '' : SARLAVHA[niyat]}
         onCancel={yop}
         maskClosable={false}
@@ -145,7 +218,10 @@ export function VoiceAssistant() {
                 <Typography.Text type="secondary" className="text-center">
                   {MISOL[niyat]}
                 </Typography.Text>
-                <Button type="primary" onClick={() => void toxtatVaYubor()}>
+                <Button
+                  type="primary"
+                  onClick={() => void toxtatVaYubor(niyat)}
+                >
                   To‘xtatish va tanish
                 </Button>
               </>
@@ -165,16 +241,68 @@ export function VoiceAssistant() {
                 <Typography.Text type="secondary">
                   Tanilgan matn:
                 </Typography.Text>
-                <Typography.Paragraph
-                  copyable
-                  className="!mt-2 !mb-4"
-                  style={{ fontSize: 16 }}
-                >
+                <Typography.Paragraph className="!mt-2" style={{ fontSize: 16 }}>
                   {matn}
                 </Typography.Paragraph>
-                <Button block onClick={() => void och(niyat)}>
-                  Qaytadan aytish
-                </Button>
+
+                {taklif !== null && (
+                  <>
+                    {/* Operator JIMGINA to'ldirilgan formani emas,
+                        nima tushunilganini ko'rishi kerak. */}
+                    <Descriptions
+                      size="small"
+                      column={1}
+                      className="!mb-4"
+                      items={[
+                        {
+                          key: 'stadion',
+                          label: 'Stadion',
+                          children: taklif.venueName ?? '—',
+                        },
+                        {
+                          key: 'vaqt',
+                          label: 'Vaqt',
+                          children:
+                            taklif.startsAt === null
+                              ? '—'
+                              : formatDateTime(taklif.startsAt),
+                        },
+                        {
+                          key: 'telefon',
+                          label: 'Telefon',
+                          children:
+                            taklif.phone === null
+                              ? '—'
+                              : displayPhone(taklif.phone),
+                        },
+                      ]}
+                    />
+
+                    {tanlov === null && (
+                      <Alert
+                        className="!mb-3"
+                        type="warning"
+                        showIcon
+                        message="Stadion yoki vaqt aniqlanmadi"
+                        description="Oynani kalendardan oching yoki qaytadan ayting."
+                      />
+                    )}
+                  </>
+                )}
+
+                <div className="flex gap-2">
+                  <Button block onClick={() => void och(niyat)}>
+                    Qaytadan aytish
+                  </Button>
+                  <Button
+                    block
+                    type="primary"
+                    disabled={tanlov === null}
+                    onClick={() => setFormOchiq(true)}
+                  >
+                    Oynani ochish
+                  </Button>
+                </div>
               </div>
             )}
 
@@ -184,6 +312,13 @@ export function VoiceAssistant() {
           </div>
         )}
       </Modal>
+
+      <BookingFormModal
+        selected={formOchiq ? tanlov : null}
+        boshlangich={boshlangich}
+        title="Ovoz bilan bron"
+        onClose={yop}
+      />
     </>
   );
 }
